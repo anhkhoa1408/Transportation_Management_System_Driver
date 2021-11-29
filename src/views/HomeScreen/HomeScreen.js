@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet, View, FlatList } from 'react-native';
+import React, { useState } from "react";
+import { Image, StyleSheet, View, FlatList } from "react-native";
 import {
   Avatar,
   Card,
@@ -8,37 +8,37 @@ import {
   Text,
   withBadge,
   SpeedDial,
-} from 'react-native-elements';
-import { Badge } from 'react-native-elements/dist/badge/Badge';
-import { headerFont } from '../../styles/fontStyle';
-import img from './../../assets/images/download.jpg';
-import banner from './../../assets/images/banner.jpg';
-import { header, shadowCard } from '../../styles/layoutStyle';
-import AbsenceForm from './AbsenceForm';
-
+} from "react-native-elements";
+import { Badge } from "react-native-elements/dist/badge/Badge";
+import { headerFont } from "../../styles/fontStyle";
+import img from "./../../assets/images/download.jpg";
+import banner from "./../../assets/images/banner.jpg";
+import { header, shadowCard } from "../../styles/layoutStyle";
+import AbsenceForm from "./AbsenceForm";
+import { STYLES, FONTS, COLORS } from "../../styles";
 
 export default function HomeScreen() {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
-  const [absenceForm, setAbsence] = useState(false)
+  const [absenceForm, setAbsence] = useState(false);
   const listItem = [
     {
-      name: 'Đơn hàng còn lại',
-      iconName: 'assignment',
+      name: "Đơn hàng còn lại",
+      iconName: "assignment",
       count: 10,
-      color: '#7FC3DC',
+      color: "#7FC3DC",
     },
     {
-      name: 'Đơn hàng đã nhận',
-      iconName: 'assignment',
+      name: "Đơn hàng đã nhận",
+      iconName: "assignment",
       count: 15,
-      color: '#6DC36C',
+      color: "#6DC36C",
     },
     {
-      name: 'Trạng thái xe',
-      iconName: 'assignment',
-      count: 'Tốt',
-      color: '#ccc',
+      name: "Trạng thái xe",
+      iconName: "assignment",
+      count: "Tốt",
+      color: "#ccc",
     },
   ];
 
@@ -47,12 +47,12 @@ export default function HomeScreen() {
       <ListItem.Content
         style={{
           borderRadius: 20,
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-evenly",
         }}
       >
         <ListItem.Title style={homeStyle.titleFont}>{item.name}</ListItem.Title>
@@ -64,7 +64,7 @@ export default function HomeScreen() {
         />
 
         <ListItem.Subtitle
-          style={{ fontSize: 28, fontWeight: 'bold', color: '#000' }}
+          style={{ fontSize: 28, fontWeight: "bold", color: "#000" }}
         >
           {item.count}
         </ListItem.Subtitle>
@@ -76,14 +76,17 @@ export default function HomeScreen() {
 
   return (
     <View style={homeStyle.container}>
+      {console.log(FONTS.headerFont)}
       <View style={homeStyle.header}>
         <BadgedIcon type="ionicon" name="notifications" size={30} />
-        <Text h4 style={homeStyle.headerFont}>Welcome, shibe</Text>
+        <Text h4 style={homeStyle.headerFont}>
+          Welcome, shibe
+        </Text>
         <Avatar rounded size="small" source={img} />
       </View>
 
-      <View style={{ width: '100%', height: '40%', marginVertical: 20 }}>
-          <Image style={homeStyle.banner} source={banner} />
+      <View style={{ width: "100%", height: "40%", marginVertical: 20 }}>
+        <Image style={homeStyle.banner} source={banner} />
       </View>
 
       <View style={homeStyle.listInfo}>
@@ -98,18 +101,18 @@ export default function HomeScreen() {
 
       <SpeedDial
         isOpen={open}
-        icon={{ name: 'add', color: '#fff' }}
-        openIcon={{ name: 'close', color: '#fff' }}
+        icon={{ name: "add", color: "#fff" }}
+        openIcon={{ name: "close", color: "#fff" }}
         onOpen={() => setOpen(!open)}
         onClose={() => setOpen(!open)}
         iconContainerStyle={{
-            backgroundColor: '#80CDBF'
+          backgroundColor: "#80CDBF",
         }}
       >
         <SpeedDial.Action
-          icon={{ name: 'home', color: '#fff', type: 'iconicon' }}
+          icon={{ name: "home", color: "#fff", type: "iconicon" }}
           iconContainerStyle={{
-            backgroundColor: '#80CDBF'
+            backgroundColor: "#80CDBF",
           }}
           title="Xin nghỉ phép"
           onPress={() => setAbsence(!absenceForm)}
@@ -117,18 +120,17 @@ export default function HomeScreen() {
       </SpeedDial>
 
       {absenceForm ? <AbsenceForm></AbsenceForm> : null}
-
     </View>
   );
 }
 
 const homeStyle = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#FFF',
-    height: '100%',
-    width: '100%',
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "#FFF",
+    height: "100%",
+    width: "100%",
   },
   header: {
     ...header,
@@ -142,26 +144,26 @@ const homeStyle = StyleSheet.create({
     ...headerFont,
   },
   listInfo: {
-    width: '100%',
-    height: '30%',
+    width: "100%",
+    height: "30%",
   },
   listItem: {
     width: 180,
     height: 180,
-    backgroundColor: '#FFF',
-    borderColor: '#000',
+    backgroundColor: "#FFF",
+    borderColor: "#000",
     paddingVertical: 15,
     marginHorizontal: 12,
     borderRadius: 20,
-    ...shadowCard
+    ...shadowCard,
   },
   titleFont: {
     fontSize: 16,
-    color: '#737373',
+    color: "#737373",
   },
   banner: {
-    width: '100%', 
-    height: '100%', 
-    borderTopRightRadius: 25
-  }
+    width: "100%",
+    height: "100%",
+    borderTopRightRadius: 25,
+  },
 });
