@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View, Text, FlatList } from 'react-native';
+import { Image, StyleSheet, View, FlatList } from 'react-native';
 import {
   Avatar,
   Card,
   ListItem,
   Icon,
+  Text,
   withBadge,
   SpeedDial,
 } from 'react-native-elements';
@@ -12,28 +13,31 @@ import { Badge } from 'react-native-elements/dist/badge/Badge';
 import { headerFont } from '../../styles/fontStyle';
 import img from './../../assets/images/download.jpg';
 import banner from './../../assets/images/banner.jpg';
+import { header, shadowCard } from '../../styles/layoutStyle';
+import AbsenceForm from './AbsenceForm';
 
 
 export default function HomeScreen() {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
+  const [absenceForm, setAbsence] = useState(false)
   const listItem = [
     {
       name: 'Đơn hàng còn lại',
       iconName: 'assignment',
-      count: 10000,
+      count: 10,
       color: '#7FC3DC',
     },
     {
       name: 'Đơn hàng đã nhận',
       iconName: 'assignment',
-      count: 10000,
+      count: 15,
       color: '#6DC36C',
     },
     {
       name: 'Trạng thái xe',
       iconName: 'assignment',
-      count: 10000,
+      count: 'Tốt',
       color: '#ccc',
     },
   ];
@@ -56,7 +60,7 @@ export default function HomeScreen() {
           name={item.iconName}
           color={item.color}
           size={40}
-          style={{ marginVertical: 5 }}
+          style={{ marginVertical: 10 }}
         />
 
         <ListItem.Subtitle
@@ -74,7 +78,7 @@ export default function HomeScreen() {
     <View style={homeStyle.container}>
       <View style={homeStyle.header}>
         <BadgedIcon type="ionicon" name="notifications" size={30} />
-        <Text style={homeStyle.headerFont}>Welcome</Text>
+        <Text h4 style={homeStyle.headerFont}>Welcome, shibe</Text>
         <Avatar rounded size="small" source={img} />
       </View>
 
@@ -98,13 +102,21 @@ export default function HomeScreen() {
         openIcon={{ name: 'close', color: '#fff' }}
         onOpen={() => setOpen(!open)}
         onClose={() => setOpen(!open)}
+        iconContainerStyle={{
+            backgroundColor: '#80CDBF'
+        }}
       >
         <SpeedDial.Action
-          icon={{ name: 'add', color: '#fff', type: 'iconicon' }}
-          title="Add"
-          onPress={() => console.log('Add Something')}
+          icon={{ name: 'home', color: '#fff', type: 'iconicon' }}
+          iconContainerStyle={{
+            backgroundColor: '#80CDBF'
+          }}
+          title="Xin nghỉ phép"
+          onPress={() => setAbsence(!absenceForm)}
         />
       </SpeedDial>
+
+      {absenceForm ? <AbsenceForm></AbsenceForm> : null}
 
     </View>
   );
@@ -119,13 +131,7 @@ const homeStyle = StyleSheet.create({
     width: '100%',
   },
   header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 20,
-    marginHorizontal: 15,
+    ...header,
   },
   image: {
     borderRadius: 20,
@@ -140,9 +146,6 @@ const homeStyle = StyleSheet.create({
     height: '30%',
   },
   listItem: {
-    // display: 'flex',
-    // flexDirection: 'row',
-    // justifyContent: 'center',
     width: 180,
     height: 180,
     backgroundColor: '#FFF',
@@ -150,14 +153,7 @@ const homeStyle = StyleSheet.create({
     paddingVertical: 15,
     marginHorizontal: 12,
     borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 5,
+    ...shadowCard
   },
   titleFont: {
     fontSize: 16,
