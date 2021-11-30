@@ -97,11 +97,15 @@ export default function HomeScreen() {
       </View>
 
       <SpeedDial
+        containerStyle={{borderRadius: 10}}
         isOpen={open}
-        icon={{ name: 'add', color: '#fff' }}
+        icon={{ name: 'edit', color: '#fff' }}
         openIcon={{ name: 'close', color: '#fff' }}
         onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
+        onClose={() => {
+            setOpen(!open)
+            setAbsence(false)
+        }}
         iconContainerStyle={{
             backgroundColor: '#80CDBF'
         }}
@@ -112,7 +116,7 @@ export default function HomeScreen() {
             backgroundColor: '#80CDBF'
           }}
           title="Xin nghỉ phép"
-          onPress={() => setAbsence(!absenceForm)}
+          onPress={() => setAbsence(true)}
         />
       </SpeedDial>
 
@@ -147,7 +151,7 @@ const homeStyle = StyleSheet.create({
   },
   listItem: {
     width: 180,
-    height: 180,
+    height: 170,
     backgroundColor: '#FFF',
     borderColor: '#000',
     paddingVertical: 15,

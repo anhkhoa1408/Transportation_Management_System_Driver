@@ -1,29 +1,38 @@
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { Card, Text, Input, Button } from 'react-native-elements';
-import { shadowCard } from '../../styles/layoutStyle';
+import CustomInput from '../../components/CustomInput/CustomInput';
+import { DatePicker } from '../../components/DatePicker/DatePicker';
+import { shadowCard, shadowInput } from '../../styles/layoutStyle';
 
 const AbsenceForm = () => {
   return (
     <View style={formStyle.container}>
-      <Card>
-        <View>
-          <Card.Title>Nghỉ phép</Card.Title>
-          <Input
-            placeholder=""
-            containerStyle={formStyle.input}
-            // leftIcon={{ type: 'font-awesome', name: 'chevron-left' }}
-          />
-          <Card.Title>Nghỉ phép</Card.Title>
-          <Input
-            placeholder=""
-            containerStyle={formStyle.input}
-            numberOfLines={4}
-            // leftIcon={{ type: 'font-awesome', name: 'chevron-left' }}
+      <Card containerStyle={formStyle.form}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
+          <Card.Title>Thời gian</Card.Title>
+          <DatePicker />
+
+          <Card.Title>Lý do</Card.Title>
+          <CustomInput 
+            multiline={true}
+            numberOfLines={5}
+            maxLength={150}
           />
         </View>
-        <Button
-          title="Gửi"
+        <Button 
+            title="Gửi" 
+            containerStyle={formStyle.button}
+            buttonStyle={{
+                padding: 10
+            }}
         />
       </Card>
     </View>
@@ -37,22 +46,28 @@ const formStyle = StyleSheet.create({
     left: '50%',
     transform: [
       {
-        translateX: -Dimensions.get('window').width * 0.4,
+        translateX: -Dimensions.get('window').width * 0.45,
       },
       {
-        translateY: -Dimensions.get('window').width * 0.25,
+        translateY: -Dimensions.get('window').width * 0.3,
       },
     ],
-    width: '80%',
+    width: '90%',
     height: '40%',
-    ...shadowCard
+    ...shadowCard,
   },
   input: {
-    // ...shadowCard
-    // borderWidth: 1,
-    // borderRadius: 20,
-    // opacity: 0.2,
-    // padding: 0
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 0
+  },
+  form: {
+    paddingHorizontal: 35,
+    paddingVertical: 35,
+    borderRadius: 5
+  },
+  button: {
+    marginTop: 15
   }
 });
 

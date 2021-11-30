@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Touchable } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { container, header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import img from './../../assets/images/download.jpg'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const SendMessageScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
@@ -33,11 +34,22 @@ const SendMessageScreen = ({ navigation }) => {
   return (
     <View style={messagesScreenStyle.container}>
       <View style={messagesScreenStyle.header}>
-        <MaterialIcon 
-          name="west"
-          size={30}
-          onPress={() => navigation.goBack()}
-        />
+        <TouchableOpacity
+
+            // onPress={() => setCo}
+            // containerStyle={{
+            //     borderRadius: 50, 
+            //     borderWidth: 1,
+            //     backgroundColor: '#DDD',
+            //     padding: 5
+            // }}
+        >
+            <MaterialIcon
+            name="west"
+            size={30}
+            onPress={() => navigation.goBack()}
+            />
+        </TouchableOpacity>
         <Text h4>Uchiha papasuker</Text>
         <Avatar 
           rounded 
