@@ -4,10 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../../src/views/HomeScreen/HomeScreen";
 import ChatScreen from "../../src/views/ChatScreen/ChatScreen";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { Icon } from "react-native-elements";
 import CustomerInfo from "../views/CustomerInfo/CustomerInfo";
 import MessageScreen from "../views/ChatScreen/MessageScreen";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { primaryColor } from "../styles/color";
+import VehicleScreen from "../views/VehicleScreen/VehicleScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -26,28 +28,28 @@ const TabNavigatior = () => {
           let iconName;
           switch (route.name) {
             case "Vehicle":
-              iconName = "home";
+              iconName = "truck";
               break;
             case "Chat":
-              iconName = "chat";
+              iconName = "message-square";
               break;
             case "Home":
               iconName = "home";
               break;
             case "Order":
-              iconName = "assignment";
+              iconName = "clipboard";
               break;
             case "Setting":
               iconName = "settings";
           }
 
-          return <MaterialIcons name={iconName} size={25} color={color} />;
+          return <Icon name={iconName} size={23} color={color} type="feather" />;
         },
         tabBarActiveTintColor: "#7FC3DC",
         tabBarInactiveTintColor: "#BBB",
       })}
     >
-      {/* <Tab.Screen name="Vehicle" component={HomeScreen} /> */}
+      <Tab.Screen name="Vehicle" component={VehicleScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Order" component={CustomerInfo} />
@@ -64,7 +66,7 @@ const style = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   label: {
-    fontSize: 30,
+    fontSize: 20,
     fontFamily: "Roboto",
   },
 });

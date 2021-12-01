@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { TextInput, StyleSheet } from 'react-native';
 import { Card } from 'react-native-elements';
-import { shadowCard, shadowInput } from '../../styles/layoutStyle';
+import { shadowInput } from '../../styles/layoutStyle';
 
 const CustomInput = (props) => {
   return (

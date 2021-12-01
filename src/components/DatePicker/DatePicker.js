@@ -3,6 +3,7 @@ import { View, Platform, TextInput, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Input, Button, Card } from 'react-native-elements';
 import { shadowCard, shadowInput } from '../../styles/layoutStyle';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const DatePicker = () => {
   const [date, setDate] = useState(new Date());
@@ -44,6 +45,7 @@ export const DatePicker = () => {
         iconContainerStyle={{
           alignSelf: 'flex-end'
         }}
+        TouchableComponent={TouchableOpacity}
       />
       {show && (
         <DateTimePicker

@@ -1,10 +1,10 @@
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { Card, Text, Input, Button } from 'react-native-elements';
+import { Card } from 'react-native-elements';
+import PillButton from '../../components/CustomButton/PillButton';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { DatePicker } from '../../components/DatePicker/DatePicker';
-import { shadowCard, shadowInput } from '../../styles/layoutStyle';
+import { shadowCard } from '../../styles/layoutStyle';
 
 const AbsenceForm = () => {
   return (
@@ -21,18 +21,12 @@ const AbsenceForm = () => {
           <DatePicker />
 
           <Card.Title>Lý do</Card.Title>
-          <CustomInput 
-            multiline={true}
-            numberOfLines={5}
-            maxLength={150}
-          />
+          <CustomInput multiline={true} numberOfLines={5} maxLength={150} />
         </View>
-        <Button 
-            title="Gửi" 
-            containerStyle={formStyle.button}
-            buttonStyle={{
-                padding: 10
-            }}
+        <PillButton
+          title="Gửi"
+          containerStyle={formStyle.button}
+          type="solid"
         />
       </Card>
     </View>
@@ -49,7 +43,7 @@ const formStyle = StyleSheet.create({
         translateX: -Dimensions.get('window').width * 0.45,
       },
       {
-        translateY: -Dimensions.get('window').width * 0.3,
+        translateY: -Dimensions.get('window').width * 0.45,
       },
     ],
     width: '90%',
@@ -59,16 +53,16 @@ const formStyle = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderRadius: 20,
-    padding: 0
+    padding: 0,
   },
   form: {
     paddingHorizontal: 35,
     paddingVertical: 35,
-    borderRadius: 5
+    borderRadius: 5,
   },
   button: {
-    marginTop: 15
-  }
+    marginTop: 20,
+  },
 });
 
 export default AbsenceForm;

@@ -117,7 +117,7 @@ export default function HomeScreen() {
             backgroundColor: "#80CDBF",
           }}
           title="Xin nghỉ phép"
-          onPress={() => setAbsence(true)}
+          onPress={() => setAbsence(!absenceForm)}
         />
       </SpeedDial>
 
@@ -135,7 +135,8 @@ const homeStyle = StyleSheet.create({
     width: "100%",
   },
   header: {
-    ...header,
+    // ...header,
+    ...STYLES.header
   },
   image: {
     borderRadius: 20,
@@ -143,7 +144,7 @@ const homeStyle = StyleSheet.create({
     height: 50,
   },
   headerFont: {
-    ...headerFont,
+    ...FONTS.headerFont,
   },
   listInfo: {
     width: "100%",
@@ -157,7 +158,7 @@ const homeStyle = StyleSheet.create({
     paddingVertical: 15,
     marginHorizontal: 12,
     borderRadius: 20,
-    // ...shadowCard,
+    ...STYLES.shadowCard
   },
   titleFont: {
     fontSize: 16,
