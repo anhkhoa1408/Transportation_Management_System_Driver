@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Image, StyleSheet, View, FlatList } from "react-native";
+import React, { useState } from 'react';
+import { Image, StyleSheet, View, FlatList } from 'react-native';
 import {
   Avatar,
   Card,
@@ -8,13 +8,14 @@ import {
   Text,
   withBadge,
   SpeedDial,
-} from "react-native-elements";
-import { Badge } from "react-native-elements/dist/badge/Badge";
-import { headerFont } from "../../styles/fontStyle";
-import img from "./../../assets/images/download.jpg";
-import banner from "./../../assets/images/banner.jpg";
-import AbsenceForm from "./AbsenceForm";
-import { STYLES, FONTS, COLORS } from "../../styles";
+} from 'react-native-elements';
+import { Badge } from 'react-native-elements/dist/badge/Badge';
+import { headerFont } from '../../styles/fontStyle';
+import img from './../../assets/images/download.jpg';
+import banner from './../../assets/images/delivery.jpg';
+import AbsenceForm from './AbsenceForm';
+import { STYLES, FONTS, COLORS } from '../../styles';
+import { primaryColor } from '../../styles/color';
 
 export default function HomeScreen() {
   const BadgedIcon = withBadge(10)(Icon);
@@ -22,22 +23,22 @@ export default function HomeScreen() {
   const [absenceForm, setAbsence] = useState(false);
   const listItem = [
     {
-      name: "Đơn hàng còn lại",
-      iconName: "assignment",
+      name: 'Đơn hàng đã nhận',
+      iconName: 'event-available',
       count: 10,
-      color: "#7FC3DC",
+      color: '#5ffa62',
     },
     {
-      name: "Đơn hàng đã nhận",
-      iconName: "assignment",
+      name: 'Đơn hàng còn lại',
+      iconName: 'assignment',
       count: 15,
-      color: "#6DC36C",
+      color: '#f0b432',
     },
     {
-      name: "Trạng thái xe",
-      iconName: "assignment",
-      count: "Tốt",
-      color: "#ccc",
+      name: 'Trạng thái xe',
+      iconName: 'local-shipping',
+      count: 'Tốt',
+      color: '#1cacff',
     },
   ];
 
@@ -46,24 +47,27 @@ export default function HomeScreen() {
       <ListItem.Content
         style={{
           borderRadius: 20,
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-evenly",
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
         }}
       >
         <ListItem.Title style={homeStyle.titleFont}>{item.name}</ListItem.Title>
         <Icon
           name={item.iconName}
           color={item.color}
-          size={40}
-          style={{ marginVertical: 10 }}
+          reverse
+          //   style={{ marginVertical: 10 }}
+          containerStyle={{
+            marginVertical: 15,
+          }}
         />
 
         <ListItem.Subtitle
-          style={{ fontSize: 28, fontWeight: "bold", color: "#000" }}
+          style={{ fontSize: 28, fontWeight: 'bold', color: '#000' }}
         >
           {item.count}
         </ListItem.Subtitle>
@@ -76,14 +80,14 @@ export default function HomeScreen() {
   return (
     <View style={homeStyle.container}>
       <View style={homeStyle.header}>
-        <BadgedIcon type="ionicon" name="notifications" size={30} />
+        <BadgedIcon name="notifications" color={primaryColor} size={30} />
         <Text h4 style={homeStyle.headerFont}>
           Welcome, shibe
         </Text>
         <Avatar rounded size="small" source={img} />
       </View>
 
-      <View style={{ width: "100%", height: "40%", marginVertical: 20 }}>
+      <View style={homeStyle.bannerContainer}>
         <Image style={homeStyle.banner} source={banner} />
       </View>
 
@@ -98,45 +102,46 @@ export default function HomeScreen() {
       </View>
 
       <SpeedDial
-        containerStyle={{borderRadius: 10}}
+        // containerStyle={{borderRadius: 10}}
         isOpen={open}
         icon={{ name: 'edit', color: '#fff' }}
         openIcon={{ name: 'close', color: '#fff' }}
         onOpen={() => setOpen(!open)}
         onClose={() => {
-            setOpen(!open)
-            setAbsence(false)
+          setOpen(!open);
+          setAbsence(false);
         }}
         iconContainerStyle={{
-          backgroundColor: "#80CDBF",
+          backgroundColor: primaryColor,
         }}
       >
         <SpeedDial.Action
-          icon={{ name: "home", color: "#fff", type: "iconicon" }}
+          icon={{ name: 'home', color: '#fff', type: 'iconicon' }}
           iconContainerStyle={{
-            backgroundColor: "#80CDBF",
+            backgroundColor: primaryColor,
+
           }}
           title="Xin nghỉ phép"
           onPress={() => setAbsence(!absenceForm)}
         />
       </SpeedDial>
 
-      {absenceForm ? <AbsenceForm></AbsenceForm> : null}
+      {absenceForm ? <AbsenceForm setAbsence={setAbsence} /> : null}
     </View>
   );
 }
 
 const homeStyle = StyleSheet.create({
   container: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "#FFF",
-    height: "100%",
-    width: "100%",
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#FFF',
+    height: '100%',
+    width: '100%',
   },
   header: {
     // ...header,
-    ...STYLES.header
+    ...STYLES.header,
   },
   image: {
     borderRadius: 20,
@@ -147,26 +152,38 @@ const homeStyle = StyleSheet.create({
     ...FONTS.headerFont,
   },
   listInfo: {
-    width: "100%",
-    height: "30%",
+    width: '100%',
+    height: '30%',
   },
   listItem: {
     width: 180,
     height: 170,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#FFF',
     borderColor: '#000',
     paddingVertical: 15,
     marginHorizontal: 12,
     borderRadius: 20,
-    ...STYLES.shadowCard
+    ...STYLES.shadowCard,
+    // elevation: 2,
   },
   titleFont: {
     fontSize: 16,
-    color: "#737373",
+    color: '#737373',
+  },
+  bannerContainer: {
+    width: '100%', 
+    height: '45%', 
+    marginVertical: 10,
+    padding: 20
+    // borderWidth: 1,
+    // backgroundColor: primaryColor,
+    // borderTopRightRadius: 25,
   },
   banner: {
-    width: "100%",
-    height: "100%",
-    borderTopRightRadius: 25,
+    width: '100%',
+    height: '100%',
   },
 });

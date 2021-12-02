@@ -50,6 +50,7 @@ export const DatePicker = () => {
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
+          dateFormat='shortdate'
           value={date}
           mode={mode}
           is24Hour={true}

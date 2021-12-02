@@ -59,8 +59,6 @@ const CustomerInfo = ({ navigation }) => {
           <Text>akhoa981@gmail.com</Text>
         </View>
 
-        {/* <Card.Divider /> */}
-
         <View
           style={{
             display: 'flex',
@@ -86,8 +84,6 @@ const CustomerInfo = ({ navigation }) => {
           </View>
           <Text>akhoa981@gmail.com</Text>
         </View>
-
-        {/* <Card.Divider /> */}
 
         <View
           style={{

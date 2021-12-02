@@ -28,22 +28,22 @@ const TabNavigatior = () => {
           let iconName;
           switch (route.name) {
             case "Vehicle":
-              iconName = "truck";
+              iconName = "local-shipping";
               break;
             case "Chat":
-              iconName = "message-square";
+              iconName = "forum";
               break;
             case "Home":
-              iconName = "home";
+              iconName = "dashboard";
               break;
             case "Order":
-              iconName = "clipboard";
+              iconName = "assignment";
               break;
             case "Setting":
               iconName = "settings";
           }
 
-          return <Icon name={iconName} size={23} color={color} type="feather" />;
+          return <Icon name={iconName} size={23} color={color} type="material" />;
         },
         tabBarActiveTintColor: "#7FC3DC",
         tabBarInactiveTintColor: "#BBB",
