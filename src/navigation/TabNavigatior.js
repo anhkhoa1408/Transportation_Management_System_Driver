@@ -10,6 +10,7 @@ import MessageScreen from "../views/ChatScreen/MessageScreen";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { primaryColor } from "../styles/color";
 import VehicleScreen from "../views/VehicleScreen/VehicleScreen";
+import SignIn from "../views/AuthScreen/Signin";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -43,7 +44,9 @@ const TabNavigatior = () => {
               iconName = "settings";
           }
 
-          return <Icon name={iconName} size={23} color={color} type="material" />;
+          return (
+            <Icon name={iconName} size={23} color={color} type="material" />
+          );
         },
         tabBarActiveTintColor: "#7FC3DC",
         tabBarInactiveTintColor: "#BBB",
@@ -53,7 +56,7 @@ const TabNavigatior = () => {
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Order" component={CustomerInfo} />
-      <Tab.Screen name="Setting" component={MessageScreen} />
+      <Tab.Screen name="Setting" component={SignIn} />
     </Tab.Navigator>
   );
 };
