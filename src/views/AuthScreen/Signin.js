@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import { COLORS } from "../../styles";
 import TextField from "../../components/TextField";
+import authApi from "../../api/authApi";
+import { USER_KEY } from "../../storage/StorageKey";
+import { getData, saveData } from "../../storage/Storage";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -43,14 +46,15 @@ const SignIn = ({ navigation }) => {
         <TouchableOpacity
           style={styles.loginBtn}
           onPress={() => {
-            if (email == "Admin" && password == "1")
-              navigation.navigate("Account");
-            else
-              Alert.alert(
-                "Error",
-                "The user name/e-mail/password provided is incorrect!",
-                [{ text: "Again" }]
-              );
+            authApi
+              .login({
+                identifier: email,
+                password: password,
+              })
+              .then((data) => {
+                saveData(USER_KEY, data);
+              })
+              .catch((err) => alert("Username or password incorrect!"));
           }}
         >
           <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>

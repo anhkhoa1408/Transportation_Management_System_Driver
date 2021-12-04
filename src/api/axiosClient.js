@@ -1,19 +1,24 @@
 import axios from "axios";
 import queryString from "query-string";
 import { store } from "../config/configureStore";
+import { USER_KEY } from "../storage/StorageKey";
+import { getData, saveData } from "../storage/Storage";
 
-const getToken = () => {
-  let storeData = store.getState();
-  if (
-    storeData &&
-    storeData.userInfo &&
-    storeData.userInfo.data &&
-    storeData.userInfo.data.token
-  ) {
-    return storeData.userInfo.data.token;
-  } else {
-    return null;
-  }
+const getToken = async () => {
+  // let storeData = store.getState();
+  // if (
+  //   storeData &&
+  //   storeData.userInfo &&
+  //   storeData.userInfo.data &&
+  //   storeData.userInfo.data.token
+  // ) {
+  //   return storeData.userInfo.data.token;
+  // } else {
+  //   return null;
+  // }
+  let userData = await getData(USER_KEY);
+  if (userData === "") return "";
+  else return JSON.parse(userData).jwt;
 };
 
 const axiosClient = axios.create({
@@ -22,17 +27,28 @@ const axiosClient = axios.create({
     "content-type": "application/json",
   },
   paramsSerializer: (params) => {
-    return queryString.stringify(params)
+    return queryString.stringify(params);
   },
 });
 
 axiosClient.interceptors.request.use(async (config) => {
   let token = await getToken();
-  config.headers = {
-    Authorization: token,
-  };
+  if (token !== "")
+    config.headers = {
+      Authorization: "Bearer " + token,
+    };
   return config;
 });
+
+axiosClient.interceptors.request.use((request) => {
+  console.log("Starting Request", JSON.stringify(request, null, 2));
+  return request;
+});
+
+// axiosClient.interceptors.response.use((response) => {
+//   console.log("Response:", JSON.stringify(response, null, 2));
+//   return response;
+// });
 
 axiosClient.interceptors.response.use(
   (response) => {
