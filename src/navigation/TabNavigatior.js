@@ -12,6 +12,7 @@ import { primaryColor } from "../styles/color";
 import VehicleScreen from "../views/VehicleScreen/VehicleScreen";
 import OrderDetailScreen from "../views/OrderScreen/OrderDetailScreen";
 import OrderScreen from "../views/OrderScreen/OrderScreen";
+import SignIn from "../views/AuthScreen/Signin";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -57,7 +58,7 @@ const TabNavigatior = () => {
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Order" component={CustomerInfo} />
-      <Tab.Screen name="Setting" component={OrderDetailScreen} />
+      <Tab.Screen name="Setting" component={OrderScreen} />
     </Tab.Navigator>
   );
 };

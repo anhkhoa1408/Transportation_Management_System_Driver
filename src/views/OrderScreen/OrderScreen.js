@@ -2,50 +2,24 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Icon, CheckBox } from "react-native-elements";
 import { COLORS, FONTS } from "../../styles";
+import shipmentApi from "../../api/shipmentAPI";
 
 export default function OrderScreen() {
-  const tempData = [
-    {
-      id: "06465467984134",
-      arrived_time: "2021-12-03T10:05:16.908Z",
-      to_address: {
-        street: "123 Pham Van Dong",
-        ward: "Phuong 2",
-        province: "Thu Duc",
-        city: "Ho Chi Minh",
-      },
-    },
-    {
-      id: "06465467984135",
-      to_address: {
-        street: "123 Pham Van Dong",
-        ward: "Phuong 2",
-        province: "Thu Duc",
-        city: "Ho Chi Minh",
-      },
-      driver: {
-        type: "Driver",
-        name: "Khoa 2",
-        phone: "0123897456",
-        username: "khoa2",
-        email: "khoa2@gmail.com",
-        birthday: "2021-12-03",
-        role: "61a842ecb5b96f16502854cb",
-        car: "61a997b081140f0016764a28",
-        id: "61a98d4c8358540016fbb60f",
-      },
-    },
-  ];
-  const [data, setData] = useState(tempData);
+  const [data, setData] = useState([]);
   const [check, setCheck] = useState([]);
 
   useEffect(() => {
-    setCheck(data.map((item) => "driver" in item));
+    shipmentApi
+      .shipment()
+      .then((resData) => {
+        setData(resData);
+        setCheck(data.map((item) => "arrived_time" in item));
+      })
+      .catch((err) => {
+        setData([]);
+        setCheck(data.map((item) => "arrived_time" in item));
+      });
   }, []);
-
-  useEffect(() => {
-    setCheck(data.map((item) => "driver" in item));
-  }, [data]);
 
   const renderItem = ({ item, index }) => (
     <View
@@ -74,7 +48,7 @@ export default function OrderScreen() {
           }}
         >
           <Text style={{}}>ID: {item.id}</Text>
-          <Text>A</Text>
+          <Text>{check[index] === false ? "Đang vận chuyển" : "Đã nhận"}</Text>
         </View>
         <CheckBox
           checked={check[index]}
@@ -116,7 +90,7 @@ export default function OrderScreen() {
           }}
         >
           <Text style={{ color: COLORS.primary, ...FONTS.header }}>
-            No Record
+            Loading data...
           </Text>
         </View>
       )}
