@@ -10,6 +10,7 @@ import MessageScreen from "../views/ChatScreen/MessageScreen";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { primaryColor } from "../styles/color";
 import VehicleScreen from "../views/VehicleScreen/VehicleScreen";
+import ComfirmOrder from "../views/OrderScreen/ConfirmOrder";
 
 const Tab = createMaterialBottomTabNavigator();
 
