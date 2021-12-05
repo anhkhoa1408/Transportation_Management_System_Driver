@@ -4,7 +4,7 @@ import { View, Text } from 'react-native'
 const OrderScreen = () => {
     return (
         <View>
-            <Text></Text>
+            <Text>a</Text>
         </View>
     )
 }
