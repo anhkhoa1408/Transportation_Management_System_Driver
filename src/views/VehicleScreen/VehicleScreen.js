@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { Icon, Text, Card, Tooltip } from "react-native-elements";
-import { container, header, shadowCard } from "../../styles/layoutStyle";
-import { primaryColor } from "../../styles/color";
-import img from "./../../assets/images/download.jpg";
-import { TouchableHighlight } from "react-native-gesture-handler";
-import ErrorForm from "./ErrorForm";
-import { store } from "../../config/configureStore";
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
+import {Icon, Text, Card, Tooltip} from 'react-native-elements';
+import {container, header, shadowCard} from '../../styles/layoutStyle';
+import {primaryColor} from '../../styles/color';
+import img from './../../assets/images/download.jpg';
+import {TouchableHighlight} from 'react-native-gesture-handler';
+import ErrorForm from './ErrorForm';
+import {store} from '../../config/configureStore';
+import Loading from '../../components/Loading/Loading';
 
 const VehicleScreen = () => {
   const carr = {
-    licence: "Loading...",
-    type: "Loading...",
-    load: "Loading...",
-    size: { len: "Loading...", width: "Loading...", height: "Loading..." },
+    licence: '',
+    type: '',
+    load: '',
+    size: {len: '', width: '', height: ''},
   };
 
   const [errorForm, setError] = useState(false);
@@ -26,12 +27,11 @@ const VehicleScreen = () => {
 
   return (
     <>
-      {/*}
-              {*/}
+      {!car.licence && <Loading /> }
       <View style={vehicleStyle.container}>
         <View style={vehicleStyle.headerContainer}>
           <View style={vehicleStyle.headerContent}>
-            <Text h4 style={{ color: "#FFF" }}>
+            <Text h4 style={{color: '#FFF'}}>
               Thông tin phương tiện
             </Text>
 
@@ -64,37 +64,37 @@ const VehicleScreen = () => {
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>Phương tiện</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {"type" in car ? car.type : "Loading..."}
+                    {'type' in car ? car.type : 'Loading...'}
                   </Text>
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>Tải trọng tối đa</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {"load" in car ? car.load : "Loading..."} Kg
+                    {'load' in car ? car.load : 'Loading...'} Kg
                   </Text>
                 </View>
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>
                     Kích thước thùng xe
                   </Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {"size" in car
+                    {'size' in car
                       ? `${car.size.len} m x ${car.size.width} m x ${car.size.height} m`
-                      : "Loading..."}
+                      : 'Loading...'}
                   </Text>
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>Biển số xe</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {"licence" in car ? car.licence : "Loading..."}
+                    {'licence' in car ? car.licence : 'Loading...'}
                   </Text>
                 </View>
               </View>
@@ -117,24 +117,24 @@ const VehicleScreen = () => {
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>Tên</Text>
                   <Text style={vehicleStyle.infoContent}>Uchiha shisui</Text>
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>Số điện thoại</Text>
                   <Text style={vehicleStyle.infoContent}>012345678</Text>
                 </View>
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>Người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>Danzo</Text>
                 </View>
 
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <Text style={vehicleStyle.infoTittle}>SDT người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>012345689</Text>
                 </View>
@@ -153,69 +153,66 @@ const vehicleStyle = StyleSheet.create({
     ...container,
   },
   infoContainer: {
-    position: "absolute",
-    top: "15%",
+    position: 'absolute',
+    top: '10%',
     bottom: 0,
     left: 0,
     right: 0,
     margin: 0,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     paddingVertical: 30,
   },
   truckContainer: {
-    display: "flex",
-    justifyContent: "flex-start",
+    display: 'flex',
+    justifyContent: 'flex-start',
     borderRadius: 20,
     paddingHorizontal: 20,
     marginBottom: 20,
     borderWidth: 0,
-    // borderLeftWidth: 10,
-    // borderColor: "#8de3e3",
     ...shadowCard,
   },
   assistContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderRadius: 25,
     borderWidth: 0,
     elevation: 2,
   },
   infoItem: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
     margin: 10,
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'flex-start',
   },
   headerContainer: {
     ...header,
-    justifyContent: "space-between",
-    flexDirection: "row",
-    height: "40%",
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    height: '40%',
     backgroundColor: primaryColor,
     marginTop: 0,
-    alignItems: "flex-start",
-    // backgroundColor: primaryColor,
+    alignItems: 'flex-start',
   },
   headerContent: {
-    marginTop: 50,
+    marginTop: 20,
     marginBottom: 0,
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   infoTittle: {
     fontSize: 15,
-    color: "rgba(0, 0, 0, 0.5)",
+    color: 'rgba(0, 0, 0, 0.5)',
   },
   infoContent: {
     fontSize: 19,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 

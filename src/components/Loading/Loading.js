@@ -1,28 +1,50 @@
-// import React, {useState, useEffect} from 'react';
-// import {StyleSheet, Text} from 'react-native';
-// import AnimatedLoader from 'react-native-animated-loader';
+import React, {useState, useEffect} from 'react';
+import Spinner from 'react-native-spinkit';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import {primaryColor} from '../../styles/color';
+import {containerOverlay} from '../../styles/layoutStyle';
+import { Text } from 'react-native-elements';
 
-// export default function Loading() {
-//   const [visible, setVisible] = useState(false);
+const Loading = () => {
+//   const [visible, setVisible] = useState(true);
 //   useEffect(() => {
-//     setInterval(() => {
-//       setVisible(!visible);
-//     }, 2000);
-//   }, []);
+//     let time = setTimeout(() => setVisible(false), 10000);
+//     return () => {
+//       clearTimeout(time);
+//     };
+//   }, [visible]);
 
-//   return (
-//     <AnimatedLoader
-//       visible={visible}
-//       overlayColor="rgba(255,255,255,0.75)"
-//       animationStyle={styles.lottie}
-//       speed={1}>
-//       <Text>Doing something...</Text>
-//     </AnimatedLoader>
-//   );
-// }
-// const styles = StyleSheet.create({
-//   lottie: {
-//     width: 100,
-//     height: 100,
-//   },
-// });
+  return (
+    <SafeAreaView style={[styles.container, styles.containerOverlay]}>
+      <Spinner
+        style={styles.spinner}
+        isVisible={true}
+        size={100}
+        type="ThreeBounce"
+        color={primaryColor}
+      />
+      <Text style={styles.text}>Xin vui lòng đợi</Text>
+    </SafeAreaView>
+  )
+};
+
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+  },
+  containerOverlay: {
+    ...containerOverlay,
+  },
+  spinner: {
+    marginBottom: 10,
+  },
+  text: {
+    color: primaryColor,
+    fontSize: 20
+  }
+});
+
+export default Loading;

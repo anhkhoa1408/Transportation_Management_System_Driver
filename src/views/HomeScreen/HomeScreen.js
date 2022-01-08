@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, View, FlatList } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Image, StyleSheet, View, FlatList} from 'react-native';
 import {
   Avatar,
   Card,
@@ -11,35 +11,37 @@ import {
 } from 'react-native-elements';
 import banner from './../../assets/images/delivery.jpg';
 import AbsenceForm from './AbsenceForm';
-import { STYLES, FONTS, COLORS } from '../../styles';
-import { primaryColor } from '../../styles/color';
-import { connect } from 'react-redux';
+import {STYLES, FONTS, COLORS} from '../../styles';
+import {primaryColor} from '../../styles/color';
+import {connect} from 'react-redux';
+import Loading from '../../components/Loading/Loading';
+import { backdropColor } from '../../styles/color';
 
-function HomeScreen({ navigation, ...props }) {
+function HomeScreen({navigation, ...props}) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
-  const [listData, setListData] = useState(listItem);
   let listItem = [
     {
       name: 'Đơn hàng đã nhận',
       iconName: 'event-available',
-      count: 10,
+      count: 0,
       color: '#5ffa62',
     },
     {
       name: 'Đơn hàng còn lại',
       iconName: 'assignment',
-      count: 15,
+      count: 0,
       color: '#f0b432',
     },
     {
       name: 'Trạng thái xe',
       iconName: 'local-shipping',
-      count: 'Tốt',
+      count: '',
       color: '#1cacff',
     },
   ];
+  const [listData, setListData] = useState(listItem);
 
   const [data, setData] = useState({
     name: 'Shiba',
@@ -48,9 +50,9 @@ function HomeScreen({ navigation, ...props }) {
   });
 
   const [dataChange, setDataChange] = useState(false);
-  const [order, setOrder] = useState({ receive: 0, remain: 0 });
+  const [order, setOrder] = useState({receive: 0, remain: 0});
   const [user, setUser] = useState({});
-	const { userInfo } = props
+  const {userInfo} = props;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -77,6 +79,7 @@ function HomeScreen({ navigation, ...props }) {
       });
       listItem[0].count = userInfo.user.shipments.length;
       listItem[1].count = remain;
+      listItem[2].count = "Tốt"
       setListData(listItem);
       setDataChange(false);
       setDataChange(true);
@@ -84,7 +87,7 @@ function HomeScreen({ navigation, ...props }) {
     return unsubscribe;
   }, [navigation]);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <ListItem style={homeStyle.listItem}>
       <ListItem.Content
         style={{
@@ -95,22 +98,19 @@ function HomeScreen({ navigation, ...props }) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-evenly',
-        }}
-      >
+        }}>
         <ListItem.Title style={homeStyle.titleFont}>{item.name}</ListItem.Title>
         <Icon
           name={item.iconName}
           color={item.color}
           reverse
-          //   style={{ marginVertical: 10 }}
           containerStyle={{
             marginVertical: 15,
           }}
         />
 
         <ListItem.Subtitle
-          style={{ fontSize: 28, fontWeight: 'bold', color: '#000' }}
-        >
+          style={{fontSize: 28, fontWeight: 'bold', color: '#000'}}>
           {item.count}
         </ListItem.Subtitle>
       </ListItem.Content>
@@ -118,63 +118,65 @@ function HomeScreen({ navigation, ...props }) {
   );
 
   const keyExtractor = (item, index) => index.toString();
-
   return (
-    <View style={homeStyle.container}>
-      <View style={homeStyle.header}>
-        <BadgedIcon name="notifications" color={primaryColor} size={30} />
-        {dataChange && (
-          <Text h4 style={homeStyle.headerFont}>
-            Welcome, {data.name}
-          </Text>
-        )}
-        {dataChange && (
-          <Avatar rounded size="small" source={{ uri: data.avatar }} />
-        )}
-      </View>
-
-      <View style={homeStyle.bannerContainer}>
-        <Image style={homeStyle.banner} source={banner} />
-      </View>
-
-      {dataChange && (
-        <View style={homeStyle.listInfo}>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={listData}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-          />
+    <>
+      { !listData[2].count && <Loading /> }
+      <View style={homeStyle.container}>
+        <View style={homeStyle.header}>
+          <BadgedIcon name="notifications" color={primaryColor} size={30} />
+          {dataChange && (
+            <Text h4 style={homeStyle.headerFont}>
+              Xin chào, {data.name}
+            </Text>
+          )}
+          {dataChange && (
+            <Avatar rounded size="small" source={{uri: data.avatar}} />
+          )}
         </View>
-      )}
 
-      <SpeedDial
-        // containerStyle={{borderRadius: 10}}
-        isOpen={open}
-        icon={{ name: 'edit', color: '#fff' }}
-        openIcon={{ name: 'close', color: '#fff' }}
-        onOpen={() => setOpen(!open)}
-        onClose={() => {
-          setOpen(!open);
-          setAbsence(false);
-        }}
-        iconContainerStyle={{
-          backgroundColor: primaryColor,
-        }}
-      >
-        <SpeedDial.Action
-          icon={{ name: 'home', color: '#fff', type: 'iconicon' }}
+        <View style={homeStyle.bannerContainer}>
+          <Image style={homeStyle.banner} source={banner} />
+        </View>
+
+        {dataChange && (
+          <View style={homeStyle.listInfo}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={listData}
+              renderItem={renderItem}
+              keyExtractor={keyExtractor}
+            />
+          </View>
+        )}
+
+        <SpeedDial
+          isOpen={open}
+          icon={{name: 'edit', color: '#fff'}}
+          openIcon={{name: 'close', color: '#fff'}}
+          onOpen={() => setOpen(!open)}
+          onClose={() => {
+            setOpen(!open);
+            setAbsence(false);
+          }}
+          overlayColor='rgba(180,179,219, 0.8)'
+        //   activeOpacity={0.8}
           iconContainerStyle={{
             backgroundColor: primaryColor,
-          }}
-          title="Xin nghỉ phép"
-          onPress={() => setAbsence(!absenceForm)}
-        />
-      </SpeedDial>
+          }}>
+          <SpeedDial.Action
+            icon={{name: 'home', color: '#fff', type: 'iconicon'}}
+            iconContainerStyle={{
+              backgroundColor: primaryColor,
+            }}
+            title="Xin nghỉ phép"
+            onPress={() => setAbsence(!absenceForm)}
+          />
+        </SpeedDial>
 
-      {absenceForm ? <AbsenceForm setAbsence={setAbsence} /> : null}
-    </View>
+        {absenceForm ? <AbsenceForm setAbsence={setAbsence} /> : null}
+      </View>
+    </>
   );
 }
 
@@ -235,7 +237,7 @@ const homeStyle = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   userInfo: state.userInfo,
 });
 

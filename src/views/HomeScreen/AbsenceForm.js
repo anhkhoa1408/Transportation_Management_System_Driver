@@ -44,18 +44,6 @@ const formStyle = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     zIndex: 1,
-    // top: '50%',
-    // left: '50%',
-    // transform: [
-    //   {
-    //     translateX: -Dimensions.get('window').width * 0.45,
-    //   },
-    //   {
-    //     translateY: -Dimensions.get('window').width * 0.45,
-    //   },
-    // ],
-    // width: '90%',
-    // height: '40%',
     ...shadowCard,
   },
   input: {

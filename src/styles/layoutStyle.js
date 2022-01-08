@@ -21,9 +21,9 @@ export const header = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: 50,
+  marginTop: 15,
   marginBottom: 10,
-  paddingHorizontal: 30,
+  paddingHorizontal: 20,
 };
 
 export const shadowCard = {

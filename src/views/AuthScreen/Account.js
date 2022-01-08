@@ -12,14 +12,17 @@ import {
 import { COLORS } from '../../styles';
 import authApi from '../../api/authApi';
 import { useDispatch } from 'react-redux';
-import { CLEAN_STORE, SAVE_USER_INFO_SUCCESS } from '../../constants/types';
+import { CLEAN_STORE } from '../../constants/types';
 import { store } from '../../config/configureStore';
 import { useFormik } from 'formik';
 import * as Bonk from 'yup';
+import { saveInfo } from '../../actions/actions';
+import ModalMess from '../../components/ModalMess/ModalMess';
+import { danger } from '../../styles/color';
 
 const Account = ({ navigation }) => {
   const [data, setData] = useState({
-    name: '',
+    name: 'aaa',
     email: '',
     password: '',
     cpassword: '',
@@ -31,19 +34,22 @@ const Account = ({ navigation }) => {
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
   const { userInfo } = store.getState();
+  const [alert, setAlert] = useState(null);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: data,
     validationSchema: Bonk.object({
       name: Bonk.string().required('Thông tin bắt buộc'),
-      email: Bonk.string().email().required('Thông tin bắt buộc'),
-      password: Bonk.string()
+      email: Bonk.string()
         .required('Thông tin bắt buộc')
-        .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
+        .email('Email không hợp lệ'),
+      //   password: Bonk.string()
+      //     .required('Thông tin bắt buộc')
+      //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
     }),
-    // onSubmit: (values) => {
-    //   handleSubmit(values);
-    // },
+    onSubmit: values => {
+      handleSubmit(values);
+    },
   });
 
   useEffect(() => {
@@ -62,9 +68,40 @@ const Account = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
 
+  const handleSubmit = values => {
+    let { name, email } = values;
+    let data = {
+      name: name,
+      email: email,
+    };
+    authApi
+      .update(user.user.id, data)
+      .then(response => {
+        dispatch(saveInfo(user));
+        setAlert({
+          type: 'success',
+          message: 'Cập nhật thông tin thành công',
+        });
+      })
+      .catch(err => {
+        setAlert({
+          type: 'error',
+          message: 'Cập nhật thông tin thất bại',
+        });
+      });
+  };
+
   return (
     <ScrollView>
       <SafeAreaView style={styles.screen}>
+        {alert && (
+          <ModalMess
+            type={alert.type}
+            message={alert.message}
+            setAlert={setAlert}
+            alert={alert}
+          />
+        )}
         <View style={{ alignItems: 'center' }}>
           {dataChange && (
             <Image
@@ -88,20 +125,7 @@ const Account = ({ navigation }) => {
           <Text style={styles.texttitle}>Name</Text>
           <TouchableOpacity
             style={{ marginLeft: 20 }}
-            onPress={() => {
-              authApi
-                .update(user.user.id, { name: data.name })
-                .then((d) => {
-                  user.user.name = data.name;
-                  dispatch({
-                    type: SAVE_USER_INFO_SUCCESS,
-                    action: user,
-                  });
-                  alert('Update Success');
-                })
-                .catch((err) => alert(err));
-            }}
-          >
+            onPress={formik.submitForm}>
             <Text style={styles.forgot}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -109,45 +133,51 @@ const Account = ({ navigation }) => {
         <View style={styles.inputView}>
           {dataChange && (
             <TextInput
+              name="name"
               style={styles.fsize}
-              onChangeText={(text) => setData({ ...data, name: text })}
-              value={data.name}
+              onChangeText={text => {
+                formik.setFieldValue('name', text);
+              }}
+              value={formik.values.name}
             />
           )}
         </View>
+
+        {formik.touched.name && formik.errors.name ? (
+          <Text style={{ color: danger, marginTop: 10 }}>
+            {formik.errors.name}
+          </Text>
+        ) : null}
 
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginTop: 20,
-          }}
-        >
+          }}>
           <Text style={styles.texttitle}>Email</Text>
           <TouchableOpacity
             style={{ marginLeft: 20 }}
-            onPress={() => {
-              authApi
-                .update(user.user.id, { name: data.email })
-                .then((d) => {
-                  user.user.email = data.email;
-                  alert('Update Success');
-                })
-                .catch((err) => alert('Update Fail!'));
-            }}
-          >
+            onPress={formik.submitForm}>
             <Text style={styles.forgot}>Change</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.inputView}>
           {dataChange && (
             <TextInput
+              name="email"
               style={styles.fsize}
-              onChangeText={(text) => setData({ ...data, email: text })}
-              value={data.email}
+              value={formik.values.email}
+              onChangeText={text => formik.setFieldValue('email', text)}
             />
           )}
         </View>
+
+        {formik.touched.email && formik.errors.email ? (
+          <Text style={{ color: danger, marginTop: 10 }}>
+            {formik.errors.email}
+          </Text>
+        ) : null}
 
         <TouchableOpacity>
           <Text style={{ ...styles.forgot, marginTop: 20 }}>
@@ -159,9 +189,7 @@ const Account = ({ navigation }) => {
             style={styles.loginBtn}
             onPress={() => {
               dispatch({ type: CLEAN_STORE });
-              // navigation.navigate('Signin');
-            }}
-          >
+            }}>
             <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
               Log out
             </Text>

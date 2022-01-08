@@ -11,12 +11,12 @@ import {
 import { COLORS } from '../../styles';
 import TextField from '../../components/TextField';
 import authApi from '../../api/authApi';
-import { SAVE_USER_INFO } from '../../constants/types';
 import { useDispatch } from 'react-redux';
 import * as Bonk from 'yup';
 import { useFormik } from 'formik';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { danger } from '../../styles/color';
+import { saveInfo } from '../../actions/actions';
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -47,8 +47,7 @@ const SignIn = ({ navigation }) => {
         password: values.password,
       })
       .then((data) => {
-        dispatch({ type: SAVE_USER_INFO, action: data });
-        // navigation.navigate('HomeTabs');
+        dispatch(saveInfo(data));
       })
       .catch((err) => alert('Username or password incorrect!'));
   };

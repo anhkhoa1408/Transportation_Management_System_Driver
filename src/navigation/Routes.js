@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-// import Loading from '../components/Loading/Loading';
+import Loading from '../components/Loading/Loading';
 import AuthStack from './StackNavigator/AuthStack';
 import MainStack from './StackNavigator/MainStack';
 
-export const Routes = (props) => {
+export const Routes = props => {
   const [logged, setLogged] = useState();
+  const [loading, setLoading] = useState(props.userInfo.isLoading);
 
-  useEffect(
-    () => {
-        console.log('aaa')
-      if (props.userInfo && props.userInfo.jwt) {
-        setLogged(true);
-      } else {
-        setLogged(false);
-      }
-    },
-    [props.userInfo],
-  );
+  useEffect(() => {
+    if (props.userInfo && props.userInfo.jwt) {
+      setLogged(true);
+    } else {
+      setLogged(false);
+    }
+    setLoading(false);
+  }, [props.userInfo]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return logged ? <MainStack /> : <AuthStack />;
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   userInfo: state.userInfo,
 });
 

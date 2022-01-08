@@ -16,7 +16,7 @@ export const DatePicker = () => {
     setDate(currentDate);
   };
 
-  const showMode = (currentMode) => {
+  const showMode = currentMode => {
     setShow(true);
     setMode(currentMode);
   };
@@ -30,33 +30,35 @@ export const DatePicker = () => {
   };
 
   return (
-    <Card containerStyle={style.container}>
+    <Card
+      wrapperStyle={{ padding: 10, backgroundColor: '#FFF', borderRadius: 10 }}
+      containerStyle={style.container}>
       <Button
-        onPress={showDatepicker} 
+        onPress={showDatepicker}
         title={date.toDateString()}
         buttonStyle={style.button}
         titleStyle={style.title}
-        iconPosition='right'
+        iconPosition="right"
         icon={{
-          name: "event",
+          name: 'event',
           size: 20,
-          color: "#000"
+          color: '#000',
         }}
         iconContainerStyle={{
-          alignSelf: 'flex-end'
+          alignSelf: 'flex-end',
         }}
         TouchableComponent={TouchableOpacity}
       />
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
-          dateFormat='shortdate'
+          dateFormat="shortdate"
           value={date}
           mode={mode}
           is24Hour={true}
           display="default"
           onChange={onChange}
-          themeVarian='light'
+          themeVarian="light"
         />
       )}
     </Card>
@@ -67,12 +69,9 @@ const style = StyleSheet.create({
   container: {
     width: '100%',
     borderRadius: 10,
-    borderWidth: 1,
-    padding: 10,
-    marginTop: 0,
-    marginHorizontal: 0,
-    marginBottom: 10,
-    ...shadowInput
+    padding: 0,
+    margin: 0,
+    ...shadowInput,
   },
   button: {
     padding: 0,
@@ -86,5 +85,5 @@ const style = StyleSheet.create({
   title: {
     color: '#000',
     textAlign: 'left',
-  }
-})
+  },
+});

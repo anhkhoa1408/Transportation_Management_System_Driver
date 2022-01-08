@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Image } from "react-native";
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, Image } from 'react-native';
 
 export default function TextField(props) {
   return (
@@ -8,23 +8,15 @@ export default function TextField(props) {
       <View style={styles.inputView}>
         <TextInput
           style={{ ...styles.fsize, flex: 1 }}
-          secureTextEntry={"secureTextEntry" in props}
-          keyboardType={
-            "keyboardType" in props ? props.keyboardType : "default"
-          }
-          editable={props.editable == "false" ? false : true}
-          value={props.value}
-          placeholder={"placeholder" in props ? props.placeholder : ""}
-          onChangeText={(text) => props.onChangeText(text)}
+          {...props}
         />
-        {"afterText" in props && (
+        {'afterText' in props && (
           <Text
-            style={{ ...styles.fsize, marginRight: 10, textAlign: "right" }}
-          >
+            style={{ ...styles.fsize, marginRight: 10, textAlign: 'right' }}>
             {props.afterText}
           </Text>
         )}
-        {"afterImage" in props && props.afterImage}
+        {'afterImage' in props && props.afterImage}
       </View>
     </View>
   );
@@ -32,7 +24,7 @@ export default function TextField(props) {
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 2,
       height: 2,
@@ -43,17 +35,17 @@ const styles = StyleSheet.create({
   },
   texttitle: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#000000",
+    fontWeight: 'bold',
+    color: '#000000',
   },
   inputView: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 15,
     padding: 5,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -64,7 +56,7 @@ const styles = StyleSheet.create({
   },
   fsize: {
     fontSize: 17,
-    color: "#000",
+    color: '#000',
     paddingLeft: 20,
     paddingVertical: 8,
   },

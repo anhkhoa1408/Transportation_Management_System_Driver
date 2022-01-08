@@ -5,11 +5,18 @@ import PillButton from '../../components/CustomButton/PillButton';
 import { containerOverlay, shadowCard } from '../../styles/layoutStyle';
 import { DatePicker } from './../../components/DatePicker/DatePicker';
 import CustomInput from '../../components/CustomInput/CustomInput';
+import { backdropColor } from '../../styles/color';
 
-const ErrorForm = (props) => {
+const ErrorForm = props => {
   return (
     <View style={formStyle.container}>
-      <Card containerStyle={formStyle.form}>
+      <Card
+        wrapperStyle={{
+          backgroundColor: '#FFF',
+          padding: 25,
+          borderRadius: 20,
+        }}
+        containerStyle={formStyle.form}>
         <Icon
           name="close"
           containerStyle={{ alignSelf: 'flex-end' }}
@@ -20,12 +27,11 @@ const ErrorForm = (props) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
-          }}
-        >
+          }}>
           <Card.Title>Thời gian</Card.Title>
           <DatePicker />
 
-          <Card.Title>Nguyên nhân</Card.Title>
+          <Card.Title style={{marginTop: 20}}>Nguyên nhân</Card.Title>
           <CustomInput multiline={true} numberOfLines={5} maxLength={150} />
         </View>
         <PillButton
@@ -41,41 +47,28 @@ const ErrorForm = (props) => {
 const formStyle = StyleSheet.create({
   container: {
     position: 'absolute',
-    // top: '50%',
-    // left: '50%',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
     display: 'flex',
-    // alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    // zIndex: 2,
-    // transform: [
-    //   {
-    //     translateX: -Dimensions.get('window').width * 0.45,
-    //   },
-    //   {
-    //     translateY: -Dimensions.get('window').width * 0.45,
-    //   },
-    // ],
-    // width: '90%',
-    // height: '40%',
-    // ...shadowCard,
+    backgroundColor: backdropColor,
+    opacity: 0.8,
+    zIndex: 1,
   },
   form: {
-    paddingHorizontal: 35,
-    paddingVertical: 35,
     borderRadius: 20,
+    padding: 0,
+    backgroundColor: '#FFF'
   },
   input: {
-    borderWidth: 1,
     borderRadius: 20,
     padding: 0,
   },
   button: {
     marginTop: 20,
+    color: '#FFF',
   },
 });
 

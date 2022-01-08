@@ -3,22 +3,22 @@ import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const PillButton = ({ containerStyle, buttonStyle, ...props }) => {
+function PillButton(props) {
   return (
     <Button
-      {...props}
       containerStyle={{
-        ...containerStyle,
+        ...props.containerStyle,
         borderRadius: 20,
       }}
       buttonStyle={{
-        ...buttonStyle,
+        ...props.buttonStyle,
         padding: 10,
       }}
-			TouchableComponent={TouchableOpacity}
-			activeOpacity={0.7}
+      TouchableComponent={TouchableOpacity}
+      activeOpacity={0.7}
+      {...props}
     />
   );
-};
+}
 
 export default PillButton;

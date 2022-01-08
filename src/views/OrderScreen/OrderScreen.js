@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, FlatList, Image} from 'react-native';
 import shipmentApi from '../../api/shipmentAPI';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Avatar, Text, Icon, CheckBox } from 'react-native-elements';
-import { COLORS, FONTS } from '../../styles';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Avatar, Text, Icon, CheckBox} from 'react-native-elements';
+import {COLORS, FONTS} from '../../styles';
 import img from './../../assets/images/download.jpg';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { container, header } from '../../styles/layoutStyle';
+import {container, header} from '../../styles/layoutStyle';
+import Loading from '../../components/Loading/Loading';
 
-export default function OrderScreen({ navigation }) {
+export default function OrderScreen({navigation}) {
   const [data, setData] = useState([]);
   const [check, setCheck] = useState([]);
 
@@ -16,19 +17,19 @@ export default function OrderScreen({ navigation }) {
     const unsubscribe = navigation.addListener('focus', () => {
       shipmentApi
         .shipment()
-        .then((resData) => {
+        .then(resData => {
           setData(resData);
-          setCheck(data.map((item) => 'arrived_time' in item));
+          setCheck(data.map(item => 'arrived_time' in item));
         })
-        .catch((err) => {
+        .catch(err => {
           setData([]);
-          setCheck(data.map((item) => 'arrived_time' in item));
+          setCheck(data.map(item => 'arrived_time' in item));
         });
     });
     return unsubscribe;
   }, [navigation]);
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({item, index}) => (
     <TouchableOpacity
       style={{
         padding: 20,
@@ -38,9 +39,8 @@ export default function OrderScreen({ navigation }) {
         backgroundColor: COLORS.white,
         ...styles.shadow,
       }}
-      onPress={() => navigation.navigate('OrderDetail')}
-    >
-      <View style={{ ...styles.row }}>
+      onPress={() => navigation.navigate('OrderDetail')}>
+      <View style={{...styles.row}}>
         <Image
           size={50}
           tintColor={'orange'}
@@ -52,16 +52,14 @@ export default function OrderScreen({ navigation }) {
             flex: 1,
             marginLeft: 10,
             alignItems: 'flex-start',
-          }}
-        >
+          }}>
           <Text
             style={{
               fontWeight: '700',
-            }}
-          >
+            }}>
             ID: {item.id}
           </Text>
-          <Text style={{ color: 'orange', fontWeight: '700' }}>
+          <Text style={{color: 'orange', fontWeight: '700'}}>
             {check[index] === false ? 'Đang vận chuyển' : 'Đã nhận'}
           </Text>
         </View>
@@ -76,9 +74,9 @@ export default function OrderScreen({ navigation }) {
           }}
         />
       </View>
-      <View style={{ paddingLeft: 5 }}>
-        <Text style={{ fontWeight: '700', color: 'gray' }}>Đến</Text>
-        <Text style={{ fontWeight: '700' }}>
+      <View style={{paddingLeft: 5}}>
+        <Text style={{fontWeight: '700', color: 'gray'}}>Đến</Text>
+        <Text style={{fontWeight: '700'}}>
           {item.to_address.street}, {item.to_address.ward},{' '}
           {item.to_address.province}, {item.to_address.city}
         </Text>
@@ -102,23 +100,11 @@ export default function OrderScreen({ navigation }) {
         <FlatList
           data={data}
           renderItem={renderItem}
-          keyExtractor={(item) => `${item.id}`}
+          keyExtractor={item => `${item.id}`}
         />
       )}
 
-      {data.length == 0 && (
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: 200,
-          }}
-        >
-          <Text style={{ color: COLORS.primary, ...FONTS.header }}>
-            Loading data...
-          </Text>
-        </View>
-      )}
+      {data.length == 0 && <Loading />}
     </View>
   );
 }
