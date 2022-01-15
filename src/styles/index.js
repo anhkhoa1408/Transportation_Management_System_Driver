@@ -1,12 +1,13 @@
-import { headerFont } from "./fontStyle";
-import { container, header, shadowCard } from "./layoutStyle";
+import { headerFont } from './fontStyle';
+import { container, header, shadowCard } from './layoutStyle';
 
 export const COLORS = {
-  primary: "#7FC3DC",
-  red: "#BF3B3B",
-  background1: "#F0F1F5",
-  white: "#fff",
-  black: "#000",
+  primary: '#7FC3DC',
+  red: '#BF3B3B',
+  background1: '#F0F1F5',
+  white: '#fff',
+  black: '#000',
+  header: '#39b2f7',
 };
 
 export const FONTS = {

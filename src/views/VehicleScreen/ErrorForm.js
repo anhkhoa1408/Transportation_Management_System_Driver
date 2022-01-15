@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import PillButton from '../../components/CustomButton/PillButton';
 import { containerOverlay, shadowCard } from '../../styles/layoutStyle';
-import { DatePicker } from './../../components/DatePicker/DatePicker';
+import { DatePicker } from './../../components/DatePicker';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { backdropColor } from '../../styles/color';
 
@@ -31,7 +31,7 @@ const ErrorForm = props => {
           <Card.Title>Thời gian</Card.Title>
           <DatePicker />
 
-          <Card.Title style={{marginTop: 20}}>Nguyên nhân</Card.Title>
+          <Card.Title style={{ marginTop: 20 }}>Nguyên nhân</Card.Title>
           <CustomInput multiline={true} numberOfLines={5} maxLength={150} />
         </View>
         <PillButton
@@ -60,7 +60,7 @@ const formStyle = StyleSheet.create({
   form: {
     borderRadius: 20,
     padding: 0,
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   input: {
     borderRadius: 20,

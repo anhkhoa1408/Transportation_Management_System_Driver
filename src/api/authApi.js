@@ -1,13 +1,13 @@
-import axiosClient from "./axiosClient";
-import { MAIN_URL } from "./config";
+import axiosClient from './axiosClient';
+import { MAIN_URL } from './config';
 
 class AuthorApi {
-  login = (data) => {
-    const url = MAIN_URL.concat("/auth/local");
+  login = data => {
+    const url = MAIN_URL.concat('/auth/local');
     return axiosClient.post(url, data);
   };
-  register = (data) => {
-    const url = MAIN_URL.concat("/auth/signup");
+  register = data => {
+    const url = MAIN_URL.concat('/auth/signup');
     return axiosClient.post(url, data);
   };
   update = (id, data) => {

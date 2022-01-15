@@ -1,20 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
-import {Icon, Text, Card, Tooltip} from 'react-native-elements';
-import {container, header, shadowCard} from '../../styles/layoutStyle';
-import {primaryColor} from '../../styles/color';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Icon, Text, Card, Tooltip } from 'react-native-elements';
+import { container, header, shadowCard } from '../../styles/layoutStyle';
+import { primaryColor } from '../../styles/color';
 import img from './../../assets/images/download.jpg';
-import {TouchableHighlight} from 'react-native-gesture-handler';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 import ErrorForm from './ErrorForm';
-import {store} from '../../config/configureStore';
-import Loading from '../../components/Loading/Loading';
+import { store } from '../../config/configureStore';
+import Loading from '../../components/Loading';
+import { COLORS } from '../../styles';
+import { InfoField } from '../../components/InfoField';
 
 const VehicleScreen = () => {
   const carr = {
     licence: '',
     type: '',
     load: '',
-    size: {len: '', width: '', height: ''},
+    size: { len: '', width: '', height: '' },
   };
 
   const [errorForm, setError] = useState(false);
@@ -27,11 +29,11 @@ const VehicleScreen = () => {
 
   return (
     <>
-      {!car.licence && <Loading /> }
+      {!car.licence && <Loading />}
       <View style={vehicleStyle.container}>
         <View style={vehicleStyle.headerContainer}>
           <View style={vehicleStyle.headerContent}>
-            <Text h4 style={{color: '#FFF'}}>
+            <Text h4 style={{ color: '#FFF' }}>
               Thông tin phương tiện
             </Text>
 
@@ -64,14 +66,14 @@ const VehicleScreen = () => {
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Phương tiện</Text>
                   <Text style={vehicleStyle.infoContent}>
                     {'type' in car ? car.type : 'Loading...'}
                   </Text>
                 </View>
 
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Tải trọng tối đa</Text>
                   <Text style={vehicleStyle.infoContent}>
                     {'load' in car ? car.load : 'Loading...'} Kg
@@ -80,7 +82,7 @@ const VehicleScreen = () => {
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>
                     Kích thước thùng xe
                   </Text>
@@ -91,7 +93,7 @@ const VehicleScreen = () => {
                   </Text>
                 </View>
 
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Biển số xe</Text>
                   <Text style={vehicleStyle.infoContent}>
                     {'licence' in car ? car.licence : 'Loading...'}
@@ -117,24 +119,24 @@ const VehicleScreen = () => {
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Tên</Text>
                   <Text style={vehicleStyle.infoContent}>Uchiha shisui</Text>
                 </View>
 
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Số điện thoại</Text>
                   <Text style={vehicleStyle.infoContent}>012345678</Text>
                 </View>
               </View>
 
               <View style={vehicleStyle.infoItem}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>Danzo</Text>
                 </View>
 
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>SDT người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>012345689</Text>
                 </View>
@@ -193,7 +195,7 @@ const vehicleStyle = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     height: '40%',
-    backgroundColor: primaryColor,
+    backgroundColor: COLORS.header,
     marginTop: 0,
     alignItems: 'flex-start',
   },

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Image } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 export default function TextField(props) {
   return (
     <View>
-      <Text style={styles.texttitle}>{props.title}</Text>
+      {'title' in props && <Text style={styles.texttitle}>{props.title}</Text>}
       <View style={styles.inputView}>
-        <TextInput
-          style={{ ...styles.fsize, flex: 1 }}
-          {...props}
-        />
+        {'icon' in props && <Icon name={props.icon} />}
+        <TextInput style={{ ...styles.fsize, flex: 1 }} {...props} />
         {'afterText' in props && (
           <Text
             style={{ ...styles.fsize, marginRight: 10, textAlign: 'right' }}>
@@ -43,8 +42,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
     backgroundColor: 'white',
-    borderRadius: 15,
+    borderRadius: 35,
     padding: 5,
+    paddingHorizontal: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

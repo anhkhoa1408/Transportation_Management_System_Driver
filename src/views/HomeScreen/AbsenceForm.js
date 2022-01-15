@@ -4,25 +4,27 @@ import { Card, Icon } from 'react-native-elements';
 import PillButton from '../../components/CustomButton/PillButton';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { shadowCard } from '../../styles/layoutStyle';
-import { DatePicker } from './../../components/DatePicker/DatePicker'
+import { DatePicker } from '../../components/DatePicker';
 
-const AbsenceForm = (props) => {
+const AbsenceForm = props => {
   return (
     <View style={formStyle.container}>
       <Card containerStyle={formStyle.form}>
-        <Icon name="close" containerStyle={{alignSelf: 'flex-end'}} onPress={() => props.setAbsence(false)}/>
+        <Icon
+          name="close"
+          containerStyle={{ alignSelf: 'flex-end' }}
+          onPress={() => props.setAbsence(false)}
+        />
         <View
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
-          }}
-        >
+          }}>
           <Card.Title>Thời gian</Card.Title>
           <DatePicker />
-
-          <Card.Title>Lý do</Card.Title>
-          <CustomInput multiline={true} numberOfLines={5} maxLength={150} />
+          <Card.Title style={{ marginTop: 15 }}>Lý do</Card.Title>
+          <CustomInput multiline={true} numberOfLines={5} />
         </View>
         <PillButton
           title="Gửi"
@@ -57,7 +59,7 @@ const formStyle = StyleSheet.create({
     borderRadius: 20,
   },
   button: {
-    marginTop: 20,
+    marginTop: 30,
   },
 });
 

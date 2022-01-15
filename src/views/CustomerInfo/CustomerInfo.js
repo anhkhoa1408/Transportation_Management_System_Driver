@@ -4,6 +4,7 @@ import { Avatar, Card, Text } from 'react-native-elements';
 import { container, header } from '../../styles/layoutStyle';
 import banner from '../../assets/images/download.jpg';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { COLORS } from '../../styles';
 
 const CustomerInfo = ({ navigation }) => {
   return (
@@ -21,8 +22,7 @@ const CustomerInfo = ({ navigation }) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <Card containerStyle={{ borderRadius: 100, padding: 5 }}>
             <Avatar size="xlarge" rounded source={banner} />
           </Card>
@@ -41,15 +41,13 @@ const CustomerInfo = ({ navigation }) => {
             justifyContent: 'space-between',
             paddingVertical: 25,
             paddingHorizontal: 20,
-          }}
-        >
+          }}>
           <View
             style={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <MaterialIcon
               name="email"
               style={{ ...customerInfoStyle.icon, color: '#fc653f' }}
@@ -67,15 +65,13 @@ const CustomerInfo = ({ navigation }) => {
             justifyContent: 'space-between',
             paddingVertical: 25,
             paddingHorizontal: 20,
-          }}
-        >
+          }}>
           <View
             style={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <MaterialIcon
               name="phone"
               style={{ ...customerInfoStyle.icon, color: '#428bff' }}
@@ -93,15 +89,13 @@ const CustomerInfo = ({ navigation }) => {
             justifyContent: 'space-between',
             paddingVertical: 25,
             paddingHorizontal: 20,
-          }}
-        >
+          }}>
           <View
             style={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <MaterialIcon
               name="home"
               style={{ ...customerInfoStyle.icon, color: '#3cc732' }}
@@ -121,8 +115,8 @@ const customerInfoStyle = StyleSheet.create({
   },
   header: {
     ...header,
-    height: '45%',
-    backgroundColor: '#7FC3DC',
+    height: '40%',
+    backgroundColor: COLORS.header,
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: 0,

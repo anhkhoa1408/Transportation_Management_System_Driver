@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Image, StyleSheet, View, FlatList} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, View, FlatList } from 'react-native';
 import {
   Avatar,
   Card,
@@ -11,13 +11,13 @@ import {
 } from 'react-native-elements';
 import banner from './../../assets/images/delivery.jpg';
 import AbsenceForm from './AbsenceForm';
-import {STYLES, FONTS, COLORS} from '../../styles';
-import {primaryColor} from '../../styles/color';
-import {connect} from 'react-redux';
-import Loading from '../../components/Loading/Loading';
+import { STYLES, FONTS, COLORS } from '../../styles';
+import { primaryColor } from '../../styles/color';
+import { connect } from 'react-redux';
+import Loading from '../../components/Loading';
 import { backdropColor } from '../../styles/color';
 
-function HomeScreen({navigation, ...props}) {
+function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
@@ -50,9 +50,9 @@ function HomeScreen({navigation, ...props}) {
   });
 
   const [dataChange, setDataChange] = useState(false);
-  const [order, setOrder] = useState({receive: 0, remain: 0});
+  const [order, setOrder] = useState({ receive: 0, remain: 0 });
   const [user, setUser] = useState({});
-  const {userInfo} = props;
+  const { userInfo } = props;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -79,7 +79,7 @@ function HomeScreen({navigation, ...props}) {
       });
       listItem[0].count = userInfo.user.shipments.length;
       listItem[1].count = remain;
-      listItem[2].count = "Tốt"
+      listItem[2].count = 'Tốt';
       setListData(listItem);
       setDataChange(false);
       setDataChange(true);
@@ -87,7 +87,7 @@ function HomeScreen({navigation, ...props}) {
     return unsubscribe;
   }, [navigation]);
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <ListItem style={homeStyle.listItem}>
       <ListItem.Content
         style={{
@@ -110,7 +110,7 @@ function HomeScreen({navigation, ...props}) {
         />
 
         <ListItem.Subtitle
-          style={{fontSize: 28, fontWeight: 'bold', color: '#000'}}>
+          style={{ fontSize: 28, fontWeight: 'bold', color: '#000' }}>
           {item.count}
         </ListItem.Subtitle>
       </ListItem.Content>
@@ -120,7 +120,7 @@ function HomeScreen({navigation, ...props}) {
   const keyExtractor = (item, index) => index.toString();
   return (
     <>
-      { !listData[2].count && <Loading /> }
+      {!listData[2].count && <Loading />}
       <View style={homeStyle.container}>
         <View style={homeStyle.header}>
           <BadgedIcon name="notifications" color={primaryColor} size={30} />
@@ -130,7 +130,7 @@ function HomeScreen({navigation, ...props}) {
             </Text>
           )}
           {dataChange && (
-            <Avatar rounded size="small" source={{uri: data.avatar}} />
+            <Avatar rounded size="small" source={{ uri: data.avatar }} />
           )}
         </View>
 
@@ -152,20 +152,20 @@ function HomeScreen({navigation, ...props}) {
 
         <SpeedDial
           isOpen={open}
-          icon={{name: 'edit', color: '#fff'}}
-          openIcon={{name: 'close', color: '#fff'}}
+          icon={{ name: 'edit', color: '#fff' }}
+          openIcon={{ name: 'close', color: '#fff' }}
           onOpen={() => setOpen(!open)}
           onClose={() => {
             setOpen(!open);
             setAbsence(false);
           }}
-          overlayColor='rgba(180,179,219, 0.8)'
-        //   activeOpacity={0.8}
+          overlayColor="rgba(180,179,219, 0.8)"
+          //   activeOpacity={0.8}
           iconContainerStyle={{
             backgroundColor: primaryColor,
           }}>
           <SpeedDial.Action
-            icon={{name: 'home', color: '#fff', type: 'iconicon'}}
+            icon={{ name: 'home', color: '#fff', type: 'iconicon' }}
             iconContainerStyle={{
               backgroundColor: primaryColor,
             }}

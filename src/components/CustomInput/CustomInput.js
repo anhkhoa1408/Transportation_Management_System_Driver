@@ -6,9 +6,14 @@ import { shadowInput } from '../../styles/layoutStyle';
 const CustomInput = props => {
   return (
     <Card
-      wrapperStyle={{ padding: 20, backgroundColor: '#FFF', borderRadius: 10 }}
+      wrapperStyle={{
+        margin: 0,
+        paddingHorizontal: 10,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+      }}
       containerStyle={style.container}>
-      <TextInput {...props} />
+      <TextInput maxLength={400} numberOfLines={5} {...props} />
     </Card>
   );
 };
@@ -20,6 +25,7 @@ const style = StyleSheet.create({
     margin: 0,
     padding: 0,
     ...shadowInput,
+    height: 100,
   },
 });
 

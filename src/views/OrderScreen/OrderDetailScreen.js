@@ -108,8 +108,7 @@ export default function OrderDetailScreen({ navigation }) {
         borderRadius: 12,
         backgroundColor: COLORS.white,
         ...styles.shadow,
-      }}
-    >
+      }}>
       <View style={{ ...styles.row }}>
         <Image
           style={{
@@ -126,14 +125,14 @@ export default function OrderDetailScreen({ navigation }) {
             flex: 1,
             marginLeft: 10,
             alignItems: 'flex-start',
-          }}
-        >
+          }}>
           <Text style={{ ...styles.bigText }}>ID: {item.id}</Text>
           <Text style={{ ...styles.smolText }}>
             Số lượng: <Text style={{ ...styles.info }}>{item.quantity}</Text>
           </Text>
           <Text style={{ ...styles.smolText }}>
-            Địa điểm hiện tại: <Text style={{ ...styles.info }}>{item.current_address}</Text>
+            Địa điểm hiện tại:{' '}
+            <Text style={{ ...styles.info }}>{item.current_address}</Text>
           </Text>
         </View>
       </View>
@@ -166,8 +165,7 @@ export default function OrderDetailScreen({ navigation }) {
               paddingHorizontal: 20,
               paddingVertical: 10,
               ...styles.borderBottom,
-            }}
-          >
+            }}>
             <Avatar
               size="medium"
               avatarStyle={{ borderRadius: 10 }}
@@ -194,8 +192,7 @@ export default function OrderDetailScreen({ navigation }) {
                   ...styles.column,
                   flex: 1,
                   marginRight: 20,
-                }}
-              >
+                }}>
                 <Text style={{ ...styles.title }}>Địa chỉ</Text>
               </View>
               <View style={{ ...styles.column, flex: 0.8 }}>
@@ -209,8 +206,7 @@ export default function OrderDetailScreen({ navigation }) {
                   flex: 1,
                   alignItems: 'flex-start',
                   marginRight: 20,
-                }}
-              >
+                }}>
                 <Text style={{ ...styles.info }}>
                   {data[0].current_address === null
                     ? data[0].order.from_address.street +
@@ -228,8 +224,7 @@ export default function OrderDetailScreen({ navigation }) {
                   ...styles.column,
                   flex: 0.8,
                   alignItems: 'flex-start',
-                }}
-              >
+                }}>
                 <Text style={{ ...styles.info }}>
                   {data.reduce(
                     (previous, current) =>
@@ -241,11 +236,12 @@ export default function OrderDetailScreen({ navigation }) {
               </View>
             </View>
           </View>
+
           <View style={{ flex: 1, alignItems: 'stretch' }}>
             <FlatList
               data={data}
               renderItem={renderItem}
-              keyExtractor={(item) => `${item.id}`}
+              keyExtractor={item => `${item.id}`}
             />
           </View>
           <TouchableOpacity style={styles.button}>
@@ -262,8 +258,7 @@ export default function OrderDetailScreen({ navigation }) {
             alignItems: 'center',
             justifyContent: 'center',
             height: 200,
-          }}
-        >
+          }}>
           <Text style={{ color: COLORS.primary, ...FONTS.header }}>
             No Record
           </Text>
@@ -307,7 +302,7 @@ const styles = StyleSheet.create({
   },
   smolText: {
     fontSize: 12,
-    marginVertical: 1
+    marginVertical: 1,
   },
   bigText: {
     fontSize: 16,

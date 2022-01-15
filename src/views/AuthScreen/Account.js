@@ -17,12 +17,12 @@ import { store } from '../../config/configureStore';
 import { useFormik } from 'formik';
 import * as Bonk from 'yup';
 import { saveInfo } from '../../actions/actions';
-import ModalMess from '../../components/ModalMess/ModalMess';
+import ModalMess from '../../components/ModalMess';
 import { danger } from '../../styles/color';
 
 const Account = ({ navigation }) => {
   const [data, setData] = useState({
-    name: 'aaa',
+    name: '',
     email: '',
     password: '',
     cpassword: '',

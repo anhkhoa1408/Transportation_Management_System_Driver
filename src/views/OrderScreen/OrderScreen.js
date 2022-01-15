@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList, Image} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, Image } from 'react-native';
 import shipmentApi from '../../api/shipmentAPI';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Avatar, Text, Icon, CheckBox} from 'react-native-elements';
-import {COLORS, FONTS} from '../../styles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Avatar, Text, Icon, CheckBox } from 'react-native-elements';
+import { COLORS, FONTS } from '../../styles';
 import img from './../../assets/images/download.jpg';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {container, header} from '../../styles/layoutStyle';
-import Loading from '../../components/Loading/Loading';
+import { container, header } from '../../styles/layoutStyle';
+import Loading from '../../components/Loading';
+// import ButtonSwitch from '../../components/ButtonSwitch';
 
-export default function OrderScreen({navigation}) {
+export default function OrderScreen({ navigation }) {
   const [data, setData] = useState([]);
   const [check, setCheck] = useState([]);
 
@@ -29,7 +30,7 @@ export default function OrderScreen({navigation}) {
     return unsubscribe;
   }, [navigation]);
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <TouchableOpacity
       style={{
         padding: 20,
@@ -40,7 +41,7 @@ export default function OrderScreen({navigation}) {
         ...styles.shadow,
       }}
       onPress={() => navigation.navigate('OrderDetail')}>
-      <View style={{...styles.row}}>
+      <View style={{ ...styles.row }}>
         <Image
           size={50}
           tintColor={'orange'}
@@ -59,7 +60,7 @@ export default function OrderScreen({navigation}) {
             }}>
             ID: {item.id}
           </Text>
-          <Text style={{color: 'orange', fontWeight: '700'}}>
+          <Text style={{ color: 'orange', fontWeight: '700' }}>
             {check[index] === false ? 'Đang vận chuyển' : 'Đã nhận'}
           </Text>
         </View>
@@ -74,9 +75,9 @@ export default function OrderScreen({navigation}) {
           }}
         />
       </View>
-      <View style={{paddingLeft: 5}}>
-        <Text style={{fontWeight: '700', color: 'gray'}}>Đến</Text>
-        <Text style={{fontWeight: '700'}}>
+      <View style={{ paddingLeft: 5 }}>
+        <Text style={{ fontWeight: '700', color: 'gray' }}>Đến</Text>
+        <Text style={{ fontWeight: '700' }}>
           {item.to_address.street}, {item.to_address.ward},{' '}
           {item.to_address.province}, {item.to_address.city}
         </Text>
@@ -95,6 +96,8 @@ export default function OrderScreen({navigation}) {
           onPress={() => navigation.navigate('Setting')}
         />
       </View>
+
+      {/* <ButtonSwitch /> */}
 
       {data.length > 0 && (
         <FlatList
