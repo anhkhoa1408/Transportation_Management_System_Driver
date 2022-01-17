@@ -21,8 +21,8 @@ export const header = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: 15,
-  marginBottom: 10,
+  paddingTop: 40,
+  paddingBottom: 30,
   paddingHorizontal: 20,
 };
 

@@ -16,6 +16,9 @@ import { primaryColor } from '../../styles/color';
 import { connect } from 'react-redux';
 import Loading from '../../components/Loading';
 import { backdropColor } from '../../styles/color';
+import Header from '../../components/Header';
+import HeaderAvatar from '../../components/HeaderAvatar';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
@@ -122,22 +125,19 @@ function HomeScreen({ navigation, ...props }) {
     <>
       {!listData[2].count && <Loading />}
       <View style={homeStyle.container}>
-        <View style={homeStyle.header}>
-          <BadgedIcon name="notifications" color={primaryColor} size={30} />
-          {dataChange && (
-            <Text h4 style={homeStyle.headerFont}>
-              Xin chào, {data.name}
-            </Text>
-          )}
-          {dataChange && (
-            <Avatar rounded size="small" source={{ uri: data.avatar }} />
-          )}
-        </View>
+        <Header
+          leftElement={
+            <BadgedIcon name="notifications" color={primaryColor} size={30} />
+          }
+          headerText={'Hello ' + data.name}
+          rightElement={
+            <HeaderAvatar url={data.avatar} navigation={navigation} />
+          }
+        />
 
         <View style={homeStyle.bannerContainer}>
           <Image style={homeStyle.banner} source={banner} />
         </View>
-
         {dataChange && (
           <View style={homeStyle.listInfo}>
             <FlatList
@@ -149,7 +149,6 @@ function HomeScreen({ navigation, ...props }) {
             />
           </View>
         )}
-
         <SpeedDial
           isOpen={open}
           icon={{ name: 'edit', color: '#fff' }}
@@ -173,7 +172,6 @@ function HomeScreen({ navigation, ...props }) {
             onPress={() => setAbsence(!absenceForm)}
           />
         </SpeedDial>
-
         {absenceForm ? <AbsenceForm setAbsence={setAbsence} /> : null}
       </View>
     </>
@@ -189,7 +187,6 @@ const homeStyle = StyleSheet.create({
     width: '100%',
   },
   header: {
-    // ...header,
     ...STYLES.header,
   },
   image: {
