@@ -1,25 +1,27 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import HomeScreen from '../../views/HomeScreen/HomeScreen';
 import ChatScreen from '../../views/ChatScreen/ChatScreen';
-import {Icon} from 'react-native-elements';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {primaryColor} from '../../styles/color';
+import { Icon } from 'react-native-elements';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { primaryColor } from '../../styles/color';
 import VehicleScreen from '../../views/VehicleScreen/VehicleScreen';
 import OrderScreen from '../../views/OrderScreen/OrderScreen';
 import Account from '../../views/AuthScreen/Account';
+import HomeStackScreen from '../StackNavigator/HomeStackScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
 const TabNavigatior = () => {
   return (
     <Tab.Navigator
+      backBehavior="initialRoute"
       initialRouteName="Home"
       activeColor={primaryColor}
       barStyle={style.container}
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({focused, color}) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
           switch (route.name) {
             case 'Vehicle':
@@ -60,7 +62,7 @@ const TabNavigatior = () => {
       />
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackScreen}
         options={{
           tabBarLabel: 'Trang chủ',
         }}

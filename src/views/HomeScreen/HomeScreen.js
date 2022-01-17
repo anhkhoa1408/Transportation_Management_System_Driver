@@ -70,22 +70,6 @@ function HomeScreen({ navigation, ...props }) {
         ...data,
         name: userInfo.user.name,
       });
-      const remain =
-        userInfo.user.shipments.length -
-        userInfo.user.shipments.reduce((pre, cur) => {
-          if ('arrived_time' in cur) return pre + 1;
-          else return pre;
-        }, 0);
-      setOrder({
-        receive: userInfo.user.shipments.length,
-        remain: remain,
-      });
-      listItem[0].count = userInfo.user.shipments.length;
-      listItem[1].count = remain;
-      listItem[2].count = 'Tốt';
-      setListData(listItem);
-      setDataChange(false);
-      setDataChange(true);
     });
     return unsubscribe;
   }, [navigation]);

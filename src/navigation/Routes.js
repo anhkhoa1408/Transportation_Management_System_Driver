@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Loading from '../components/Loading';
 import AuthStack from './StackNavigator/AuthStack';
 import MainStack from './StackNavigator/MainStack';
+import TabNavigatior from './TabNavigator/TabNavigatior';
 
 export const Routes = props => {
   const [logged, setLogged] = useState();
@@ -21,7 +22,7 @@ export const Routes = props => {
     return <Loading />;
   }
 
-  return logged ? <MainStack /> : <AuthStack />;
+  return logged ? <TabNavigatior /> : <AuthStack />;
 };
 
 const mapStateToProps = state => ({
