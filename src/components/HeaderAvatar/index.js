@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar } from 'react-native-elements';
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
-function HeaderAvatar({ url, navigation }) {
+function HeaderAvatar({ url, onPressAction }) {
   return (
-    <TouchableWithoutFeedback>
+    <TouchableOpacity onPress={() => onPressAction()}>
       <Avatar
         rounded
         size="small"
@@ -12,7 +12,7 @@ function HeaderAvatar({ url, navigation }) {
           uri: url,
         }}
       />
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 

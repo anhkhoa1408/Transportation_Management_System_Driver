@@ -115,7 +115,10 @@ function HomeScreen({ navigation, ...props }) {
           }
           headerText={'Hello ' + data.name}
           rightElement={
-            <HeaderAvatar url={data.avatar} navigation={navigation} />
+            <HeaderAvatar
+              url={data.avatar}
+              onPressAction={() => navigation.navigate('Account')}
+            />
           }
         />
 

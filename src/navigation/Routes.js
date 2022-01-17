@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Loading from '../components/Loading';
 import AuthStack from './StackNavigator/AuthStack';
-import MainStack from './StackNavigator/MainStack';
 import TabNavigatior from './TabNavigator/TabNavigatior';
 
 export const Routes = props => {
