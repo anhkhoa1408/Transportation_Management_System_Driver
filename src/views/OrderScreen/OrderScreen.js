@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import shipmentApi from '../../api/shipmentAPI';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Avatar, Text, Icon, CheckBox } from 'react-native-elements';
 import { COLORS, FONTS } from '../../styles';
 import img from './../../assets/images/download.jpg';
