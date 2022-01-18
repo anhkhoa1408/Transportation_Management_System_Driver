@@ -20,31 +20,36 @@ function HomeScreen({ navigation, ...props }) {
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
 
-  const [data, setData] = useState({
+  const [user, setUser] = useState({
     name: 'Shiba',
     avatar:
       'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
   });
 
-  const [user, setUser] = useState({});
   const { userInfo } = props;
 
   useEffect(() => {
+    if (userInfo.user.avatar && userInfo.user.avatar.url)
+      setUser({
+        ...user,
+        avatar: userInfo.user.avatar.url,
+      });
+    setUser({
+      ...user,
+      name: userInfo.user.name,
+    });
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setUser(userInfo);
-      if ('avatar' in userInfo.user)
-        if ('url' in userInfo.user.avatar)
-          setData({
-            ...data,
-            avatar: userInfo.user.avatar.url,
-          });
-      setData({
-        ...data,
-        name: userInfo.user.name,
-      });
-      homeAPI.getDriverStatus().then(response => {
-        setListData(response);
-      });
+      homeAPI
+        .getDriverStatus()
+        .then(response => {
+          setListData(response);
+        })
+        .catch(() => {
+          // Do nothing
+        });
     });
     return unsubscribe;
   }, [navigation]);
@@ -54,17 +59,18 @@ function HomeScreen({ navigation, ...props }) {
 
   return (
     <>
-      {listData.length > 0 && <Loading />}
+      <Loading />
+      {/* {!listData.length > 0 && <Loading />} */}
       <View style={STYLES.container}>
         {/* Header Section */}
         <Header
           leftElement={
             <BadgedIcon name="notifications" color={COLORS.primary} size={30} />
           }
-          headerText={'Hello ' + data.name}
+          headerText={'Hello ' + user.name}
           rightElement={
             <HeaderAvatar
-              url={data.avatar}
+              url={user.avatar}
               onPressAction={() => navigation.navigate('Account')}
             />
           }
@@ -81,7 +87,7 @@ function HomeScreen({ navigation, ...props }) {
         </View>
 
         {/* Info Cards Section */}
-        {listData.length > 0 && (
+        {/* {listData.length > 0 && (
           <View style={homeStyle.listInfo}>
             <FlatList
               showsHorizontalScrollIndicator={false}
@@ -91,7 +97,7 @@ function HomeScreen({ navigation, ...props }) {
               keyExtractor={keyExtractor}
             />
           </View>
-        )}
+        )} */}
 
         <SpeedDial
           isOpen={open}
