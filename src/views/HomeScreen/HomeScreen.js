@@ -18,33 +18,13 @@ import Loading from '../../components/Loading';
 import { backdropColor } from '../../styles/color';
 import Header from '../../components/Header';
 import HeaderAvatar from '../../components/HeaderAvatar';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import homeAPI from '../../api/homeAPI';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
-  let listItem = [
-    {
-      name: 'Đơn hàng đã nhận',
-      iconName: 'event-available',
-      count: 0,
-      color: '#5ffa62',
-    },
-    {
-      name: 'Đơn hàng còn lại',
-      iconName: 'assignment',
-      count: 0,
-      color: '#f0b432',
-    },
-    {
-      name: 'Trạng thái xe',
-      iconName: 'local-shipping',
-      count: '',
-      color: '#1cacff',
-    },
-  ];
-  const [listData, setListData] = useState(listItem);
+  const [listData, setListData] = useState([]);
 
   const [data, setData] = useState({
     name: 'Shiba',
@@ -69,6 +49,10 @@ function HomeScreen({ navigation, ...props }) {
       setData({
         ...data,
         name: userInfo.user.name,
+      });
+      homeAPI.getDriverStatus().then(response => {
+        console.log(response);
+        setListData(response);
       });
     });
     return unsubscribe;
