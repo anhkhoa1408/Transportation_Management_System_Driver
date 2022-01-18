@@ -120,6 +120,15 @@ function HomeScreen({ navigation, ...props }) {
             />
           </View>
         )}
+        <View style={homeStyle.listInfo}>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={listData}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+          />
+        </View>
         <SpeedDial
           isOpen={open}
           icon={{ name: 'edit', color: '#fff' }}

@@ -13,13 +13,14 @@ import authApi from '../../api/authApi';
 import { useDispatch } from 'react-redux';
 import * as Bonk from 'yup';
 import { useFormik } from 'formik';
-import { danger } from '../../styles/color';
+import { danger, success, warning } from '../../styles/color';
 import { saveInfo } from '../../actions/actions';
 import background from './../../assets/images/background.png';
 import bg from './../../assets/images/bg.png';
 import Loading from './../../components/Loading';
+import { Divider } from 'react-native-elements';
 
-const SignIn = ({ navigation }) => {
+const InputOtp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isFocus, setFocus] = useState('');
@@ -32,29 +33,30 @@ const SignIn = ({ navigation }) => {
       email: email,
       password: password,
     },
-    validationSchema: Bonk.object({
-      email: Bonk.string().required('Thông tin bắt buộc'),
-      password: Bonk.string()
-        .required('Thông tin bắt buộc')
-        .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
-    }),
+    // validationSchema: Bonk.object({
+    //   email: Bonk.string().required('Thông tin bắt buộc'),
+    //   password: Bonk.string()
+    //     .required('Thông tin bắt buộc')
+    //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
+    // }),
     onSubmit: values => {
       handleSubmit(values);
     },
   });
 
   const handleSubmit = values => {
-    setLoading(true);
-    authApi
-      .login({
-        identifier: values.email,
-        password: values.password,
-      })
-      .then(data => {
-        dispatch(saveInfo(data));
-        setLoading(false);
-      })
-      .catch(err => alert('Username or password incorrect!'));
+    navigation.navigate('resetPass');
+    // setLoading(true);
+    // authApi
+    //   .login({
+    //     identifier: values.email,
+    //     password: values.password,
+    //   })
+    //   .then(data => {
+    //     dispatch(saveInfo(data));
+    //     setLoading(false);
+    //   })
+    //   .catch(err => alert('Username or password incorrect!'));
   };
 
   // useEffect(() => {
@@ -82,22 +84,19 @@ const SignIn = ({ navigation }) => {
             resizeMode="cover"
             style={styles.background}
             source={bg}>
-            {!isFocus && (
+            <View style={{ ...styles.form, ...isFocus }}>
               <Text
                 style={{
-                  fontSize: 45,
-                  alignSelf: 'flex-start',
-                  marginBottom: 20,
-                  alignSelf: 'flex-start',
-                  marginLeft: '5%',
+                  fontSize: 17,
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                  marginBottom: 5,
                 }}>
-                Xin chào
+                Kiểm tra điện thoại của bạn và nhập mã OTP từ tin nhắn
               </Text>
-            )}
-            <View style={{ ...styles.form, ...isFocus }}>
               <TextField
-                icon="person-outline"
-                placeholder="Tên đăng nhập"
+                icon="phone"
+                placeholder="Nhập mã OTP"
                 value={formik.values.email}
                 onChangeText={setEmail}
               />
@@ -113,33 +112,9 @@ const SignIn = ({ navigation }) => {
                 </Text>
               ) : null}
 
-              <TextField
-                icon="https"
-                placeholder="Mật khẩu"
-                value={formik.values.password}
-                secureTextEntry
-                onChangeText={setPassword}
-              />
-
-              {formik.touched.password && formik.errors.password ? (
-                <Text
-                  style={{
-                    color: danger,
-                    marginBottom: 15,
-                    fontWeight: 'bold',
-                  }}>
-                  {formik.errors.password}
-                </Text>
-              ) : null}
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate('forgotPassword')}>
-                <Text style={styles.forgot}>Quên mật khẩu?</Text>
-              </TouchableOpacity>
-
               <View style={styles.btnContainer}>
                 <TouchableOpacity
-                  style={styles.loginBtn}
+                  style={[styles.loginBtn, { backgroundColor: success }]}
                   onPress={formik.submitForm}>
                   <Text
                     style={{
@@ -147,15 +122,34 @@ const SignIn = ({ navigation }) => {
                       fontSize: 20,
                       fontWeight: 'bold',
                     }}>
-                    Đăng nhập
+                    Xác nhận
                   </Text>
                 </TouchableOpacity>
               </View>
 
-              <View style={[styles.container1]}>
-                <Text>Chưa có tài khoản? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                  <Text style={{ color: COLORS.primary }}>Đăng ký</Text>
+              <Divider width={1} style={{ marginVertical: 20 }} />
+
+              <Text
+                style={{
+                  fontSize: 17,
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                }}>
+                Gửi lại mã OTP
+              </Text>
+
+              <View style={styles.btnContainer}>
+                <TouchableOpacity
+                  style={[styles.loginBtn, { backgroundColor: warning }]}
+                  onPress={formik.submitForm}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                    }}>
+                    Gửi lại mã
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -166,7 +160,7 @@ const SignIn = ({ navigation }) => {
   );
 };
 
-export default SignIn;
+export default InputOtp;
 
 export const styles = StyleSheet.create({
   container: {

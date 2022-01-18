@@ -192,6 +192,7 @@ const vehicleStyle = StyleSheet.create({
   },
   headerContainer: {
     ...header,
+    paddingTop: 0,
     justifyContent: 'space-between',
     flexDirection: 'row',
     height: '40%',

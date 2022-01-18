@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Dimensions,
   ScrollView,
+  Keyboard,
 } from 'react-native';
 import { COLORS } from '../../styles';
 import TextField from '../../components/TextField';
@@ -20,13 +21,14 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import { danger } from '../../styles/color';
 import { saveInfo } from '../../actions/actions';
 import bg from './../../assets/images/bg.png';
-import { Input } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeat] = useState('');
   const [isFocus, setFocus] = useState('');
+  const viewRef = useRef();
 
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -49,9 +51,9 @@ const SignUp = ({ navigation }) => {
           'Xác nhận mật khẩu và mật khẩu chưa chính xác',
         ),
     }),
-    validateOnBlur: true,
-    validateOnChange: true,
     onSubmit: values => {
+      setFocus('');
+      Keyboard.dismiss();
       handleSubmit(values);
     },
   });
@@ -68,63 +70,55 @@ const SignUp = ({ navigation }) => {
     //   .catch(err => alert('Username or password incorrect!'));
   };
 
-  // useEffect(() => {
-  //   function handleBackButton() {
-  //     // navigation.navigate('register-phone');
-  //     // return true;
-  //     console.log(1);
-  //   }
+  const handleFocus = () => {
+    setFocus({
+      height: '75%',
+    });
+  };
 
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     handleBackButton,
-  //   );
+  useEffect(() => {
+    function handleKeyBoard() {
+      if (isFocus) setFocus('');
+    }
 
-  //   return () => backHandler.remove();
-  // }, [navigation]);
+    const KeyboardHandle = Keyboard.addListener(
+      'keyboardDidHide',
+      handleKeyBoard,
+    );
+
+    return () => KeyboardHandle.remove();
+  }, [isFocus]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.background} source={bg}>
-        {/* {!isFocus && ( */}
         <Text
           style={{
-            // color: '',
-            fontSize: 37,
+            fontSize: 45,
             alignSelf: 'flex-start',
-            marginLeft: 25,
             marginBottom: 20,
-            fontWeight: 'bold',
+            marginLeft: '5%',
           }}>
-          Đăng ký
+          Tạo tài khoản
         </Text>
-        {/* )} */}
-        <View style={{ ...styles.form, ...isFocus }}>
-          {/* <Text
-            style={{
-              color: '#000',
-              fontSize: 40,
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              marginBottom: 20,
-            }}>
-            Đăng ký
-          </Text> */}
+        <View ref={viewRef} style={{ ...styles.form, ...isFocus }}>
           <ScrollView
+            keyboardShouldPersistTaps="always"
             contentContainerStyle={{
-              paddingHorizontal: 5,
+              paddingHorizontal: 15,
               paddingVertical: 25,
             }}
-            onFocus={() =>
+            onFocus={() => {
               setFocus({
                 height: '75%',
-              })
-            }>
+              });
+            }}>
             <TextField
               icon="person-outline"
               placeholder="Tên đăng nhập"
               value={formik.values.email}
               onChangeText={setEmail}
+              onPressIn={handleFocus}
             />
 
             {formik.touched.email && formik.errors.email ? (
@@ -140,6 +134,7 @@ const SignUp = ({ navigation }) => {
               value={formik.values.password}
               secureTextEntry
               onChangeText={setPassword}
+              onPressIn={handleFocus}
             />
 
             {formik.touched.email && formik.errors.email ? (
@@ -155,6 +150,7 @@ const SignUp = ({ navigation }) => {
               value={formik.values.repeatPassword}
               secureTextEntry
               onChangeText={setRepeat}
+              onPressIn={handleFocus}
             />
 
             {formik.touched.repeatPassword && formik.errors.repeatPassword ? (
@@ -167,10 +163,7 @@ const SignUp = ({ navigation }) => {
             <View style={styles.btnContainer}>
               <TouchableOpacity
                 style={styles.loginBtn}
-                onPress={() => {
-                  setFocus('');
-                  formik.submitForm;
-                }}>
+                onPress={formik.submitForm}>
                 <Text
                   style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
                   Xác nhận
@@ -238,11 +231,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   form: {
-    paddingHorizontal: 30,
-    paddingVertical: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     width: '90%',
-    // marginBottom: 10
-
     backgroundColor: COLORS.white,
     borderRadius: 30,
   },
