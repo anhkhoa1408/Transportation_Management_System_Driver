@@ -51,7 +51,6 @@ function HomeScreen({ navigation, ...props }) {
         name: userInfo.user.name,
       });
       homeAPI.getDriverStatus().then(response => {
-        console.log(response);
         setListData(response);
       });
     });
