@@ -91,7 +91,7 @@ function HomeScreen({ navigation, ...props }) {
   const keyExtractor = (item, index) => index.toString();
   return (
     <>
-      {!listData[2].count && <Loading />}
+      {listData.length > 0 && <Loading />}
       <View style={homeStyle.container}>
         <Header
           leftElement={
