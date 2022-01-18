@@ -3,3 +3,5 @@ export const headerFont = {
   fontFamily: 'Roboto',
   fontWeight: '700',
 };
+
+export default { headerFont };
