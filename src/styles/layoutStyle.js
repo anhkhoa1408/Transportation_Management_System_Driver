@@ -46,3 +46,5 @@ export const shadowInput = {
   shadowRadius: 3.84,
   elevation: 5,
 };
+
+export default { container };

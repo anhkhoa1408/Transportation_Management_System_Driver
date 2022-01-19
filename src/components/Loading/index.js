@@ -21,7 +21,7 @@ const Loading = () => {
         isVisible={true}
         size={100}
         type="ThreeBounce"
-        color={primaryColor}
+        color={primary}
       />
       <Text style={styles.text}>Xin vui lòng đợi</Text>
     </SafeAreaView>
