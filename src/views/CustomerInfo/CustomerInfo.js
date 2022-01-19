@@ -115,7 +115,7 @@ const customerInfoStyle = StyleSheet.create({
   },
   header: {
     ...header,
-    height: '40%',
+    height: '45%',
     backgroundColor: COLORS.header,
     justifyContent: 'center',
     flexDirection: 'column',

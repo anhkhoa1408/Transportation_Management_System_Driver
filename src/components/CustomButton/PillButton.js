@@ -6,17 +6,18 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 function PillButton(props) {
   return (
     <Button
+      {...props}
       containerStyle={{
         ...props.containerStyle,
-        borderRadius: 20,
+        borderRadius: 35,
+        marginVertical: 15,
       }}
       buttonStyle={{
         ...props.buttonStyle,
-        padding: 10,
+        padding: 14,
       }}
       TouchableComponent={TouchableOpacity}
       activeOpacity={0.7}
-      {...props}
     />
   );
 }

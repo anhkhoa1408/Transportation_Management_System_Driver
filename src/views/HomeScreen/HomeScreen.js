@@ -107,13 +107,13 @@ function HomeScreen({ navigation, ...props }) {
   const keyExtractor = (item, index) => index.toString();
   return (
     <>
-      {!listData[2].count && <Loading />}
+      {/* {!listData[2].count && <Loading />} */}
       <View style={homeStyle.container}>
         <Header
           leftElement={
             <BadgedIcon name="notifications" color={primaryColor} size={30} />
           }
-          headerText={'Hello ' + data.name}
+          headerText={'Xin chào ' + data.name}
           rightElement={
             <HeaderAvatar
               url={data.avatar}

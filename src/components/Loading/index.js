@@ -1,18 +1,18 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Spinner from 'react-native-spinkit';
-import {SafeAreaView, StyleSheet} from 'react-native';
-import {primaryColor} from '../../styles/color';
-import {containerOverlay} from '../../styles/layoutStyle';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { primaryColor } from '../../styles/color';
+import { containerOverlay } from '../../styles/layoutStyle';
 import { Text } from 'react-native-elements';
 
 const Loading = () => {
-//   const [visible, setVisible] = useState(true);
-//   useEffect(() => {
-//     let time = setTimeout(() => setVisible(false), 10000);
-//     return () => {
-//       clearTimeout(time);
-//     };
-//   }, [visible]);
+  //   const [visible, setVisible] = useState(true);
+  //   useEffect(() => {
+  //     let time = setTimeout(() => setVisible(false), 10000);
+  //     return () => {
+  //       clearTimeout(time);
+  //     };
+  //   }, [visible]);
 
   return (
     <SafeAreaView style={[styles.container, styles.containerOverlay]}>
@@ -25,7 +25,7 @@ const Loading = () => {
       />
       <Text style={styles.text}>Xin vui lòng đợi</Text>
     </SafeAreaView>
-  )
+  );
 };
 
 var styles = StyleSheet.create({
@@ -34,6 +34,7 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFF',
+    zIndex: 9999,
   },
   containerOverlay: {
     ...containerOverlay,
@@ -43,8 +44,8 @@ var styles = StyleSheet.create({
   },
   text: {
     color: primaryColor,
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 });
 
 export default Loading;

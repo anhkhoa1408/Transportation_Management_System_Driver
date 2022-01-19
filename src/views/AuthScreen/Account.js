@@ -1,264 +1,273 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-  Image,
+  FlatList,
   SafeAreaView,
-  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  StatusBar,
 } from 'react-native';
+import { Avatar, Icon, ListItem, Switch } from 'react-native-elements';
+import { container, shadowCard } from '../../styles/layoutStyle';
+import img from '../../assets/images/download.jpg';
 import { COLORS } from '../../styles';
-import authApi from '../../api/authApi';
 import { useDispatch } from 'react-redux';
-import { CLEAN_STORE } from '../../constants/types';
-import { store } from '../../config/configureStore';
-import { useFormik } from 'formik';
-import * as Bonk from 'yup';
-import { saveInfo } from '../../actions/actions';
-import ModalMess from '../../components/ModalMess';
-import { danger } from '../../styles/color';
+import { success, warning, danger, backdropColor } from '../../styles/color';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Account = ({ navigation }) => {
-  const [data, setData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    cpassword: '',
-  });
-  const [avatar, setAvatar] = useState(
-    'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  );
-  const [dataChange, setDataChange] = useState(true);
-  const [user, setUser] = useState({});
   const dispatch = useDispatch();
-  const { userInfo } = store.getState();
-  const [alert, setAlert] = useState(null);
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: data,
-    validationSchema: Bonk.object({
-      name: Bonk.string().required('Thông tin bắt buộc'),
-      email: Bonk.string()
-        .required('Thông tin bắt buộc')
-        .email('Email không hợp lệ'),
-      //   password: Bonk.string()
-      //     .required('Thông tin bắt buộc')
-      //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
-    }),
-    onSubmit: values => {
-      handleSubmit(values);
-    },
+  const [toggle, setToggle] = useState({
+    language: true,
+    nightMode: false,
+    notification: false,
   });
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setUser(userInfo);
-      setData({
-        ...data,
-        name: userInfo.user.name,
-        email: userInfo.user.email,
-      });
-      if ('avatar' in userInfo.user)
-        if ('url' in userInfo.user.avatar) setAvatar(userInfo.user.avatar.url);
-      setDataChange(false);
-      setDataChange(true);
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  const handleSubmit = values => {
-    let { name, email } = values;
-    let data = {
-      name: name,
-      email: email,
-    };
-    authApi
-      .update(user.user.id, data)
-      .then(response => {
-        dispatch(saveInfo(user));
-        setAlert({
-          type: 'success',
-          message: 'Cập nhật thông tin thành công',
-        });
-      })
-      .catch(err => {
-        setAlert({
-          type: 'error',
-          message: 'Cập nhật thông tin thất bại',
-        });
-      });
+  const toggleSwitch = (e, item) => {
+    console.log(item);
+    setToggle({ ...toggle, [item.name]: e });
   };
 
-  return (
-    <ScrollView>
-      <SafeAreaView style={styles.screen}>
-        {alert && (
-          <ModalMess
-            type={alert.type}
-            message={alert.message}
-            setAlert={setAlert}
-            alert={alert}
-          />
-        )}
-        <View style={{ alignItems: 'center' }}>
-          {dataChange && (
-            <Image
-              style={{
-                height: 145,
-                width: 145,
-                resizeMode: 'contain',
-                marginBottom: 20,
-              }}
-              source={{
-                uri: avatar,
-              }}
-            />
-          )}
-          <TouchableOpacity>
-            <Text style={styles.forgot}>Change avatar</Text>
-          </TouchableOpacity>
-        </View>
+  const accountList = [
+    {
+      title: 'Chỉnh sửa thông tin',
+      icon: 'edit',
+      navigate: 'EditProfile',
+      color: '#CCC',
+    },
+    {
+      title: 'Đổi mật khẩu',
+      icon: 'lock',
+      navigate: 'ChangePass',
+      color: '#fc6603',
+    },
+    {
+      title: 'Đăng xuất',
+      icon: 'logout',
+      navigate: '',
+      color: danger,
+    },
+  ];
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.texttitle}>Name</Text>
-          <TouchableOpacity
-            style={{ marginLeft: 20 }}
-            onPress={formik.submitForm}>
-            <Text style={styles.forgot}>Change</Text>
-          </TouchableOpacity>
-        </View>
+  const appList = [
+    {
+      title: 'English',
+      icon: 'language',
+      name: 'language',
+      state: toggle.language,
+      color: '#ac4ff7',
+    },
+    {
+      title: 'Chế độ tối',
+      icon: 'nightlight-round',
+      name: 'nightMode',
+      state: toggle.nightMode,
+      color: '#000',
+    },
+    {
+      title: 'Thông báo',
+      icon: 'notifications',
+      name: 'notification',
+      state: toggle.notification,
+      color: COLORS.primary,
+    },
+  ];
 
-        <View style={styles.inputView}>
-          {dataChange && (
-            <TextInput
-              name="name"
-              style={styles.fsize}
-              onChangeText={text => {
-                formik.setFieldValue('name', text);
-              }}
-              value={formik.values.name}
-            />
-          )}
-        </View>
+  const keyExtractor = (item, index) => index.toString();
 
-        {formik.touched.name && formik.errors.name ? (
-          <Text style={{ color: danger, marginTop: 10 }}>
-            {formik.errors.name}
-          </Text>
-        ) : null}
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 20,
-          }}>
-          <Text style={styles.texttitle}>Email</Text>
-          <TouchableOpacity
-            style={{ marginLeft: 20 }}
-            onPress={formik.submitForm}>
-            <Text style={styles.forgot}>Change</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.inputView}>
-          {dataChange && (
-            <TextInput
-              name="email"
-              style={styles.fsize}
-              value={formik.values.email}
-              onChangeText={text => formik.setFieldValue('email', text)}
-            />
-          )}
-        </View>
-
-        {formik.touched.email && formik.errors.email ? (
-          <Text style={{ color: danger, marginTop: 10 }}>
-            {formik.errors.email}
-          </Text>
-        ) : null}
-
-        <TouchableOpacity>
-          <Text style={{ ...styles.forgot, marginTop: 20 }}>
-            Change Password
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => {
-              dispatch({ type: CLEAN_STORE });
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          item.navigate
+            ? navigation.navigate(item.navigate)
+            : dispatch({ type: 'CLEAN_STORE' });
+        }}
+        style={{ width: '100%' }}>
+        <ListItem
+          containerStyle={{
+            width: '100%',
+            display: 'flex',
+            paddingVertical: 20,
+          }}
+          bottomDivider>
+          <View
+            style={{
+              backgroundColor: item.color,
+              padding: 12,
+              borderRadius: 20,
             }}>
-            <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
-              Log out
-            </Text>
-          </TouchableOpacity>
+            <Icon name={item.icon} color="#FFF" size={22} />
+          </View>
+          <ListItem.Title
+            style={{
+              flex: 1,
+              fontSize: 18,
+              marginLeft: 10,
+            }}>
+            {item.title}
+          </ListItem.Title>
+
+          <ListItem.Chevron size={30} />
+        </ListItem>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderAppItem = ({ item }) => {
+    return (
+      <View style={{ width: '100%' }}>
+        <ListItem
+          containerStyle={{
+            width: '100%',
+            display: 'flex',
+            paddingVertical: 20,
+          }}
+          bottomDivider>
+          <View
+            style={{
+              backgroundColor: item.color,
+              padding: 12,
+              borderRadius: 20,
+            }}>
+            <Icon name={item.icon} color="#FFF" size={22} />
+          </View>
+          <ListItem.Title
+            style={{
+              flex: 1,
+              fontSize: 18,
+              marginLeft: 10,
+            }}>
+            {item.title}
+          </ListItem.Title>
+
+          <View
+            style={
+              item.state
+                ? [styles.switchContainer, styles.switchOn]
+                : [styles.switchContainer, styles.switchOff]
+            }>
+            <Switch
+              onValueChange={e => toggleSwitch(e, item)}
+              thumbColor="#FFF"
+              trackColor={{ false: '#CCC', true: success }}
+              value={item.state}
+            />
+          </View>
+        </ListItem>
+      </View>
+    );
+  };
+
+  const footerComponent = (
+    <>
+      <Text style={styles.sectionText}>Tài khoản</Text>
+      <FlatList
+        listKey="A"
+        nestedScrollEnabled
+        style={{
+          width: '100%',
+          paddingHorizontal: 20,
+          flexGrow: 0,
+          marginBottom: 20,
+        }}
+        keyExtractor={keyExtractor}
+        data={accountList}
+        renderItem={renderItem}
+      />
+      <Text style={styles.sectionText}>Ứng dụng</Text>
+      <FlatList
+        listKey="B"
+        nestedScrollEnabled
+        style={{
+          width: '100%',
+          paddingHorizontal: 20,
+          flexGrow: 0,
+          marginBottom: 20,
+        }}
+        keyExtractor={keyExtractor}
+        data={appList}
+        renderItem={renderAppItem}
+      />
+    </>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View nestedScrollEnabled style={styles.header}>
+        <Avatar rounded size="large" source={img} />
+        <View style={{ marginLeft: 20, flex: 1 }}>
+          <Text style={styles.smallText}>Nhân viên</Text>
+          <Text style={styles.bigText}>Shober of Justice</Text>
+          <Text style={styles.statusText}>Đang làm việc</Text>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+          <Icon name="edit" size={28} color={COLORS.primary} />
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        style={styles.scrollContainer}
+        data={[]}
+        renderItem={() => null}
+        ListEmptyComponent={footerComponent}
+      />
+    </SafeAreaView>
   );
 };
 
 export default Account;
 
-export const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: COLORS.background1,
-    flexDirection: 'column',
-    padding: 30,
-    alignItems: 'stretch',
+const styles = StyleSheet.create({
+  container: {
+    ...container,
   },
-  inputView: {
+  scrollContainer: {
+    width: '100%',
+  },
+  header: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
-  },
-  fsize: {
-    fontSize: 17,
-    color: '#000',
-    paddingLeft: 20,
-    paddingVertical: 8,
-  },
-  texttitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  forgot: {
-    color: '#3B3DBF',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  reset: {
-    color: COLORS.red,
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  container: {
+    width: '100%',
+    paddingHorizontal: 30,
+    marginBottom: 45,
     marginTop: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  loginBtn: {
-    backgroundColor: COLORS.red,
+  bigText: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: '#000',
+  },
+  smallText: {
+    fontSize: 15,
+    color: 'rgba(0, 0, 0, 0.5)',
+  },
+  editBtn: {
+    marginVertical: 20,
+    marginRight: 20,
+    fontSize: 20,
+    color: COLORS.primary,
+  },
+  statusText: {
+    color: success,
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
+  sectionText: {
+    alignSelf: 'flex-start',
+    marginLeft: 30,
+  },
+  switchContainer: {
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '80%',
-    borderRadius: 15,
-    height: 50,
+    borderRadius: 30,
+  },
+  switchOn: {
+    backgroundColor: success,
+  },
+  switchOff: {
+    backgroundColor: '#CCC',
   },
 });

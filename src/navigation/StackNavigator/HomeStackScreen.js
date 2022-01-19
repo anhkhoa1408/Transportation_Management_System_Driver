@@ -4,6 +4,9 @@ import HomeScreen from '../../views/HomeScreen/HomeScreen';
 import Account from '../../views/AuthScreen/Account';
 import OrderDetailScreen from '../../views/OrderScreen/OrderDetailScreen';
 import SendMessageScreen from '../../views/ChatScreen/MessageScreen';
+import EditProfile from '../../views/SettingScreen/EditProfile';
+import CustomerInfo from '../../views/CustomerInfo/CustomerInfo';
+import ChangePass from '../../views/SettingScreen/ChangePass';
 
 const HomeStack = createStackNavigator();
 
@@ -18,7 +21,9 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="Account" component={Account} />
       <HomeStack.Screen name="SendMessage" component={SendMessageScreen} />
       <HomeStack.Screen name="OrderDetail" component={OrderDetailScreen} />
-      {/* <HomeStack.Screen name="SendMessageScreen" component={Account} /> */}
+      <HomeStack.Screen name="EditProfile" component={EditProfile} />
+      <HomeStack.Screen name="CustomerInfo" component={CustomerInfo} />
+      <HomeStack.Screen name="ChangePass" component={ChangePass} />
     </HomeStack.Navigator>
   );
 };
