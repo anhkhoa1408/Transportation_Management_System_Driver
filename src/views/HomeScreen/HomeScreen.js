@@ -13,6 +13,7 @@ import homeAPI from '../../api/homeAPI';
 // Import Asset
 import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
+import { container } from '../../styles/layoutStyle';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
@@ -59,13 +60,13 @@ function HomeScreen({ navigation, ...props }) {
 
   return (
     <>
-      {/* {!listData[2].count && <Loading />} */}
+      {!listData.length && <Loading />}
       <View style={homeStyle.container}>
         <Header
           leftElement={
             <BadgedIcon name="notifications" color={COLORS.primary} size={30} />
           }
-          headerText={'Xin chào ' + data.name}
+          headerText={'Xin chào ' + user.name}
           rightElement={
             <HeaderAvatar
               url={user.avatar}
@@ -85,7 +86,7 @@ function HomeScreen({ navigation, ...props }) {
         </View>
 
         {/* Info Cards Section */}
-        {/* {listData.length > 0 && (
+        {listData.length > 0 && (
           <View style={homeStyle.listInfo}>
             <FlatList
               showsHorizontalScrollIndicator={false}
@@ -95,7 +96,7 @@ function HomeScreen({ navigation, ...props }) {
               keyExtractor={keyExtractor}
             />
           </View>
-        )} */}
+        )}
 
         <SpeedDial
           isOpen={open}
@@ -126,6 +127,9 @@ function HomeScreen({ navigation, ...props }) {
 }
 
 const homeStyle = StyleSheet.create({
+  container: {
+    ...container,
+  },
   listInfo: {
     width: '100%',
     height: '30%',

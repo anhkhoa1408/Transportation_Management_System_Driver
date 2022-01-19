@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import { primaryColor } from '../../styles/color';
 import { containerOverlay } from '../../styles/layoutStyle';
 import { Text } from 'react-native-elements';
+import { COLORS } from '../../styles';
 
 const Loading = () => {
   //   const [visible, setVisible] = useState(true);
@@ -21,7 +22,7 @@ const Loading = () => {
         isVisible={true}
         size={100}
         type="ThreeBounce"
-        color={primary}
+        color={COLORS.primary}
       />
       <Text style={styles.text}>Xin vui lòng đợi</Text>
     </SafeAreaView>
@@ -43,7 +44,7 @@ var styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    color: primaryColor,
+    color: COLORS.primary,
     fontSize: 20,
   },
 });

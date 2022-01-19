@@ -4,11 +4,11 @@ import HomeScreen from '../../views/HomeScreen/HomeScreen';
 import ChatScreen from '../../views/ChatScreen/ChatScreen';
 import { Icon } from 'react-native-elements';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { primaryColor } from '../../styles/color';
 import VehicleScreen from '../../views/VehicleScreen/VehicleScreen';
 import OrderScreen from '../../views/OrderScreen/OrderScreen';
 import Account from '../../views/AuthScreen/Account';
 import HomeStackScreen from '../StackNavigator/HomeStackScreen';
+import { COLORS } from '../../styles';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -17,7 +17,7 @@ const TabNavigatior = () => {
     <Tab.Navigator
       backBehavior="initialRoute"
       initialRouteName="Home"
-      activeColor={primaryColor}
+      activeColor={COLORS.primary}
       barStyle={style.container}
       screenOptions={({ route }) => ({
         headerShown: false,
