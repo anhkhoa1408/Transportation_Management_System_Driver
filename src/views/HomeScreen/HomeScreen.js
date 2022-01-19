@@ -79,6 +79,7 @@ function HomeScreen({ navigation, ...props }) {
         <View
           style={{
             ...STYLES.container,
+            flex: 0,
             height: '40%',
             paddingHorizontal: 10,
           }}>
