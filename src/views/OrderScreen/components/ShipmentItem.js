@@ -9,10 +9,10 @@ import OrderImage from '../../../assets/images/outline_inventory_black_24dp.png'
 import { COLORS, FONTS, STYLES } from '../../../styles';
 
 export default function ShipmentItem({
-  navigation,
   item,
   isDone,
   checkBoxHandler,
+  onPress,
 }) {
   return (
     <TouchableOpacity
@@ -22,9 +22,13 @@ export default function ShipmentItem({
         borderRadius: 12,
         backgroundColor: COLORS.white,
       }}
-      onPress={() => navigation.navigate('OrderDetail')}>
+      onPress={() => onPress()}>
       <View style={{ ...STYLES.row }}>
-        <Image size={50} tintColor={'orange'} source={OrderImage} />
+        <Image
+          size={50}
+          tintColor={isDone === false ? 'orange' : COLORS.green}
+          source={OrderImage}
+        />
         <View
           style={{
             ...STYLES.column,
@@ -33,8 +37,12 @@ export default function ShipmentItem({
             alignItems: 'flex-start',
           }}>
           <Text style={{ ...FONTS.MediumBold }}>ID: {item.id}</Text>
-          <Text style={{ ...FONTS.MediumBold, color: 'orange' }}>
-            {isDone === true ? 'Đang vận chuyển' : 'Đã nhận'}
+          <Text
+            style={{
+              ...FONTS.MediumBold,
+              color: isDone === false ? 'orange' : COLORS.green,
+            }}>
+            {isDone === false ? 'Đang vận chuyển' : 'Đã nhận'}
           </Text>
         </View>
         <CheckBox
