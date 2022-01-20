@@ -1,10 +1,19 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+// Component
 import React from 'react';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
+// Function
+import { joinAddress } from '../../../utils/addressUltis';
+// Asset
 import OrderImage from '../../../assets/images/outline_inventory_black_24dp.png';
 import { COLORS, FONTS, STYLES } from '../../../styles';
-import { joinAddress } from '../../../utils/addressUltis';
 
-export default function ShipmentItem({ navigation, item, isDone }) {
+export default function ShipmentItem({
+  navigation,
+  item,
+  isDone,
+  checkBoxHandler,
+}) {
   return (
     <TouchableOpacity
       style={{
@@ -28,6 +37,13 @@ export default function ShipmentItem({ navigation, item, isDone }) {
             {isDone === true ? 'Đang vận chuyển' : 'Đã nhận'}
           </Text>
         </View>
+        <CheckBox
+          disabled={false}
+          value={isDone}
+          onValueChange={newValue => {
+            checkBoxHandler(item.id, newValue);
+          }}
+        />
       </View>
       <View style={{ paddingLeft: 5 }}>
         <Text style={{ ...FONTS.Medium, color: 'gray' }}>Đến</Text>
