@@ -7,6 +7,7 @@ import SendMessageScreen from '../../views/ChatScreen/MessageScreen';
 import EditProfile from '../../views/SettingScreen/EditProfile';
 import CustomerInfo from '../../views/CustomerInfo/CustomerInfo';
 import ChangePass from '../../views/SettingScreen/ChangePass';
+import NotificationScreen from '../../views/NotificationScreen/NotificationScreen';
 
 const HomeStack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="EditProfile" component={EditProfile} />
       <HomeStack.Screen name="CustomerInfo" component={CustomerInfo} />
       <HomeStack.Screen name="ChangePass" component={ChangePass} />
+      <HomeStack.Screen name="Notification" component={NotificationScreen} />
     </HomeStack.Navigator>
   );
 };

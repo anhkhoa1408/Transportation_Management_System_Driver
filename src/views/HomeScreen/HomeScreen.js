@@ -65,7 +65,12 @@ function HomeScreen({ navigation, ...props }) {
       <View style={homeStyle.container}>
         <Header
           leftElement={
-            <BadgedIcon name="notifications" color={COLORS.primary} size={30} />
+            <BadgedIcon
+              name="notifications"
+              color={COLORS.primary}
+              size={30}
+              onPress={() => navigation.navigate('Notification')}
+            />
           }
           headerText={'Xin chào ' + user.name}
           rightElement={

@@ -30,14 +30,17 @@ const ChangePass = ({ navigation }) => {
     enableReinitialize: true,
     initialValues: data,
     validationSchema: Bonk.object({
-      currPass: Bonk.string()
-        .required('Thông tin bắt buộc')
-        .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
+      currPass: Bonk.string().required('Thông tin bắt buộc'),
       password: Bonk.string()
         .required('Thông tin bắt buộc')
+        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, 'Mật khẩu không hợp lệ')
         .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
       confirmPassword: Bonk.string()
         .required('Thông tin bắt buộc')
+        .oneOf(
+          [Bonk.ref('password'), null],
+          'Mật khẩu và xác nhận mật khẩu không khớp',
+        )
         .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
     }),
     onSubmit: values => {
@@ -62,29 +65,30 @@ const ChangePass = ({ navigation }) => {
   // }, [navigation]);
 
   const handleSubmit = values => {
-    setLoading(true);
-    let { name, email } = values;
-    let data = {
-      name: name,
-      email: email,
-    };
-    authApi
-      .update(user.user.id, data)
-      .then(response => {
-        setLoading(false);
-        dispatch(saveInfo(user));
-        setAlert({
-          type: 'success',
-          message: 'Cập nhật thông tin thành công',
-        });
-      })
-      .catch(err => {
-        setLoading(false);
-        setAlert({
-          type: 'error',
-          message: 'Cập nhật thông tin thất bại',
-        });
-      });
+    console.log(values);
+    // setLoading(true);
+    // let { name, email } = values;
+    // let data = {
+    //   name: name,
+    //   email: email,
+    // };
+    // authApi
+    //   .update(user.user.id, data)
+    //   .then(response => {
+    //     setLoading(false);
+    //     dispatch(saveInfo(user));
+    //     setAlert({
+    //       type: 'success',
+    //       message: 'Cập nhật thông tin thành công',
+    //     });
+    //   })
+    //   .catch(err => {
+    //     setLoading(false);
+    //     setAlert({
+    //       type: 'error',
+    //       message: 'Cập nhật thông tin thất bại',
+    //     });
+    //   });
   };
 
   return (
@@ -111,8 +115,8 @@ const ChangePass = ({ navigation }) => {
             textAlign: 'center',
             marginBottom: 25,
           }}>
-          Mật khẩu mới phải tối thiểu 8 ký tự, bao gồm chữ in hoa, số, ký tự đặc
-          biệt và khác với mật khẩu hiện tại
+          Mật khẩu mới phải tối thiểu 8 ký tự, bao gồm chữ in hoa, số và khác
+          với mật khẩu hiện tại
         </Text>
 
         <TextField
@@ -147,6 +151,7 @@ const ChangePass = ({ navigation }) => {
           title="Xác nhận mật khẩu"
           style={styles.fsize}
           value={formik.values.confirmPassword}
+          secureTextEntry
           onChangeText={text => formik.setFieldValue('confirmPassword', text)}
         />
 
@@ -158,7 +163,6 @@ const ChangePass = ({ navigation }) => {
 
         <PillButton
           title="Cập nhật"
-          // type="outline"
           buttonStyle={{ backgroundColor: success }}
           onPress={formik.submitForm}
         />

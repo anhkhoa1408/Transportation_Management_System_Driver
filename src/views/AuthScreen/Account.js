@@ -221,6 +221,7 @@ const Account = ({ navigation, userInfo }) => {
 };
 
 const mapStateToProps = state => {
+  console.log(JSON.stringify(state));
   return {
     userInfo: state.userInfo,
   };
