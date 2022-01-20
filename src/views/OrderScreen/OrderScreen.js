@@ -1,15 +1,23 @@
+// Import Component
 import React, { useState, useEffect } from 'react';
 import { View, FlatList } from 'react-native';
-import shipmentApi from '../../api/shipmentAPI';
-import { STYLES } from '../../styles';
 import Loading from '../../components/Loading';
 import Header from '../../components/Header';
 import ShipmentItem from './components/ShipmentItem';
+// Import Function
+import shipmentApi from '../../api/shipmentAPI';
+import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { saveShipmentState } from '../../actions/actions';
+// Import Asset
+import { STYLES } from '../../styles';
 
-export default function OrderScreen({ navigation }) {
+function OrderScreen({ navigation, ...props }) {
   const [data, setData] = useState([]);
-  const [check, setCheck] = useState([]);
   const [loaded, setLoaded] = useState(false);
+
+  const { shipmentState } = props;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -17,20 +25,37 @@ export default function OrderScreen({ navigation }) {
         .shipment()
         .then(resData => {
           setData(resData);
-          setCheck(data.map(item => 'arrived_time' in item));
+
+          // Save Shipment's State
+          let tempShipmentState = shipmentState;
+          resData.map(item => {
+            if (!(item.id in tempShipmentState)) {
+              tempShipmentState = {
+                ...tempShipmentState,
+                [item.id]: {
+                  checked: false,
+                  time: new Date(),
+                },
+              };
+            }
+          });
+          dispatch(saveShipmentState(tempShipmentState));
           setLoaded(true);
         })
         .catch(err => {
-          setData([]);
-          setCheck(data.map(item => 'arrived_time' in item));
-          setLoaded(true);
+          // Handle Error
+          // setLoaded(true);
         });
     });
     return unsubscribe;
   }, [navigation]);
 
   const renderItem = ({ item, index }) => (
-    <ShipmentItem navigation={navigation} item={item} isDone={check[index]} />
+    <ShipmentItem
+      navigation={navigation}
+      item={item}
+      isDone={shipmentState[item.id].checked}
+    />
   );
 
   return (
@@ -49,3 +74,9 @@ export default function OrderScreen({ navigation }) {
     </View>
   );
 }
+
+const mapStateToProps = state => ({
+  shipmentState: state.shipmentState,
+});
+
+export default connect(mapStateToProps)(OrderScreen);
