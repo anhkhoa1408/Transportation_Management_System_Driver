@@ -2,6 +2,11 @@ export const headerFont = {
   fontSize: 25,
 };
 
+export const SmolBold = {
+  fontSize: 14,
+  fontWeight: '700',
+};
+
 export const MediumBold = {
   fontSize: 15,
   fontWeight: '700',
@@ -9,8 +14,29 @@ export const MediumBold = {
   color: '#000',
 };
 
+export const BigBold = {
+  fontSize: 16,
+  fontWeight: '700',
+};
+
+export const Smol = {
+  fontSize: 14,
+};
+
 export const Medium = {
   fontSize: 15,
 };
 
-export default { headerFont, Medium, MediumBold };
+export const Big = {
+  fontSize: 16,
+};
+
+export default {
+  headerFont,
+  Smol,
+  Medium,
+  Big,
+  SmolBold,
+  MediumBold,
+  BigBold,
+};

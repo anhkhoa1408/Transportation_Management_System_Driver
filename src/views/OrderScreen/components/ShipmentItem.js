@@ -19,6 +19,7 @@ export default function ShipmentItem({
       style={{
         ...STYLES.subContainer,
         ...STYLES.shadowCard,
+        padding: 20,
         borderRadius: 12,
         backgroundColor: COLORS.white,
       }}

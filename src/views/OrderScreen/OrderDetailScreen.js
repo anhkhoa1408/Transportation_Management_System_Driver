@@ -7,10 +7,11 @@ import {
   Image,
 } from 'react-native';
 import { Icon, CheckBox, Avatar, Text } from 'react-native-elements';
-import { COLORS, FONTS } from '../../styles';
+import { COLORS, FONTS, STYLES } from '../../styles';
 import img from '../../assets/images/download.jpg';
 import { container, header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import Header from '../../components/Header';
 
 export default function OrderDetailScreen({ navigation }) {
   const tempData = [
@@ -101,38 +102,36 @@ export default function OrderDetailScreen({ navigation }) {
   const renderItem = ({ item, index }) => (
     <View
       style={{
-        paddingVertical: 25,
-        paddingHorizontal: 20,
-        marginHorizontal: 25,
-        marginVertical: 15,
+        ...STYLES.subContainer,
+        ...STYLES.shadowCard,
+        padding: 20,
         borderRadius: 12,
         backgroundColor: COLORS.white,
-        ...styles.shadow,
       }}>
-      <View style={{ ...styles.row }}>
+      <View style={{ ...STYLES.row }}>
         <Image
           style={{
             tintColor: '#000000',
             resizeMode: 'contain',
             height: 50,
             width: 50,
+            marginTop: 10,
           }}
           source={require('../../assets/images/package.png')}
         />
         <View
           style={{
-            ...styles.column,
+            ...STYLES.column,
             flex: 1,
-            marginLeft: 10,
-            alignItems: 'flex-start',
+            marginLeft: 20,
           }}>
-          <Text style={{ ...styles.bigText }}>ID: {item.id}</Text>
-          <Text style={{ ...styles.smolText }}>
-            Số lượng: <Text style={{ ...styles.info }}>{item.quantity}</Text>
+          <Text style={{ ...FONTS.Big }}>ID: {item.id}</Text>
+          <Text style={{ ...FONTS.Smol }}>
+            Số lượng: <Text style={{ ...FONTS.SmolBold }}>{item.quantity}</Text>
           </Text>
-          <Text style={{ ...styles.smolText }}>
+          <Text style={{ ...FONTS.Smol }}>
             Địa điểm hiện tại:{' '}
-            <Text style={{ ...styles.info }}>{item.current_address}</Text>
+            <Text style={{ ...FONTS.SmolBold }}>{item.current_address}</Text>
           </Text>
         </View>
       </View>
@@ -140,30 +139,28 @@ export default function OrderDetailScreen({ navigation }) {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <MaterialIcon
-            name="west"
-            size={30}
-            onPress={() => navigation.goBack()}
-          />
-        </TouchableOpacity>
-        <Text h4>Chi tiết đơn</Text>
-        <Avatar
-          rounded
-          size="small"
-          source={img}
-          onPress={() => navigation.navigate('CustomerInfo')}
-        />
-      </View>
+    <View style={{ ...STYLES.container }}>
+      <Header
+        leftElement={
+          <TouchableOpacity>
+            <MaterialIcon
+              name="west"
+              size={30}
+              onPress={() => navigation.goBack()}
+            />
+          </TouchableOpacity>
+        }
+        headerText={'Chi tiết đơn hàng'}
+      />
+
       {data.length > 0 && (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           <View
             style={{
-              ...styles.row,
-              paddingHorizontal: 20,
-              paddingVertical: 10,
+              ...STYLES.row,
+              ...STYLES.subContainer,
+              padding: 0,
+              paddingBottom: 20,
               ...styles.borderBottom,
             }}>
             <Avatar
@@ -172,7 +169,7 @@ export default function OrderDetailScreen({ navigation }) {
               source={img}
             />
             <View style={{ flex: 1 }}>
-              <View style={{ ...styles.column, flex: 1, marginLeft: 20 }}>
+              <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
                 <Text>{data[0].order.sender_name}</Text>
                 <Text>SĐT: {data[0].order.sender_phone}</Text>
               </View>
@@ -185,29 +182,34 @@ export default function OrderDetailScreen({ navigation }) {
             />
           </View>
 
-          <View style={{ ...styles.borderBottom, padding: 20 }}>
-            <View style={{ ...styles.row }}>
+          <View
+            style={{
+              ...STYLES.subContainer,
+              paddingBottom: 18,
+              ...styles.borderBottom,
+            }}>
+            <View style={{ ...STYLES.row }}>
               <View
                 style={{
-                  ...styles.column,
+                  ...STYLES.column,
                   flex: 1,
                   marginRight: 20,
                 }}>
                 <Text style={{ ...styles.title }}>Địa chỉ</Text>
               </View>
-              <View style={{ ...styles.column, flex: 0.8 }}>
+              <View style={{ ...STYLES.column, flex: 0.8 }}>
                 <Text style={{ ...styles.title }}>Cần vận chuyển</Text>
               </View>
             </View>
-            <View style={{ ...styles.row }}>
+            <View style={{ ...STYLES.row }}>
               <View
                 style={{
-                  ...styles.column,
+                  ...STYLES.column,
                   flex: 1,
                   alignItems: 'flex-start',
                   marginRight: 20,
                 }}>
-                <Text style={{ ...styles.info }}>
+                <Text style={{ ...FONTS.SmolBold }}>
                   {data[0].current_address === null
                     ? data[0].order.from_address.street +
                       ', ' +
@@ -221,11 +223,11 @@ export default function OrderDetailScreen({ navigation }) {
               </View>
               <View
                 style={{
-                  ...styles.column,
+                  ...STYLES.column,
                   flex: 0.8,
                   alignItems: 'flex-start',
                 }}>
-                <Text style={{ ...styles.info }}>
+                <Text style={{ ...FONTS.SmolBold }}>
                   {data.reduce(
                     (previous, current) =>
                       previous + current.weight * current.quantity,
@@ -244,7 +246,7 @@ export default function OrderDetailScreen({ navigation }) {
               keyExtractor={item => `${item.id}`}
             />
           </View>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={STYLES.button}>
             <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
               Chụp ảnh
             </Text>
@@ -269,67 +271,8 @@ export default function OrderDetailScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    ...container,
-    alignItems: 'stretch',
-    flex: 1,
-  },
-  header: {
-    ...header,
-    // width: '100%',
-    // flexDirection: 'row',
-    // justifyContent: 'space-between'
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 3,
-  },
-  row: {
-    flexWrap: 'nowrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  column: {
-    flexWrap: 'nowrap',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  smolText: {
-    fontSize: 12,
-    marginVertical: 1,
-  },
-  bigText: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
   borderBottom: {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.primary,
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '60%',
-    backgroundColor: '#3B3DBF',
-    borderRadius: 8,
-    paddingVertical: 10,
-    alignSelf: 'center',
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  title: {
-    fontWeight: '700',
-    fontSize: 14,
-    color: 'gray',
-  },
-  info: {
-    fontWeight: '700',
-    fontSize: 14,
   },
 });

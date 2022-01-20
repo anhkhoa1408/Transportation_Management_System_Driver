@@ -9,7 +9,6 @@ export const container = {
 };
 
 export const subContainer = {
-  padding: 20,
   marginHorizontal: 20,
   marginVertical: 10,
 };
@@ -36,11 +35,12 @@ export const shadowCard = {
   shadowColor: '#000',
   shadowOffset: {
     width: 0,
-    height: 3,
+    height: 2,
   },
-  shadowRadius: 5,
-  shadowOpacity: 1.0,
-  elevation: 3,
+  shadowOpacity: 0.23,
+  shadowRadius: 2.62,
+
+  elevation: 4,
 };
 
 export const shadowInput = {
@@ -58,13 +58,23 @@ export const row = {
   flexWrap: 'nowrap',
   flexDirection: 'row',
   justifyContent: 'center',
-  alignItems: 'center',
 };
+
 export const column = {
   flexWrap: 'nowrap',
   flexDirection: 'column',
   justifyContent: 'center',
-  alignItems: 'center',
 };
 
-export default { container, subContainer, shadowCard, row, column };
+export const button = {
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '40%',
+  backgroundColor: '#3B3DBF',
+  borderRadius: 8,
+  padding: 12,
+  alignSelf: 'center',
+  margin: 10,
+};
+
+export default { container, subContainer, shadowCard, row, column, button };

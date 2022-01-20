@@ -29,15 +29,7 @@ function OrderScreen({ navigation, ...props }) {
           // Save Shipment's State
           resData.map(item => {
             if (!(item.id in shipmentState)) {
-              dispatch(
-                saveShipmentState({
-                  ...shipmentState,
-                  [item.id]: {
-                    checked: false,
-                    time: new Date().toDateString(),
-                  },
-                }),
-              );
+              updateShipmentState(item.id, false);
             }
           });
           setLoaded(true);
@@ -56,7 +48,7 @@ function OrderScreen({ navigation, ...props }) {
         ...shipmentState,
         [id]: {
           checked: state,
-          time: shipmentState[id].time,
+          time: new Date().toDateString(),
         },
       }),
     );
