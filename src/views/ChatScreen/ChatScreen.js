@@ -3,11 +3,12 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Avatar, SearchBar, Text, ListItem } from 'react-native-elements';
 import CustomSearch from '../../components/CustomSearch/CustomSearch';
 import { container, header } from '../../styles/layoutStyle';
-import banner from '../../assets/images/banner.jpg';
 import img from '../../assets/images/download.jpg';
 import { ScrollView } from 'react-native-gesture-handler';
+import { store } from '../../config/configureStore';
 
 const ChatScreen = ({ navigation }) => {
+  const { userInfo } = store.getState();
   const historyChatList = [
     {
       avatar: img,
@@ -63,7 +64,13 @@ const ChatScreen = ({ navigation }) => {
     <View style={chatScreenStyle.container}>
       <View style={chatScreenStyle.header}>
         <Text h4>Tin nhắn</Text>
-        <Avatar rounded size="small" source={banner} />
+        <Avatar
+          rounded
+          size="small"
+          source={{
+            uri: userInfo?.user?.avatar?.url,
+          }}
+        />
       </View>
 
       <View style={{ width: '100%', paddingHorizontal: 20 }}>
@@ -76,12 +83,10 @@ const ChatScreen = ({ navigation }) => {
             <TouchableOpacity
               key={index}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate('SendMessage')}
-            >
+              onPress={() => navigation.navigate('SendMessage')}>
               <ListItem
                 underlayColor="#F0F1F5"
-                containerStyle={chatScreenStyle.chatItem}
-              >
+                containerStyle={chatScreenStyle.chatItem}>
                 <Avatar
                   size="medium"
                   avatarStyle={{ borderRadius: 10 }}

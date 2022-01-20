@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Text,
   View,
-  StatusBar,
 } from 'react-native';
 import { Avatar, Icon, ListItem, Switch } from 'react-native-elements';
 import { container, shadowCard } from '../../styles/layoutStyle';
@@ -14,9 +13,9 @@ import img from '../../assets/images/download.jpg';
 import { COLORS } from '../../styles';
 import { useDispatch } from 'react-redux';
 import { success, warning, danger, backdropColor } from '../../styles/color';
-import { ScrollView } from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
 
-const Account = ({ navigation }) => {
+const Account = ({ navigation, userInfo }) => {
   const dispatch = useDispatch();
   const [toggle, setToggle] = useState({
     language: true,
@@ -25,7 +24,6 @@ const Account = ({ navigation }) => {
   });
 
   const toggleSwitch = (e, item) => {
-    console.log(item);
     setToggle({ ...toggle, [item.name]: e });
   };
 
@@ -196,10 +194,16 @@ const Account = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View nestedScrollEnabled style={styles.header}>
-        <Avatar rounded size="large" source={img} />
+        <Avatar
+          rounded
+          size="large"
+          source={{
+            uri: userInfo?.user?.avatar?.url,
+          }}
+        />
         <View style={{ marginLeft: 20, flex: 1 }}>
           <Text style={styles.smallText}>Nhân viên</Text>
-          <Text style={styles.bigText}>Shober of Justice</Text>
+          <Text style={styles.bigText}>{userInfo?.user?.name}</Text>
           <Text style={styles.statusText}>Đang làm việc</Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
@@ -216,7 +220,13 @@ const Account = ({ navigation }) => {
   );
 };
 
-export default Account;
+const mapStateToProps = state => {
+  return {
+    userInfo: state.userInfo,
+  };
+};
+
+export default connect(mapStateToProps, null)(Account);
 
 const styles = StyleSheet.create({
   container: {

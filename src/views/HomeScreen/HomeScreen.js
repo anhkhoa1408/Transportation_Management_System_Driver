@@ -39,7 +39,7 @@ function HomeScreen({ navigation, ...props }) {
       ...user,
       name: userInfo.user.name,
     });
-  }, []);
+  }, [userInfo]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -48,8 +48,9 @@ function HomeScreen({ navigation, ...props }) {
         .then(response => {
           setListData(response);
         })
-        .catch(() => {
+        .catch(err => {
           // Do nothing
+          console.log(err);
         });
     });
     return unsubscribe;

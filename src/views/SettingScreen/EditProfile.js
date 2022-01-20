@@ -20,8 +20,7 @@ const EditProfile = ({ navigation }) => {
   const [data, setData] = useState({
     name: '',
     email: '',
-    password: 'aaaaaaa',
-    phone: '0909145830',
+    phone: '',
   });
   const [avatar, setAvatar] = useState(
     'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
@@ -40,9 +39,7 @@ const EditProfile = ({ navigation }) => {
       email: Bonk.string()
         .required('Thông tin bắt buộc')
         .email('Email không hợp lệ'),
-      //   password: Bonk.string()
-      //     .required('Thông tin bắt buộc')
-      //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
+      phone: Bonk.string().required('Thông tin bắt buộc'),
     }),
     onSubmit: values => {
       handleSubmit(values);
@@ -56,6 +53,7 @@ const EditProfile = ({ navigation }) => {
         ...data,
         name: userInfo.user.name,
         email: userInfo.user.email,
+        phone: userInfo.user.phone,
       });
       if ('avatar' in userInfo.user)
         if ('url' in userInfo.user.avatar) setAvatar(userInfo.user.avatar.url);
@@ -67,16 +65,11 @@ const EditProfile = ({ navigation }) => {
 
   const handleSubmit = values => {
     setLoading(true);
-    let { name, email } = values;
-    let data = {
-      name: name,
-      email: email,
-    };
     authApi
-      .update(user.user.id, data)
+      .update(user.user.id, values)
       .then(response => {
         setLoading(false);
-        dispatch(saveInfo(user));
+        dispatch(saveInfo({ user: response }));
         setAlert({
           type: 'success',
           message: 'Cập nhật thông tin thành công',

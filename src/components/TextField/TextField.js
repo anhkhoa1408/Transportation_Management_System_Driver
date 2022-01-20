@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Image } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, Tooltip } from 'react-native-elements';
+import { COLORS } from '../../styles';
 
 export default function TextField(props) {
   return (
@@ -8,7 +9,7 @@ export default function TextField(props) {
       {'title' in props && <Text style={styles.texttitle}>{props.title}</Text>}
       <View style={styles.inputView}>
         {'icon' in props && <Icon name={props.icon} />}
-        <TextInput style={{ ...styles.fsize, flex: 1 }} {...props} />
+        <TextInput style={{ ...styles.fsize }} {...props} />
         {'afterText' in props && (
           <Text
             style={{ ...styles.fsize, marginRight: 10, textAlign: 'right' }}>
@@ -16,6 +17,19 @@ export default function TextField(props) {
           </Text>
         )}
         {'afterImage' in props && props.afterImage}
+        {/* <Tooltip
+          height={100}
+          width={250}
+          overlayColor="rgba(0,0,0,0.2)"
+          backgroundColor="#FFF"
+          containerStyle={{ alignSelf: 'flex-end' }}
+          popover={
+            <Text style={{ color: COLORS.danger, fontSize: 16 }}>
+              Mật khẩu phải tối thiểu 9 ký tự chữ cái
+            </Text>
+          }>
+          <Icon name="error" color="red" />
+        </Tooltip> */}
       </View>
     </View>
   );
