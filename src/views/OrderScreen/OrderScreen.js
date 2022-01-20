@@ -27,19 +27,20 @@ function OrderScreen({ navigation, ...props }) {
           setData(resData);
 
           // Save Shipment's State
-          let tempShipmentState = shipmentState;
           resData.map(item => {
-            if (!(item.id in tempShipmentState)) {
-              tempShipmentState = {
-                ...tempShipmentState,
-                [item.id]: {
-                  checked: false,
-                  time: new Date(),
-                },
-              };
+            if (!(item.id in shipmentState)) {
+              console.log(id + ' not in state');
+              dispatch(
+                saveShipmentState({
+                  ...shipmentState,
+                  [item.id]: {
+                    checked: false,
+                    time: new Date().toDateString(),
+                  },
+                }),
+              );
             }
           });
-          dispatch(saveShipmentState(tempShipmentState));
           setLoaded(true);
         })
         .catch(err => {
@@ -50,11 +51,31 @@ function OrderScreen({ navigation, ...props }) {
     return unsubscribe;
   }, [navigation]);
 
+  const updateShipmentState = (id, state) => {
+    console.log('Update State called!');
+    console.log('Pre-state: ' + JSON.stringify(shipmentState));
+
+    try {
+      dispatch(
+        saveShipmentState({
+          ...shipmentState,
+          [id]: {
+            checked: state,
+            time: shipmentState[id].time,
+          },
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const renderItem = ({ item, index }) => (
     <ShipmentItem
       navigation={navigation}
       item={item}
       isDone={shipmentState[item.id].checked}
+      checkBoxHandler={updateShipmentState}
     />
   );
 
@@ -69,6 +90,7 @@ function OrderScreen({ navigation, ...props }) {
           keyExtractor={item => `${item.id}`}
         />
       )}
+      {console.log(shipmentState)}
 
       {!loaded && <Loading />}
     </View>
