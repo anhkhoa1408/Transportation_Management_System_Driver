@@ -1,9 +1,9 @@
 import * as types from './../constants/types';
 
-export const saveInfo = (payload) => {
+export const saveInfo = payload => {
   return {
     type: types.SAVE_USER_INFO,
-		payload: payload
+    payload: payload,
   };
 };
 
@@ -21,5 +21,9 @@ export const saveInfoError = payload => {
   };
 };
 
-
-
+export const saveShipmentState = payload => {
+  return {
+    type: types.SAVE_SHIPMENT_STATE,
+    payload: payload,
+  };
+};
