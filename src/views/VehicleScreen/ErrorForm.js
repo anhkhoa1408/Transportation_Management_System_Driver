@@ -5,7 +5,7 @@ import PillButton from '../../components/CustomButton/PillButton';
 import { containerOverlay, shadowCard } from '../../styles/layoutStyle';
 import { DatePicker } from './../../components/DatePicker';
 import CustomInput from '../../components/CustomInput/CustomInput';
-import { backdropColor } from '../../styles/color';
+import { backdropColor, primary } from '../../styles/color';
 
 const ErrorForm = props => {
   return (
@@ -30,14 +30,17 @@ const ErrorForm = props => {
           }}>
           <Card.Title>Thời gian</Card.Title>
           <DatePicker />
-
           <Card.Title style={{ marginTop: 20 }}>Nguyên nhân</Card.Title>
           <CustomInput multiline={true} numberOfLines={5} maxLength={150} />
         </View>
         <PillButton
           title="Gửi"
           containerStyle={formStyle.button}
+          buttonStyle={{
+            backgroundColor: primary,
+          }}
           type="solid"
+          onPress={() => console.log(1)}
         />
       </Card>
     </View>
@@ -55,7 +58,7 @@ const formStyle = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: backdropColor,
     opacity: 0.8,
-    zIndex: 1,
+    zIndex: 2,
   },
   form: {
     borderRadius: 20,

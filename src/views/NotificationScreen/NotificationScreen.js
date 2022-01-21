@@ -5,9 +5,10 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  RefreshControl,
 } from 'react-native';
 import { Avatar, ListItem, Icon, Divider, Button } from 'react-native-elements';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Header from '../../components/Header';
 import { container } from '../../styles/layoutStyle';
 import img from './../../assets/images/icon.png';
@@ -87,13 +88,15 @@ const NotificationScreen = ({ navigation }) => {
       title: 'Hệ thống',
       subTitle: 'Bạn có đơn vận chuyển mới',
       type: 'delivery',
-      time: '09:46 sáng',
+      time: '09:48 sáng',
     },
   ];
 
-  const [count, setCount] = useState(4);
+  const [count, setCount] = useState(5);
   const [data, setData] = useState(appList.slice(0, count));
   const [deleteData, setDeleteData] = useState(appList);
+  const [refreshing, setRefreshing] = useState(false);
+
   const ref = useRef();
 
   const keyExtractor = (item, index) => index.toString();
@@ -111,6 +114,19 @@ const NotificationScreen = ({ navigation }) => {
       setCount(count + appList.length - data.length);
     }
   };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 500);
+    setTimeout(
+      () =>
+        ref.current.scrollToIndex({
+          index: 0,
+          animated: true,
+        }),
+      500,
+    );
+  }, []);
 
   useEffect(() => {
     setData(appList.slice(0, count));
@@ -197,11 +213,6 @@ const NotificationScreen = ({ navigation }) => {
             </View>
           )}
         </ListItem.Content>
-
-        {/* <ListItem.Chevron
-          containerStyle={{ margin: 0, padding: 0 }}
-          size={20}
-        /> */}
       </ListItem.Swipeable>
     );
   };
@@ -229,18 +240,29 @@ const NotificationScreen = ({ navigation }) => {
         data={data}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        onContentSizeChange={() => ref.current.scrollToEnd({ animated: true })}
+        persistentScrollbar={true}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        // onContentSizeChange={() => ref.current.scrollToEnd({ animated: true })}
+        onScrollBeginDrag={() => ref.current.flashScrollIndicators()}
+        ListFooterComponent={() =>
+          deleteData.length > 3 &&
+          count < deleteData.length && (
+            <View>
+              <Icon name="more-horiz" color={primary} size={30} />
+              <Button
+                title={`Xem thêm (${deleteData.length - count})`}
+                buttonStyle={{ backgroundColor: primary }}
+                onPress={handleShowMore}
+              />
+            </View>
+          )
+        }
       />
-      {deleteData.length > 3 && count < deleteData.length && (
-        <View>
-          <Icon name="more-horiz" color={primary} size={30} />
-          <Button
-            title="Xem thêm"
-            buttonStyle={{ backgroundColor: primary }}
-            onPress={handleShowMore}
-          />
-        </View>
-      )}
+      {/* {deleteData.length > 3 && count < deleteData.length && (
+       
+      )} */}
     </SafeAreaView>
   );
 };

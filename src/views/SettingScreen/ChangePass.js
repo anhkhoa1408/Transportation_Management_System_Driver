@@ -65,7 +65,6 @@ const ChangePass = ({ navigation }) => {
   // }, [navigation]);
 
   const handleSubmit = values => {
-    console.log(values);
     // setLoading(true);
     // let { name, email } = values;
     // let data = {

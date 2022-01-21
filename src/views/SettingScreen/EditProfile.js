@@ -114,7 +114,7 @@ const EditProfile = ({ navigation }) => {
               underlayColor="#CCC"
               style={{ backgroundColor: COLORS.primary }}
               color={COLORS.white}
-              onPress={() => console.log(1)}
+              // onPress={() => console.log(1)}
               size={35}
             />
           </Avatar>
@@ -130,9 +130,7 @@ const EditProfile = ({ navigation }) => {
         />
 
         {formik.touched.name && formik.errors.name ? (
-          <Text style={{ color: danger, marginTop: 10 }}>
-            {formik.errors.name}
-          </Text>
+          <Text style={{ color: danger }}>{formik.errors.name}</Text>
         ) : null}
 
         <TextField
@@ -143,18 +141,8 @@ const EditProfile = ({ navigation }) => {
         />
 
         {formik.touched.email && formik.errors.email ? (
-          <Text style={{ color: danger, marginTop: 10 }}>
-            {formik.errors.email}
-          </Text>
+          <Text style={{ color: danger }}>{formik.errors.email}</Text>
         ) : null}
-
-        {/* <TextField
-          title="Mật khẩu"
-          style={styles.fsize}
-          value={formik.values.password}
-          secureTextEntry
-          onChangeText={text => formik.setFieldValue('password', text)}
-        /> */}
 
         <TextField
           keyboardType="numeric"
@@ -163,6 +151,10 @@ const EditProfile = ({ navigation }) => {
           value={formik.values.phone}
           onChangeText={text => formik.setFieldValue('phone', text)}
         />
+
+        {formik.touched.phone && formik.errors.phone ? (
+          <Text style={{ color: danger }}>{formik.errors.phone}</Text>
+        ) : null}
 
         <PillButton
           title="Cập nhật"

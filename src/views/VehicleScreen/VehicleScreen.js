@@ -2,14 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Icon, Text, Card, Tooltip } from 'react-native-elements';
 import { container, header, shadowCard } from '../../styles/layoutStyle';
-import { primaryColor } from '../../styles/color';
-import img from './../../assets/images/download.jpg';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import ErrorForm from './ErrorForm';
 import { store } from '../../config/configureStore';
 import Loading from '../../components/Loading';
 import { COLORS } from '../../styles';
-import { InfoField } from '../../components/InfoField';
 
 const VehicleScreen = () => {
   const carr = {
@@ -165,6 +162,7 @@ const vehicleStyle = StyleSheet.create({
     borderTopRightRadius: 50,
     backgroundColor: '#FFF',
     paddingVertical: 30,
+    zIndex: 1,
   },
   truckContainer: {
     display: 'flex',
