@@ -8,12 +8,37 @@ import { joinAddress } from '../../../utils/addressUltis';
 import OrderImage from '../../../assets/images/outline_inventory_black_24dp.png';
 import { COLORS, FONTS, STYLES } from '../../../styles';
 
+// Function get Color and Text of shipment item
+function getItemState(item, checkBoxHandler, isDone) {
+  // TODO: Insert check giao hay nhan hang
+  const itemState = {
+    init: {
+      color: 'orange',
+      text: 'Đang vận chuyển',
+    },
+    process: {
+      color: COLORS.green,
+      text: 'Đã nhận',
+    },
+    done: {
+      color: COLORS.primary,
+      text: 'Đã hoàn thành',
+    },
+  };
+  if (checkBoxHandler) {
+    if (isDone) return itemState.process;
+    else return itemState.init;
+  }
+  return itemState.done;
+}
+
 export default function ShipmentItem({
   item,
   isDone,
   checkBoxHandler,
   onPress,
 }) {
+  const currentState = getItemState(item, checkBoxHandler, isDone);
   return (
     <TouchableOpacity
       style={{
@@ -25,11 +50,7 @@ export default function ShipmentItem({
       }}
       onPress={() => onPress()}>
       <View style={{ ...STYLES.row }}>
-        <Image
-          size={50}
-          tintColor={isDone === false ? 'orange' : COLORS.green}
-          source={OrderImage}
-        />
+        <Image size={50} tintColor={currentState.color} source={OrderImage} />
         <View
           style={{
             ...STYLES.column,
@@ -41,18 +62,20 @@ export default function ShipmentItem({
           <Text
             style={{
               ...FONTS.MediumBold,
-              color: isDone === false ? 'orange' : COLORS.green,
+              color: currentState.color,
             }}>
-            {isDone === false ? 'Đang vận chuyển' : 'Đã nhận'}
+            {currentState.text}
           </Text>
         </View>
-        <CheckBox
-          disabled={false}
-          value={isDone}
-          onValueChange={newValue => {
-            checkBoxHandler(item.id, newValue);
-          }}
-        />
+        {checkBoxHandler && (
+          <CheckBox
+            disabled={false}
+            value={isDone}
+            onValueChange={newValue => {
+              checkBoxHandler(item.id, newValue);
+            }}
+          />
+        )}
       </View>
       <View style={{ paddingLeft: 5 }}>
         <Text style={{ ...FONTS.Medium, color: 'gray' }}>Đến</Text>
