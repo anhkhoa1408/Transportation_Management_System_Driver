@@ -9,7 +9,7 @@ import OrderImage from '../../../assets/images/outline_inventory_black_24dp.png'
 import { COLORS, FONTS, STYLES } from '../../../styles';
 
 // Function get Color and Text of shipment item
-function getItemState(item, checkBoxHandler, isDone) {
+function getItemState(item, isDone) {
   // TODO: Insert check giao hay nhan hang
   const itemState = {
     init: {
@@ -25,7 +25,7 @@ function getItemState(item, checkBoxHandler, isDone) {
       text: 'Đã hoàn thành',
     },
   };
-  if (checkBoxHandler) {
+  if (!item.arrived_time) {
     if (isDone) return itemState.process;
     else return itemState.init;
   }
@@ -38,7 +38,7 @@ export default function ShipmentItem({
   checkBoxHandler,
   onPress,
 }) {
-  const currentState = getItemState(item, checkBoxHandler, isDone);
+  const currentState = getItemState(item, isDone);
   return (
     <TouchableOpacity
       style={{
@@ -67,7 +67,7 @@ export default function ShipmentItem({
             {currentState.text}
           </Text>
         </View>
-        {checkBoxHandler && (
+        {!item.arrived_time && (
           <CheckBox
             disabled={false}
             value={isDone}

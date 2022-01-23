@@ -74,7 +74,7 @@ export const button = {
   borderRadius: 8,
   padding: 12,
   alignSelf: 'center',
-  margin: 10,
+  margin: 20,
 };
 
 export default { container, subContainer, shadowCard, row, column, button };

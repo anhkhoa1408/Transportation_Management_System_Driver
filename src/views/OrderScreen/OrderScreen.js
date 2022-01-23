@@ -18,45 +18,43 @@ function OrderScreen({ navigation, ...props }) {
   const [finishedShipment, setFinishedShipment] = useState([]);
   const [loadedC, setLoadedC] = useState(false);
   const [loadedF, setLoadedF] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [pageIndex, setPageIndex] = useState(1);
-  const [index, setIndex] = React.useState(0);
+  const [isLoading, setLoading] = useState(false); // is getting finished shipments
+  const [pageIndex, setPageIndex] = useState(1); // 10 finished shipments per page
+  const [index, setIndex] = React.useState(0); // Tab index
 
-  const { shipmentState } = props;
+  const { shipmentState } = props; // whether driver checked a shipment or not
   const dispatch = useDispatch();
 
+  // Load both current and unfinish shipments on first render
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      shipmentApi
-        .currentShipment()
-        .then(resData => {
-          setCurrentShipment(resData);
+    shipmentApi
+      .currentShipment()
+      .then(resData => {
+        setCurrentShipment(resData);
 
-          // Save Shipment's State
-          resData.map(item => {
-            if (!(item.id in shipmentState)) {
-              updateShipmentState(item.id, false);
-            }
-          });
-          setLoadedC(true);
-        })
-        .catch(err => {
-          // Handle Error
-          // setLoaded(true);
+        // Save Shipment's State
+        resData.map(item => {
+          if (!(item.id in shipmentState)) {
+            updateShipmentState(item.id, false);
+          }
         });
-      shipmentApi
-        .finishedShipment()
-        .then(resData => {
-          setFinishedShipment(resData);
-          setLoadedF(true);
-        })
-        .catch(err => {
-          // Handle Error
-          // setLoaded(true);
-        });
-    });
-    return unsubscribe;
-  }, [navigation]);
+        setLoadedC(true);
+      })
+      .catch(err => {
+        // Handle Error
+        // setLoaded(true);
+      });
+    shipmentApi
+      .finishedShipment()
+      .then(resData => {
+        setFinishedShipment(resData);
+        setLoadedF(true);
+      })
+      .catch(err => {
+        // Handle Error
+        // setLoaded(true);
+      });
+  }, []);
 
   const updateShipmentState = (id, state) => {
     dispatch(
@@ -76,24 +74,14 @@ function OrderScreen({ navigation, ...props }) {
         navigation.navigate('OrderDetail', { shipmentID: item.id })
       }
       item={item}
-      isDone={shipmentState[item.id].checked}
+      isDone={!item.arrived_time && shipmentState[item.id].checked}
       checkBoxHandler={updateShipmentState}
-    />
-  );
-
-  const renderFinishedItem = ({ item, index }) => (
-    <ShipmentItem
-      onPress={() =>
-        navigation.navigate('OrderDetail', { shipmentID: item.id })
-      }
-      item={item}
     />
   );
 
   const handleLoadMore = () => {
     if (isLoading) return;
     setLoading(true);
-    console.log('Load more! Load moreeee!');
     shipmentApi
       .finishedShipment(pageIndex)
       .then(resData => {
@@ -112,6 +100,7 @@ function OrderScreen({ navigation, ...props }) {
     <View style={STYLES.container}>
       <Header headerText={'Đơn vận chuyển'} />
 
+      {/* Tab separate Current and Finished shipments */}
       <Tab
         value={index}
         onChange={e => setIndex(e)}
@@ -137,6 +126,7 @@ function OrderScreen({ navigation, ...props }) {
         />
       </Tab>
 
+      {/* List display shipments */}
       <TabView value={index} onChange={setIndex} animationType="spring">
         <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
           {loadedC && (
@@ -153,7 +143,7 @@ function OrderScreen({ navigation, ...props }) {
           {loadedF && (
             <FlatList
               data={finishedShipment}
-              renderItem={renderFinishedItem}
+              renderItem={renderItem}
               keyExtractor={item => `${item.id}`}
               onEndReached={handleLoadMore}
             />
