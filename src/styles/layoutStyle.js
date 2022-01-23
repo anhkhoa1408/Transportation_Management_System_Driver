@@ -4,7 +4,13 @@ export const container = {
   backgroundColor: '#FFF',
   height: '100%',
   width: '100%',
-  alignItems: 'center',
+  alignItems: 'stretch',
+  flex: 1,
+};
+
+export const subContainer = {
+  marginHorizontal: 20,
+  marginVertical: 10,
 };
 
 export const containerOverlay = {
@@ -29,11 +35,12 @@ export const shadowCard = {
   shadowColor: '#000',
   shadowOffset: {
     width: 0,
-    height: 3,
+    height: 2,
   },
-  shadowRadius: 5,
-  shadowOpacity: 1.0,
-  elevation: 3,
+  shadowOpacity: 0.23,
+  shadowRadius: 2.62,
+
+  elevation: 4,
 };
 
 export const shadowInput = {
@@ -47,4 +54,27 @@ export const shadowInput = {
   elevation: 5,
 };
 
-export default { container };
+export const row = {
+  flexWrap: 'nowrap',
+  flexDirection: 'row',
+  justifyContent: 'center',
+};
+
+export const column = {
+  flexWrap: 'nowrap',
+  flexDirection: 'column',
+  justifyContent: 'center',
+};
+
+export const button = {
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '40%',
+  backgroundColor: '#3B3DBF',
+  borderRadius: 8,
+  padding: 12,
+  alignSelf: 'center',
+  margin: 20,
+};
+
+export default { container, subContainer, shadowCard, row, column, button };

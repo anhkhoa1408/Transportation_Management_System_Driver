@@ -1,23 +1,15 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Text } from 'react-native-elements';
+import { FONTS } from '../../styles';
 
-export const InfoField = ({ title, content }) => {
+export const InfoField = ({ title, content, style = {} }) => {
   return (
-    <View style={{ flex: 1 }}>
-      <Text style={style.infoTittle}>{title}</Text>
-      <Text style={style.infoContent}>{content}</Text>
+    <View style={{ ...style }}>
+      <Text style={{ ...FONTS.Medium, color: 'rgba(0, 0, 0, 0.5)' }}>
+        {title}
+      </Text>
+      <Text style={{ ...FONTS.BigBold }}>{content}</Text>
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  infoTittle: {
-    fontSize: 15,
-    color: 'rgba(0, 0, 0, 0.5)',
-  },
-  infoContent: {
-    fontSize: 19,
-    fontWeight: 'bold',
-  },
-});
