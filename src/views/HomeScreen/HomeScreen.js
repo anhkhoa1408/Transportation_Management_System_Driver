@@ -1,7 +1,7 @@
 // Import Component
 import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, View, FlatList } from 'react-native';
-import { Icon, withBadge, SpeedDial } from 'react-native-elements';
+import { Icon, withBadge, SpeedDial, Overlay } from 'react-native-elements';
 import AbsenceForm from './AbsenceForm';
 import Loading from '../../components/Loading';
 import Header from '../../components/Header';
@@ -14,6 +14,7 @@ import homeAPI from '../../api/homeAPI';
 import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
+import { backdropColor } from '../../styles/color';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
@@ -106,7 +107,7 @@ function HomeScreen({ navigation, ...props }) {
 
         <SpeedDial
           isOpen={open}
-          icon={{ name: 'edit', color: '#fff' }}
+          icon={{ name: 'sliders-h', color: '#fff', type: 'font-awesome-5' }}
           openIcon={{ name: 'close', color: '#fff' }}
           onOpen={() => setOpen(!open)}
           onClose={() => {
@@ -118,7 +119,7 @@ function HomeScreen({ navigation, ...props }) {
             backgroundColor: COLORS.primary,
           }}>
           <SpeedDial.Action
-            icon={{ name: 'home', color: '#fff', type: 'iconicon' }}
+            icon={{ name: 'snooze', color: '#fff', type: 'material' }}
             iconContainerStyle={{
               backgroundColor: COLORS.primary,
             }}
@@ -126,7 +127,22 @@ function HomeScreen({ navigation, ...props }) {
             onPress={() => setAbsence(!absenceForm)}
           />
         </SpeedDial>
-        {absenceForm ? <AbsenceForm setAbsence={setAbsence} /> : null}
+
+        <Overlay
+          backdropStyle={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: backdropColor,
+            opacity: 0.6,
+          }}
+          overlayStyle={{
+            width: '90%',
+            borderRadius: 20,
+            padding: 30,
+          }}
+          visible={absenceForm}>
+          <AbsenceForm setAbsence={setAbsence} />
+        </Overlay>
       </View>
     </>
   );

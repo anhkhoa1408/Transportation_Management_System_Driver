@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { Icon, Text, Card, Tooltip } from 'react-native-elements';
+import { View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { Icon, Text, Card, Overlay } from 'react-native-elements';
 import { container, header, shadowCard } from '../../styles/layoutStyle';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import ErrorForm from './ErrorForm';
 import { store } from '../../config/configureStore';
 import Loading from '../../components/Loading';
 import { COLORS } from '../../styles';
+import { backdropColor } from '../../styles/color';
 
 const VehicleScreen = () => {
   const carr = {
@@ -27,7 +28,7 @@ const VehicleScreen = () => {
   return (
     <>
       {!car.licence && <Loading />}
-      <View style={vehicleStyle.container}>
+      <SafeAreaView style={vehicleStyle.container}>
         <View style={vehicleStyle.headerContainer}>
           <View style={vehicleStyle.headerContent}>
             <Text h4 style={{ color: '#FFF' }}>
@@ -45,7 +46,7 @@ const VehicleScreen = () => {
         </View>
 
         <Card containerStyle={vehicleStyle.infoContainer}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ paddingHorizontal: 5 }}>
             <Card containerStyle={vehicleStyle.truckContainer}>
               <View style={vehicleStyle.infoItem}>
                 <Icon
@@ -141,8 +142,22 @@ const VehicleScreen = () => {
             </Card>
           </ScrollView>
         </Card>
-      </View>
-      {errorForm ? <ErrorForm setError={setError} /> : null}
+        <Overlay
+          backdropStyle={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: backdropColor,
+            opacity: 0.6,
+          }}
+          overlayStyle={{
+            width: '90%',
+            borderRadius: 20,
+            padding: 30,
+          }}
+          isVisible={errorForm}>
+          <ErrorForm setError={setError} />
+        </Overlay>
+      </SafeAreaView>
     </>
   );
 };
@@ -153,7 +168,7 @@ const vehicleStyle = StyleSheet.create({
   },
   infoContainer: {
     position: 'absolute',
-    top: '10%',
+    top: 90,
     bottom: 0,
     left: 0,
     right: 0,
@@ -190,7 +205,7 @@ const vehicleStyle = StyleSheet.create({
   },
   headerContainer: {
     ...header,
-    paddingTop: 0,
+    paddingTop: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
     height: '40%',
