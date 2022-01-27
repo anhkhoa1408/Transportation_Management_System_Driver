@@ -77,7 +77,7 @@ function HomeScreen({ navigation, ...props }) {
           rightElement={
             <HeaderAvatar
               url={user.avatar}
-              onPressAction={() => navigation.navigate('Account')}
+              onPressAction={() => navigation.navigate('EditProfile')}
             />
           }
         />
@@ -115,6 +115,10 @@ function HomeScreen({ navigation, ...props }) {
             setOpen(!open);
             setAbsence(false);
           }}
+          containerStyle={{
+            bottom: 20,
+            marginTop: 20,
+          }}
           overlayColor="rgba(0,0,0,0.15)"
           iconContainerStyle={{
             backgroundColor: COLORS.primary,
@@ -124,7 +128,7 @@ function HomeScreen({ navigation, ...props }) {
             iconContainerStyle={{
               backgroundColor: COLORS.primary,
             }}
-            title="Xin nghỉ phép"
+            title="Nghỉ phép"
             onPress={() => setAbsence(!absenceForm)}
           />
         </SpeedDial>

@@ -1,101 +1,170 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import HomeScreen from '../../views/HomeScreen/HomeScreen';
-import ChatScreen from '../../views/ChatScreen/ChatScreen';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import VehicleScreen from '../../views/VehicleScreen/VehicleScreen';
-import OrderScreen from '../../views/OrderScreen/OrderScreen';
-import Account from '../../views/AuthScreen/Account';
-import HomeStackScreen from '../StackNavigator/HomeStackScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 import { COLORS } from '../../styles';
-import OrderStackScreen from '../StackNavigator/OrderStackScreen';
 
-const Tab = createMaterialBottomTabNavigator();
+import HomeStackScreen from '../StackNavigator/HomeStackScreen';
+import ChatStackScreen from '../StackNavigator/ChatStackScreen';
+import OrderStackScreen from '../StackNavigator/OrderStackScreen';
+import SettingStackScreen from '../StackNavigator/SettingStackScreen';
+import VehicleScreen from '../../views/VehicleScreen/VehicleScreen';
+
+const Tab = createBottomTabNavigator();
 
 const TabNavigatior = () => {
+  const CustomTabBarButton = props => {
+    let { iconName, name, color, accessibilityState } = props;
+    let focused = accessibilityState.selected;
+    let duration = 600;
+    const viewRef = useRef(null);
+    const textViewRef = useRef(null);
+    useEffect(() => {
+      if (focused) {
+        viewRef.current.animate({ 0: { scale: 0 }, 1: { scale: 1 } });
+        textViewRef.current.animate({ 0: { scale: 0 }, 1: { scale: 1 } });
+      } else {
+        viewRef.current.animate({ 0: { scale: 1 }, 1: { scale: 0 } });
+        textViewRef.current.animate({ 0: { scale: 1 }, 1: { scale: 0 } });
+      }
+    }, [focused]);
+    return (
+      <TouchableOpacity
+        {...props}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          flex: focused ? 1.5 : 0.5,
+        }}>
+        <View>
+          <Animatable.View
+            duration={duration}
+            ref={viewRef}
+            style={[
+              StyleSheet.absoluteFillObject,
+              { backgroundColor: color, borderRadius: 16 },
+            ]}
+          />
+          <View
+            style={[
+              style.btn,
+              {
+                backgroundColor: focused ? null : '#FFF',
+              },
+            ]}>
+            <Icon name={iconName} color={focused ? COLORS.white : '#CCC'} />
+            <Animatable.View duration={duration} ref={textViewRef}>
+              {focused && (
+                <Text
+                  style={{
+                    color: COLORS.white,
+                    paddingHorizontal: 8,
+                    fontSize: 15,
+                  }}>
+                  {name}
+                </Text>
+              )}
+            </Animatable.View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <Tab.Navigator
       backBehavior="initialRoute"
-      initialRouteName="Home"
+      initialRouteName="HomeStack"
       activeColor={COLORS.primary}
       barStyle={style.container}
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({ focused, color }) => {
-          let iconName;
+        tabBarStyle: {
+          ...style.container,
+          display: getTabBarVisibility(route),
+        },
+        tabBarButton: props => {
+          let iconName, name, color;
           switch (route.name) {
             case 'Vehicle':
               iconName = 'local-shipping';
+              name = 'Phương tiện';
+              color = COLORS.primary;
               break;
             case 'Chat':
               iconName = 'forum';
+              name = 'Tin nhắn';
+              color = COLORS.header;
               break;
-            case 'Home':
+            case 'HomeStack':
               iconName = 'dashboard';
+              name = 'Trang chủ';
+              color = COLORS.success;
               break;
             case 'Shipping':
               iconName = 'assignment';
+              name = 'Đơn hàng';
+              color = COLORS.danger;
               break;
             case 'Setting':
               iconName = 'settings';
+              color = COLORS.warning;
+              name = 'Cài đặt';
           }
           return (
-            <Icon name={iconName} size={24} color={color} type="material" />
+            <CustomTabBarButton
+              color={color}
+              iconName={iconName}
+              name={name}
+              {...props}
+            />
           );
         },
-        tabBarActiveTintColor: '#7FC3DC',
-        tabBarInactiveTintColor: '#BBB',
       })}>
-      <Tab.Screen
-        name="Vehicle"
-        component={VehicleScreen}
-        options={{
-          tabBarLabel: 'Phương tiện',
-        }}
-      />
-      <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{
-          tabBarLabel: 'Nhắn tin',
-        }}
-      />
-      <Tab.Screen
-        name="Home"
-        component={HomeStackScreen}
-        options={{
-          tabBarLabel: 'Trang chủ',
-        }}
-      />
-      <Tab.Screen
-        name="Shipping"
-        component={OrderStackScreen}
-        options={{
-          tabBarLabel: 'Vận chuyển',
-        }}
-      />
-      <Tab.Screen
-        name="Setting"
-        component={Account}
-        options={{
-          tabBarLabel: 'Cài đặt',
-        }}
-      />
+      <Tab.Screen name="Vehicle" component={VehicleScreen} />
+      <Tab.Screen name="Chat" component={ChatStackScreen} />
+      <Tab.Screen name="HomeStack" component={HomeStackScreen} />
+      <Tab.Screen name="Shipping" component={OrderStackScreen} />
+      <Tab.Screen name="Setting" component={SettingStackScreen} />
     </Tab.Navigator>
   );
 };
 
+const visibleTabBarScreen = [
+  'Vehicle',
+  'ChatScreen',
+  'HomeScreen',
+  'OrderHome',
+  'Account',
+];
+
+const getTabBarVisibility = route => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'HomeScreen';
+  return visibleTabBarScreen.includes(routeName) ? 'flex' : 'none';
+};
+
 const style = StyleSheet.create({
   container: {
+    paddingHorizontal: 24,
+    backgroundColor: COLORS.white,
+    height: 90,
+    marginHorizontal: 20,
+    bottom: 15,
+    borderRadius: 20,
+    alignItems: 'center',
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
-    backgroundColor: '#FFF',
-    // position: 'relative',
-    // display: 'flex',
-    // alignItems: 'center',
-    // bottom: 0,
-    zIndex: 1,
-    height: '10%',
+    paddingVertical: 15,
+    borderRadius: 16,
   },
 });
 
