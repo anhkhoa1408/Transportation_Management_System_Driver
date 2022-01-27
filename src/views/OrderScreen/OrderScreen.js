@@ -1,154 +1,161 @@
+// Import Component
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import shipmentApi from '../../api/shipmentAPI';
-import { Avatar, Text, Icon, CheckBox } from 'react-native-elements';
-import { COLORS, FONTS } from '../../styles';
-import img from './../../assets/images/download.jpg';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { container, header } from '../../styles/layoutStyle';
+import { View, FlatList } from 'react-native';
+import { Tab, Text, TabView } from 'react-native-elements';
 import Loading from '../../components/Loading';
-// import ButtonSwitch from '../../components/ButtonSwitch';
+import Header from '../../components/Header';
+import ShipmentItem from './components/ShipmentItem';
+// Import Function
+import shipmentApi from '../../api/shipmentAPI';
+import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { saveShipmentState } from '../../actions/actions';
+// Import Asset
+import { COLORS, FONTS, STYLES } from '../../styles';
 
-export default function OrderScreen({ navigation }) {
-  const [data, setData] = useState([]);
-  const [check, setCheck] = useState([]);
+function OrderScreen({ navigation, ...props }) {
+  const [currentShipment, setCurrentShipment] = useState([]);
+  const [finishedShipment, setFinishedShipment] = useState([]);
+  const [loadedC, setLoadedC] = useState(false);
+  const [loadedF, setLoadedF] = useState(false);
+  const [isLoading, setLoading] = useState(false); // is getting finished shipments
+  const [pageIndex, setPageIndex] = useState(1); // 10 finished shipments per page
+  const [index, setIndex] = React.useState(0); // Tab index
 
+  const { shipmentState } = props; // whether driver checked a shipment or not
+  const dispatch = useDispatch();
+
+  // Load both current and unfinish shipments on first render
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      shipmentApi
-        .shipment()
-        .then(resData => {
-          setData(resData);
-          setCheck(data.map(item => 'arrived_time' in item));
-        })
-        .catch(err => {
-          setData([]);
-          setCheck(data.map(item => 'arrived_time' in item));
+    shipmentApi
+      .currentShipment()
+      .then(resData => {
+        setCurrentShipment(resData);
+
+        // Save Shipment's State
+        resData.map(item => {
+          if (!(item.id in shipmentState)) {
+            updateShipmentState(item.id, false);
+          }
         });
-    });
-    return unsubscribe;
-  }, [navigation]);
+        setLoadedC(true);
+      })
+      .catch(err => {
+        // Handle Error
+        // setLoaded(true);
+      });
+    shipmentApi
+      .finishedShipment()
+      .then(resData => {
+        setFinishedShipment(resData);
+        setLoadedF(true);
+      })
+      .catch(err => {
+        // Handle Error
+        // setLoaded(true);
+      });
+  }, []);
+
+  const updateShipmentState = (id, state) => {
+    dispatch(
+      saveShipmentState({
+        ...shipmentState,
+        [id]: {
+          checked: state,
+          time: new Date().toDateString(),
+        },
+      }),
+    );
+  };
 
   const renderItem = ({ item, index }) => (
-    <TouchableOpacity
-      style={{
-        padding: 20,
-        marginHorizontal: 20,
-        marginVertical: 10,
-        borderRadius: 12,
-        backgroundColor: COLORS.white,
-        ...styles.shadow,
-      }}
-      onPress={() => navigation.navigate('OrderDetail')}>
-      <View style={{ ...styles.row }}>
-        <Image
-          size={50}
-          tintColor={'orange'}
-          source={require('../../assets/images/outline_inventory_black_24dp.png')}
-        />
-        <View
-          style={{
-            ...styles.column,
-            flex: 1,
-            marginLeft: 10,
-            alignItems: 'flex-start',
-          }}>
-          <Text
-            style={{
-              fontWeight: '700',
-            }}>
-            ID: {item.id}
-          </Text>
-          <Text style={{ color: 'orange', fontWeight: '700' }}>
-            {check[index] === false ? 'Đang vận chuyển' : 'Đã nhận'}
-          </Text>
-        </View>
-        <CheckBox
-          checked={check[index]}
-          onIconPress={() => {
-            setCheck(
-              check.map((item, key) => {
-                return key === index ? !item : item;
-              }),
-            );
-          }}
-        />
-      </View>
-      <View style={{ paddingLeft: 5 }}>
-        <Text style={{ fontWeight: '700', color: 'gray' }}>Đến</Text>
-        <Text style={{ fontWeight: '700' }}>
-          {item.to_address.street}, {item.to_address.ward},{' '}
-          {item.to_address.province}, {item.to_address.city}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <ShipmentItem
+      onPress={() =>
+        navigation.navigate('OrderDetail', { shipmentID: item.id })
+      }
+      item={item}
+      isDone={!item.arrived_time && shipmentState[item.id].checked}
+      checkBoxHandler={updateShipmentState}
+    />
   );
 
+  const handleLoadMore = () => {
+    if (isLoading) return;
+    setLoading(true);
+    shipmentApi
+      .finishedShipment(pageIndex)
+      .then(resData => {
+        if (resData.length !== 0) setPageIndex(pageIndex + 1);
+        setFinishedShipment([...finishedShipment, ...resData]);
+        setLoading(false);
+      })
+      .catch(err => {
+        setLoading(false);
+        // Handle Error
+        // setLoaded(true);
+      });
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text h4>Danh sách vận chuyển</Text>
-        <Avatar
-          rounded
-          size="small"
-          source={img}
-          onPress={() => navigation.navigate('Setting')}
+    <View style={STYLES.container}>
+      <Header headerText={'Đơn vận chuyển'} />
+
+      {/* Tab separate Current and Finished shipments */}
+      <Tab
+        value={index}
+        onChange={e => setIndex(e)}
+        indicatorStyle={{
+          backgroundColor: COLORS.primary,
+          height: 5,
+        }}
+        variant="primary">
+        <Tab.Item
+          title="Đơn hàng hiện tại"
+          containerStyle={{ backgroundColor: 'white' }}
+          titleStyle={{ ...FONTS.Smol, color: COLORS.green }}
+          icon={{
+            name: 'local-shipping',
+            color: COLORS.green,
+          }}
         />
-      </View>
-
-      {/* <ButtonSwitch /> */}
-
-      {data.length > 0 && (
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => `${item.id}`}
+        <Tab.Item
+          title="Lịch sử đơn hàng"
+          containerStyle={{ backgroundColor: 'white' }}
+          titleStyle={{ ...FONTS.Smol, color: COLORS.primary }}
+          icon={{ name: 'timer', type: 'ionicon', color: COLORS.primary }}
         />
-      )}
+      </Tab>
 
-      {data.length == 0 && <Loading />}
+      {/* List display shipments */}
+      <TabView value={index} onChange={setIndex} animationType="spring">
+        <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
+          {loadedC && (
+            <FlatList
+              data={currentShipment}
+              renderItem={renderItem}
+              keyExtractor={item => `${item.id}`}
+            />
+          )}
+
+          {/* {!loadedC && <Loading />} */}
+        </TabView.Item>
+        <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
+          {loadedF && (
+            <FlatList
+              data={finishedShipment}
+              renderItem={renderItem}
+              keyExtractor={item => `${item.id}`}
+              onEndReached={handleLoadMore}
+            />
+          )}
+        </TabView.Item>
+      </TabView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    ...container,
-    alignItems: 'stretch',
-    flex: 1,
-  },
-  header: {
-    ...header,
-    // width: '100%',
-    // flexDirection: 'row',
-    // justifyContent: 'space-between'
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 3,
-  },
-  row: {
-    flexWrap: 'nowrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  column: {
-    flexWrap: 'nowrap',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+const mapStateToProps = state => ({
+  shipmentState: state.shipmentState,
 });
+
+export default connect(mapStateToProps)(OrderScreen);

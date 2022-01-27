@@ -9,6 +9,7 @@ import OrderScreen from '../../views/OrderScreen/OrderScreen';
 import Account from '../../views/AuthScreen/Account';
 import HomeStackScreen from '../StackNavigator/HomeStackScreen';
 import { COLORS } from '../../styles';
+import OrderStackScreen from '../StackNavigator/OrderStackScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -69,7 +70,7 @@ const TabNavigatior = () => {
       />
       <Tab.Screen
         name="Shipping"
-        component={OrderScreen}
+        component={OrderStackScreen}
         options={{
           tabBarLabel: 'Vận chuyển',
         }}
