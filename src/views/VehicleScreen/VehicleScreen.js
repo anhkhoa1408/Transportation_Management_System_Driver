@@ -155,7 +155,7 @@ const VehicleScreen = () => {
             padding: 30,
           }}
           isVisible={errorForm}>
-          <ErrorForm setError={setError} />
+          <ErrorForm setError={setError} car={carInfo} />
         </Overlay>
       </SafeAreaView>
     </>
