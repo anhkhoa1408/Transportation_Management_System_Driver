@@ -49,8 +49,11 @@ const ErrorForm = props => {
               note: cause,
               car: props.car.id,
             })
-            .then(data => console.log(data))
-            .catch(error => console.log(error))
+            .then(data => {
+              props.onSuccess();
+              props.setError(false);
+            })
+            .catch(error => props.onFailure())
         }
       />
     </View>
