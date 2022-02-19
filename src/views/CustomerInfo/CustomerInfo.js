@@ -49,30 +49,6 @@ const CustomerInfo = ({ navigation }) => {
               alignItems: 'center',
             }}>
             <MaterialIcon
-              name="email"
-              style={{ ...customerInfoStyle.icon, color: '#fc653f' }}
-            />
-            <Text>Email</Text>
-          </View>
-          <Text>akhoa981@gmail.com</Text>
-        </View>
-
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingVertical: 25,
-            paddingHorizontal: 20,
-          }}>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <MaterialIcon
               name="phone"
               style={{ ...customerInfoStyle.icon, color: '#428bff' }}
             />

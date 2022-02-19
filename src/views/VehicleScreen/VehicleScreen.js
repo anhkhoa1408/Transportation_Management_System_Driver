@@ -8,6 +8,7 @@ import { store } from '../../config/configureStore';
 import Loading from '../../components/Loading';
 import { COLORS } from '../../styles';
 import { backdropColor } from '../../styles/color';
+import ModalMess from '../../components/ModalMess';
 
 const VehicleScreen = () => {
   const carr = {
@@ -20,6 +21,8 @@ const VehicleScreen = () => {
   const [errorForm, setError] = useState(false);
   const [car, setCar] = useState(carr);
   const carInfo = store.getState().userInfo.user.car;
+  const [successModal, setSuccessModal] = useState(null);
+  const [failModal, setFailModal] = useState(null);
 
   useEffect(() => {
     setCar(carInfo);
@@ -47,6 +50,18 @@ const VehicleScreen = () => {
 
         <Card containerStyle={vehicleStyle.infoContainer}>
           <ScrollView contentContainerStyle={{ paddingHorizontal: 5 }}>
+            <ModalMess
+              type={'success'}
+              message={'Cập nhật thành công.'}
+              alert={successModal}
+              setAlert={setSuccessModal}
+            />
+            <ModalMess
+              type={'danger'}
+              message={'Cập nhật thất bại.'}
+              alert={failModal}
+              setAlert={setFailModal}
+            />
             <Card containerStyle={vehicleStyle.truckContainer}>
               <View style={vehicleStyle.infoItem}>
                 <Icon
@@ -155,7 +170,12 @@ const VehicleScreen = () => {
             padding: 30,
           }}
           isVisible={errorForm}>
-          <ErrorForm setError={setError} />
+          <ErrorForm
+            setError={setError}
+            car={carInfo}
+            onSuccess={setSuccessModal}
+            onFailure={setFailModal}
+          />
         </Overlay>
       </SafeAreaView>
     </>
