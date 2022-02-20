@@ -15,6 +15,7 @@ import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const EditProfile = ({ navigation }) => {
   const [data, setData] = useState({
@@ -55,8 +56,8 @@ const EditProfile = ({ navigation }) => {
         email: userInfo.user.email,
         phone: userInfo.user.phone,
       });
-      if ('avatar' in userInfo.user)
-        if ('url' in userInfo.user.avatar) setAvatar(userInfo.user.avatar.url);
+      if (userInfo.user?.avatar?.url !== undefined)
+        setAvatar(userInfo.user.avatar.url);
       setDataChange(false);
       setDataChange(true);
     });
@@ -114,7 +115,19 @@ const EditProfile = ({ navigation }) => {
               underlayColor="#CCC"
               style={{ backgroundColor: COLORS.primary }}
               color={COLORS.white}
-              // onPress={() => console.log(1)}
+              onPress={() =>
+                launchImageLibrary({
+                  mediaTypes: 'photo',
+                  quality: 1,
+                }).then(data => {
+                  if (data.assets && data.assets.length > 0) {
+                    authApi
+                      .updateAvatar(data.assets[0])
+                      .then(data => console.log(data))
+                      .catch(e => console.log(e.toString()));
+                  }
+                })
+              }
               size={35}
             />
           </Avatar>
