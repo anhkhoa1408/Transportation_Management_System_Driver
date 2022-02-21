@@ -121,10 +121,24 @@ const EditProfile = ({ navigation }) => {
                   quality: 1,
                 }).then(data => {
                   if (data.assets && data.assets.length > 0) {
+                    setLoading(true);
                     authApi
                       .updateAvatar(data.assets[0])
-                      .then(data => console.log(data))
-                      .catch(e => console.log(e.toString()));
+                      .then(response => {
+                        setLoading(false);
+                        dispatch(saveInfo({ user: response }));
+                        setAlert({
+                          type: 'success',
+                          message: 'Cập nhật ảnh đại diện thành công',
+                        });
+                      })
+                      .catch(err => {
+                        setLoading(false);
+                        setAlert({
+                          type: 'error',
+                          message: 'Cập nhật ảnh đại diện thất bại',
+                        });
+                      });
                   }
                 })
               }
