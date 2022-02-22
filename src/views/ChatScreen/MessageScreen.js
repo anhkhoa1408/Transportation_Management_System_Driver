@@ -4,11 +4,14 @@ import { Avatar, Text } from 'react-native-elements';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { container, header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import img from './../../assets/images/download.jpg'
+import img from './../../assets/images/download.jpg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import io from 'socket.io-client';
+import { MAIN_URL } from '../../api/config';
 
 const SendMessageScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(io(MAIN_URL));
 
   useEffect(() => {
     setMessages([
@@ -26,7 +29,18 @@ const SendMessageScreen = ({ navigation }) => {
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
+    socket.emit('chat', { username: 'Hi', room: 1 }, error => {
+      if (error) {
+        setError(error);
+        alert(error);
+      } else {
+        socket.on('welcome', data => {
+          // props.onJoinSuccess(data);
+          console.log(data);
+        });
+      }
+    });
+    setMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
     );
   }, []);
@@ -34,33 +48,24 @@ const SendMessageScreen = ({ navigation }) => {
   return (
     <View style={messagesScreenStyle.container}>
       <View style={messagesScreenStyle.header}>
-        <TouchableOpacity
-
-            // onPress={() => setCo}
-            // containerStyle={{
-            //     borderRadius: 50, 
-            //     borderWidth: 1,
-            //     backgroundColor: '#DDD',
-            //     padding: 5
-            // }}
-        >
-            <MaterialIcon
+        <TouchableOpacity>
+          <MaterialIcon
             name="west"
             size={30}
             onPress={() => navigation.goBack()}
-            />
+          />
         </TouchableOpacity>
         <Text h4>Uchiha papasuker</Text>
-        <Avatar 
-          rounded 
-          size="small" 
-          source={img} 
+        <Avatar
+          rounded
+          size="small"
+          source={img}
           onPress={() => navigation.navigate('CustomerInfo')}
         />
       </View>
       <GiftedChat
         messages={messages}
-        onSend={(messages) => onSend(messages)}
+        onSend={messages => onSend(messages)}
         user={{
           _id: 1,
         }}
@@ -75,13 +80,13 @@ const messagesScreenStyle = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
-  header: {...header},
+  header: { ...header },
   input: {
     padding: 15,
     backgroundColor: '#FFF',
-  }
-})
+  },
+});
 
 export default SendMessageScreen;

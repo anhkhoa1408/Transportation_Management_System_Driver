@@ -9,49 +9,8 @@ import { store } from '../../config/configureStore';
 
 const ChatScreen = ({ navigation }) => {
   const { userInfo } = store.getState();
+
   const historyChatList = [
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
     {
       avatar: img,
       name: 'Uchiha sasuker',
@@ -83,7 +42,7 @@ const ChatScreen = ({ navigation }) => {
             <TouchableOpacity
               key={index}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate('SendMessage')}>
+              onPress={() => navigation.navigate('SendMessageScreen')}>
               <ListItem
                 underlayColor="#F0F1F5"
                 containerStyle={chatScreenStyle.chatItem}>
@@ -117,14 +76,6 @@ const chatScreenStyle = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: '#F0F1F5',
     borderRadius: 15,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
-    // elevation: 3,
   },
   chatList: {
     width: '100%',

@@ -11,7 +11,7 @@ const ChatStackScreen = () => {
       screenOptions={routes => ({
         headerShown: false,
       })}
-      initialRouteName="ChatScreen">
+      initialRouteName="SendMessageScreen">
       <ChatStack.Screen name="ChatScreen" component={ChatScreen} />
       <ChatStack.Screen
         name="SendMessageScreen"
