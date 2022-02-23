@@ -11,9 +11,21 @@ import { MAIN_URL } from '../../api/config';
 
 const SendMessageScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(io(MAIN_URL));
+  const socket = io(MAIN_URL);
 
   useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connect' + socket.id); // x8WIv7-mJelg7on_ALbx
+      socket.on('chat', message => {
+        console.log('Socket: ' + socket.id);
+        console.log(message);
+      });
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnect'); // undefined
+    });
+
     setMessages([
       {
         _id: 1,
@@ -29,17 +41,17 @@ const SendMessageScreen = ({ navigation }) => {
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    socket.emit('chat', { username: 'Hi', room: 1 }, error => {
-      if (error) {
-        setError(error);
-        alert(error);
-      } else {
-        socket.on('welcome', data => {
-          // props.onJoinSuccess(data);
-          console.log(data);
-        });
-      }
-    });
+    socket.emit(
+      'chat',
+      { username: 'Hi', room: '1', message: messages },
+      error => {
+        if (error) {
+          alert(error);
+        } else {
+        }
+      },
+    );
+
     setMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
     );
