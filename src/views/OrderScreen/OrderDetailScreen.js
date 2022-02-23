@@ -9,11 +9,14 @@ import {
 import { Icon, CheckBox, Avatar, Text } from 'react-native-elements';
 import { COLORS, FONTS, STYLES } from '../../styles';
 import img from '../../assets/images/download.jpg';
-import { container, header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../../components/Header';
+import { joinAddress } from '../../utils/addressUltis';
+import PackageItem from './components/PackageItem';
+import InfoField from '../../components/InfoField';
+import shipmentApi from '../../api/shipmentAPI';
 
-export default function OrderDetailScreen({ navigation }) {
+export default function OrderDetailScreen({ navigation, route }) {
   const tempData = [
     {
       quantity: 133,
@@ -97,46 +100,17 @@ export default function OrderDetailScreen({ navigation }) {
       id: '61a9840512c1a7001641525c',
     },
   ];
-  const [data, setData] = useState(tempData);
+  const [data, setData] = useState([]);
 
-  const renderItem = ({ item, index }) => (
-    <View
-      style={{
-        ...STYLES.subContainer,
-        ...STYLES.shadowCard,
-        padding: 20,
-        borderRadius: 12,
-        backgroundColor: COLORS.white,
-      }}>
-      <View style={{ ...STYLES.row }}>
-        <Image
-          style={{
-            tintColor: '#000000',
-            resizeMode: 'contain',
-            height: 50,
-            width: 50,
-            marginTop: 10,
-          }}
-          source={require('../../assets/images/package.png')}
-        />
-        <View
-          style={{
-            ...STYLES.column,
-            flex: 1,
-            marginLeft: 20,
-          }}>
-          <Text style={{ ...FONTS.Big }}>ID: {item.id}</Text>
-          <Text style={{ ...FONTS.Smol }}>
-            Số lượng: <Text style={{ ...FONTS.SmolBold }}>{item.quantity}</Text>
-          </Text>
-          <Text style={{ ...FONTS.Smol }}>
-            Địa điểm hiện tại:{' '}
-            <Text style={{ ...FONTS.SmolBold }}>{item.current_address}</Text>
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
+  useEffect(() => {
+    if (route.params.shipmentID)
+      shipmentApi.shipmentDetail(route.params.shipmentID).then(response => {
+        console.log(response);
+        setData(response.packages);
+      });
+  }, []);
+
+  const renderItem = ({ item, index }) => <PackageItem item={item} />;
 
   return (
     <View style={{ ...STYLES.container }}>
@@ -184,59 +158,31 @@ export default function OrderDetailScreen({ navigation }) {
 
           <View
             style={{
+              ...STYLES.row,
               ...STYLES.subContainer,
-              paddingBottom: 18,
               ...styles.borderBottom,
+              paddingBottom: 18,
             }}>
-            <View style={{ ...STYLES.row }}>
-              <View
-                style={{
-                  ...STYLES.column,
-                  flex: 1,
-                  marginRight: 20,
-                }}>
-                <Text style={{ ...styles.title }}>Địa chỉ</Text>
-              </View>
-              <View style={{ ...STYLES.column, flex: 0.8 }}>
-                <Text style={{ ...styles.title }}>Cần vận chuyển</Text>
-              </View>
-            </View>
-            <View style={{ ...STYLES.row }}>
-              <View
-                style={{
-                  ...STYLES.column,
-                  flex: 1,
-                  alignItems: 'flex-start',
-                  marginRight: 20,
-                }}>
-                <Text style={{ ...FONTS.SmolBold }}>
-                  {data[0].current_address === null
-                    ? data[0].order.from_address.street +
-                      ', ' +
-                      data[0].order.from_address.ward +
-                      ', ' +
-                      data[0].order.from_address.province +
-                      ', ' +
-                      data[0].order.from_address.city
-                    : data[0].current_address}
-                </Text>
-              </View>
-              <View
-                style={{
-                  ...STYLES.column,
-                  flex: 0.8,
-                  alignItems: 'flex-start',
-                }}>
-                <Text style={{ ...FONTS.SmolBold }}>
-                  {data.reduce(
-                    (previous, current) =>
-                      previous + current.weight * current.quantity,
-                    0,
-                  )}{' '}
-                  Kg
-                </Text>
-              </View>
-            </View>
+            <InfoField
+              title={'Địa chỉ'}
+              style={{ flex: 1 }}
+              content={
+                data[0].current_address !== null
+                  ? joinAddress(data[0].order.from_address)
+                  : data[0].current_address
+              }
+            />
+            <InfoField
+              title={'Khối lượng'}
+              style={{ flex: 0.8 }}
+              content={
+                data.reduce(
+                  (previous, current) =>
+                    previous + current.weight * current.quantity,
+                  0,
+                ) + ' Kg'
+              }
+            />
           </View>
 
           <View style={{ flex: 1, alignItems: 'stretch' }}>
