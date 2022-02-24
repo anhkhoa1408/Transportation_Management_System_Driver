@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Account from '../../views/AuthScreen/Account';
 import OrderDetailScreen from '../../views/OrderScreen/OrderDetailScreen';
 import OrderScreen from '../../views/OrderScreen/OrderScreen';
+import ConfirmOrder from '../../views/OrderScreen/ConfirmOrder';
 
 const OrderStack = createStackNavigator();
 
@@ -15,6 +15,7 @@ const OrderStackScreen = () => {
       initialRouteName="OrderHome">
       <OrderStack.Screen name="OrderDetail" component={OrderDetailScreen} />
       <OrderStack.Screen name="OrderHome" component={OrderScreen} />
+      <OrderStack.Screen name="ConfirmOrder" component={ConfirmOrder} />
     </OrderStack.Navigator>
   );
 };

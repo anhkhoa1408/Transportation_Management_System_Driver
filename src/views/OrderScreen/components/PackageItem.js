@@ -3,28 +3,45 @@ import { View, Text, Image } from 'react-native';
 
 import { COLORS, FONTS, STYLES } from '../../../styles';
 import PackageImage from '../../../assets/images/package.png';
+import { ListItem, Button, Icon } from 'react-native-elements';
+import { simplifyString } from '../../../utils/simplifyString';
 
-const PackageItem = ({ item }) => {
+const PackageItem = ({ item, navigation }) => {
   return (
-    <View
-      style={{
-        ...STYLES.subContainer,
-        ...STYLES.shadowCard,
-        padding: 20,
-        borderRadius: 12,
-        backgroundColor: COLORS.white,
-      }}>
-      <View style={{ ...STYLES.row }}>
-        <Image
-          style={{
-            tintColor: '#000000',
-            resizeMode: 'contain',
-            height: 40,
-            width: 40,
-            marginTop: 10,
+    <ListItem.Swipeable
+      bottomDivider
+      rightContent={
+        <Button
+          title="Chụp ảnh"
+          icon={{ name: 'camera', color: 'white' }}
+          buttonStyle={{
+            backgroundColor: COLORS.header,
+            minHeight: '100%',
           }}
-          source={PackageImage}
+          onPress={() =>
+            navigation.navigate('ConfirmOrder', {
+              packageId: item.id,
+              packageImage: item.images,
+            })
+          }
         />
+      }
+      containerStyle={{
+        ...STYLES.shadowCard,
+        padding: 30,
+        backgroundColor: COLORS.white,
+        position: 'relative',
+      }}>
+      <ListItem.Content style={{ ...STYLES.row }}>
+        <View
+          style={{
+            backgroundColor: COLORS.white,
+            padding: 12,
+            borderRadius: 15,
+            elevation: 3,
+          }}>
+          <Icon name="inventory" size={28} color={COLORS.primary} />
+        </View>
         <View
           style={{
             ...STYLES.column,
@@ -37,11 +54,18 @@ const PackageItem = ({ item }) => {
           </Text>
           <Text style={{ ...FONTS.Smol }}>
             Địa điểm hiện tại:{' '}
-            <Text style={{ ...FONTS.SmolBold }}>{item.current_address}</Text>
+            <Text style={[FONTS.SmolBold]}>
+              {item.current_address
+                ? simplifyString(
+                    Object.values(item.current_address).slice(1, 5).join(', '),
+                    20,
+                  )
+                : 'Chưa có thông tin'}
+            </Text>
           </Text>
         </View>
-      </View>
-    </View>
+      </ListItem.Content>
+    </ListItem.Swipeable>
   );
 };
 
