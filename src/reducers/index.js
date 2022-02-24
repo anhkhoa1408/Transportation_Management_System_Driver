@@ -4,10 +4,12 @@ import { CLEAN_STORE } from '../constants/types';
 // Import reducer
 import userInfo from './userInfo';
 import shipmentState from './shipmentState';
+import message from './message';
 
 const appReducer = combineReducers({
   userInfo,
   shipmentState,
+  message,
 });
 
 const rootReducer = (state, action) => {

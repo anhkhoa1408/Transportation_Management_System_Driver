@@ -37,20 +37,31 @@ const SendMessageScreen = ({ navigation }) => {
           avatar: 'https://placeimg.com/140/140/any',
         },
       },
+      {
+        _id: 2,
+        text: 'Hello developer',
+        createdAt: new Date(),
+        user: {
+          _id: 3,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/141/140/any',
+        },
+      },
     ]);
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    socket.emit(
-      'chat',
-      { username: 'Hi', room: '1', message: messages },
-      error => {
-        if (error) {
-          alert(error);
-        } else {
-        }
-      },
-    );
+    // socket.emit(
+    //   'join',
+    //   { username: 'Hi', room: '1', message: messages },
+    //   error => {
+    //     if (error) {
+    //       alert(error);
+    //     } else {
+    //     }
+    //   },
+    // );
+    console.log(JSON.stringify(messages));
 
     setMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
@@ -80,6 +91,8 @@ const SendMessageScreen = ({ navigation }) => {
         onSend={messages => onSend(messages)}
         user={{
           _id: 1,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
         }}
         placeholder="Nhập"
         textInputStyle={messagesScreenStyle.input}

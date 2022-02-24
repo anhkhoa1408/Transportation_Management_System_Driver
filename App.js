@@ -5,9 +5,13 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import { persistor, store } from './src/config/configureStore';
 import Routes from './src/navigation/Routes';
 import { StatusBar } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { startSocketIO } from './src/config/socketIO';
 
 export default function App(props) {
+  React.useEffect(() => {
+    startSocketIO(store);
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>

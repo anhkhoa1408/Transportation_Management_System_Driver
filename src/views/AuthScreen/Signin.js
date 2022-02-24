@@ -18,6 +18,7 @@ import { saveInfo } from '../../actions/actions';
 import background from './../../assets/images/background.png';
 import bg from './../../assets/images/bg.png';
 import Loading from './../../components/Loading';
+import { socket } from '../../config/socketIO';
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -51,6 +52,7 @@ const SignIn = ({ navigation }) => {
         password: values.password,
       })
       .then(data => {
+        socket.connect();
         dispatch(saveInfo(data));
         setLoading(false);
       })
