@@ -22,21 +22,28 @@ class ShipmentAPI {
     const url = MAIN_URL.concat(`/packages/images/${id}`);
 
     let formData = new FormData();
-    // console.log(uploadList);
 
     uploadList.forEach(image => {
-      formData.append('upload', {
-        name: image.fileName,
-        uri: image.uri,
-        type: image.type,
-      });
+      formData.append(
+        `files`,
+        {
+          name: image.fileName,
+          uri: image.uri,
+          type: image.type,
+        },
+        image.fileName,
+      );
     });
     formData.append('data', `{"_delete": ${JSON.stringify(deleteList)}}`);
     formData.append('ref', 'package');
     formData.append('refId', id);
     formData.append('field', 'images');
 
-    return axiosClient.put(url, formData);
+    return axiosClient.post(url, formData);
+  };
+  assistanceInfo = () => {
+    const url = MAIN_URL.concat(`/assistance/status`);
+    return axiosClient.get(url);
   };
 }
 const shipmentApi = new ShipmentAPI();
