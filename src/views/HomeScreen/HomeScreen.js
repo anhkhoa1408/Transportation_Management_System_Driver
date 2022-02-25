@@ -15,31 +15,28 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
+import { MAIN_URL } from './../../api/config';
 
-function HomeScreen({ navigation, ...props }) {
+function HomeScreen({ navigation, userInfo, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
 
-  const [user, setUser] = useState({
-    name: 'Shiba',
-    avatar:
-      'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  });
-
-  const { userInfo } = props;
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     if (userInfo.user.avatar && userInfo.user.avatar.url)
       setUser({
         ...user,
+        name: userInfo.user.name,
         avatar: userInfo.user.avatar.url,
       });
-    setUser({
-      ...user,
-      name: userInfo.user.name,
-    });
+    else
+      setUser({
+        ...user,
+        name: userInfo.user.name,
+      });
   }, [userInfo]);
 
   useEffect(() => {
