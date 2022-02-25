@@ -77,8 +77,6 @@ const ConfirmOrder = ({ navigation, route }) => {
   };
 
   const handleUpdateImage = () => {
-    console.log(uploadList);
-
     setLoading(true);
     shipmentApi
       .updatePackageImage(packageId, uploadList, deleteList)
@@ -90,7 +88,6 @@ const ConfirmOrder = ({ navigation, route }) => {
         });
         setUpload([]);
         setDelete([]);
-        // if (data && data.images)
         handleListImage(data.images);
       })
       .catch(error => {
@@ -217,7 +214,6 @@ const ConfirmOrder = ({ navigation, route }) => {
           ))}
         </View>
         <PillButton
-          // disabled={images.length === 0 || images.every(item => item === null)}
           onPress={handleUpdateImage}
           title="Xác nhận"
           buttonStyle={{ backgroundColor: COLORS.primary }}
