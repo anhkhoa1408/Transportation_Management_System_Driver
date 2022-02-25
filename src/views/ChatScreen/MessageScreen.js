@@ -7,18 +7,25 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import img from './../../assets/images/download.jpg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { socket } from '../../config/socketIO';
+import { addMessage } from '../../actions/actions';
+import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 
-const MessageScreen = ({ navigation, route }) => {
+const MessageScreen = props => {
+  const { navigation, route, messenger } = props;
   const { room, user } = route.params;
-  const [messages, setMessages] = useState([]);
 
-  useEffect(() => {}, []);
+  const [messages, setMessages] = useState();
+
+  useEffect(() => {
+    setMessages(messenger[room]);
+  }, []);
 
   const onSend = useCallback((newMessages = []) => {
     socket.emit('chat', newMessages[0], room);
 
     setMessages(previousMessages => {
-      // TODO: Add message to store
+      useDispatch()(addMessage(newMessages[0], room));
       return GiftedChat.append(previousMessages, newMessages);
     });
   }, []);
@@ -68,4 +75,8 @@ const messagesScreenStyle = StyleSheet.create({
   },
 });
 
-export default MessageScreen;
+const mapStateToProps = state => ({
+  messenger: state.messenger,
+});
+
+export default connect(mapStateToProps)(MessageScreen);

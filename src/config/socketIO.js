@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import { MAIN_URL } from '../api/config';
-import { addMessage, addRoom } from '../actions/actions';
+import { addMessage } from '../actions/actions';
 
 // Initialize Socket IO:
 export const socket = io(MAIN_URL);
@@ -15,10 +15,6 @@ export const startSocketIO = store => {
 
   socket.on('disconnect', () => {
     console.log('Disconnect socket');
-  });
-
-  socket.on('join', data => {
-    store.dispatch(addRoom(data));
   });
 
   socket.on('chat', (message, room) => {

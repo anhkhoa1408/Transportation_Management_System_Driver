@@ -35,10 +35,3 @@ export const addMessage = (payload, room) => {
     room: room,
   };
 };
-
-export const addRoom = payload => {
-  return {
-    type: types.ADD_ROOM,
-    payload: payload,
-  };
-};

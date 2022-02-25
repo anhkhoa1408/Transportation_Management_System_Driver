@@ -1,28 +1,12 @@
-import { ADD_MESSAGE, ADD_ROOM } from '../constants/types';
+import { ADD_MESSAGE } from '../constants/types';
 
-const initialState = {
-  room: [],
-  messages: {},
-};
-
-const reducer = (state = initialState, action) => {
+const reducer = (state = {}, action) => {
   switch (action.type) {
     case ADD_MESSAGE:
-      let newState = state;
-      if (newState.messages[action.room] === undefined) {
-        newState.messages[action.room] = [action.payload];
-      } else {
-        newState.messages[action.room] = [
-          action.payload,
-          ...newState.messages[action.room],
-        ];
-      }
-      return newState;
-    case ADD_ROOM:
-      if (state.room.indexOf(action.payload) >= 0) return state;
+      const room = state[action.room] === undefined ? [] : state[action.room];
       return {
         ...state,
-        room: [...state.room, action.payload],
+        [action.room]: [action.payload, ...room],
       };
     default:
       return state;

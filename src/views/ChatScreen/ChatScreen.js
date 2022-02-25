@@ -14,31 +14,44 @@ const ChatScreen = props => {
   const [historyChatList, setHistoryChatList] = React.useState([]);
 
   React.useEffect(() => {
-    console.log(messenger);
-    const _historyChatList = Object.keys(messenger?.messages).map(room => {
-      const messages = messenger.messages[room];
-      const message = messages[messages.length];
+    console.log(JSON.stringify(messenger));
+    const _historyChatList = Object.keys(messenger).map(room => {
+      const lastMessage = messenger[room][0];
       return {
         room: room,
-        avatar: message?.user?.avatar,
-        name: message?.user?.name,
-        lastMessage: message?.text,
-        time: message?.createdAt,
+        avatar: lastMessage.user.avatar,
+        name: lastMessage.user.name,
+        lastMessage: lastMessage.text,
+        time: formatDate(lastMessage.createdAt),
       };
     });
-    setHistoryChatList(_historyChatList);
+    setHistoryChatList([..._historyChatList, temp]);
     // setHistoryChatList(temp);
-  }, []);
+  }, [messenger]);
 
-  const temp = [
-    {
-      room: '62189ecbf63eae0268063ab4',
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-  ];
+  const temp = {
+    room: '62189ecbf63eae0268063ab4',
+    avatar: img,
+    name: 'Uchiha sasuker',
+    lastMessage: 'Bạn: hãy giao vào lúc 10h',
+    time: '10:30 PM',
+  };
+
+  const formatDate = dateString => {
+    const today = new Date();
+    const date = new Date(dateString);
+    if (today.toDateString() === date.toDateString()) {
+      return date.toLocaleTimeString('vi-VN', {
+        hour: 'numeric',
+        minute: 'numeric',
+      });
+    }
+    return date.toLocaleDateString('vi-VN', {
+      weekday: 'short',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
   const onChoose = element => {
     socket.emit('join', {
@@ -49,6 +62,7 @@ const ChatScreen = props => {
     navigation.navigate('MessageScreen', {
       room: element.room,
       user: userInfo.user,
+      messages: messenger[element.room],
     });
   };
 
