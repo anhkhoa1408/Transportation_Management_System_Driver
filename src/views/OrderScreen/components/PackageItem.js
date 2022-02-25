@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 import { COLORS, FONTS, STYLES } from '../../../styles';
 import PackageImage from '../../../assets/images/package.png';
@@ -22,6 +22,21 @@ const PackageItem = ({ item, navigation }) => {
             navigation.navigate('ConfirmOrder', {
               packageId: item.id,
               packageImage: item.images,
+            })
+          }
+        />
+      }
+      leftContent={
+        <Button
+          title="Chi tiết"
+          icon={{ name: 'info', color: 'white' }}
+          buttonStyle={{
+            backgroundColor: COLORS.success,
+            minHeight: '100%',
+          }}
+          onPress={() =>
+            navigation.navigate('PackageDetail', {
+              packageId: item.id,
             })
           }
         />
