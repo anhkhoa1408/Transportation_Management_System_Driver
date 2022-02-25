@@ -5,34 +5,11 @@ import { socket } from '../../config/socketIO';
 import { connect } from 'react-redux';
 
 function Notification(props) {
-  const { messages, state } = props;
+  const { messenger, state } = props;
 
-  React.useEffect(() => {
-    socket.on('chat', message => {
-      // console.log(message);
-      // console.log('Store: ' + JSON.stringify(messages));
-      // console.log('state: ' + JSON.stringify(state));
-      // store.dispatch(storeMessages([message]));
-    });
-  }, []);
+  React.useEffect(() => {}, []);
 
-  async function chatt() {
-    // socket.emit(
-    //   'chat',
-    //   { username: 'Hi', room: '1', message: [{ text: 2 }] },
-    //   error => {
-    //     if (error) {
-    //       alert(error);
-    //     } else {
-    //     }
-    //   },
-    // );
-    socket.emit('join', {
-      userId: '61a98d4c8358540016fbb60f',
-      anotherId: '61a89d4905989200dc6ee647',
-    });
-    console.log(JSON.stringify(messages));
-  }
+  async function chatt() {}
 
   async function onDisplayNotification() {
     const channelId = await notifee.createChannel({
@@ -71,7 +48,7 @@ function Notification(props) {
 }
 
 const mapStateToProps = state => ({
-  messages: state.message,
+  messages: state.messenger,
   state: state,
 });
 

@@ -2,75 +2,30 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, Touchable } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { container, header } from '../../styles/layoutStyle';
+import { header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import img from './../../assets/images/download.jpg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import io from 'socket.io-client';
-import { MAIN_URL } from '../../api/config';
+import { socket } from '../../config/socketIO';
 
-const SendMessageScreen = ({ navigation }) => {
+const MessageScreen = ({ navigation, route }) => {
+  const { room, user } = route.params;
   const [messages, setMessages] = useState([]);
-  const socket = io(MAIN_URL);
 
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connect' + socket.id); // x8WIv7-mJelg7on_ALbx
-      socket.on('chat', message => {
-        console.log('Socket: ' + socket.id);
-        console.log(message);
-      });
+  useEffect(() => {}, []);
+
+  const onSend = useCallback((newMessages = []) => {
+    socket.emit('chat', newMessages[0], room);
+
+    setMessages(previousMessages => {
+      // TODO: Add message to store
+      return GiftedChat.append(previousMessages, newMessages);
     });
-
-    socket.on('disconnect', () => {
-      console.log('Disconnect'); // undefined
-    });
-
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 2,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 3,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/141/140/any',
-        },
-      },
-    ]);
-  }, []);
-
-  const onSend = useCallback((messages = []) => {
-    // socket.emit(
-    //   'join',
-    //   { username: 'Hi', room: '1', message: messages },
-    //   error => {
-    //     if (error) {
-    //       alert(error);
-    //     } else {
-    //     }
-    //   },
-    // );
-    console.log(JSON.stringify(messages));
-
-    setMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
-    );
   }, []);
 
   return (
     <View style={messagesScreenStyle.container}>
-      <View style={messagesScreenStyle.header}>
+      <View style={header}>
         <TouchableOpacity>
           <MaterialIcon
             name="west"
@@ -90,9 +45,9 @@ const SendMessageScreen = ({ navigation }) => {
         messages={messages}
         onSend={messages => onSend(messages)}
         user={{
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          _id: user.id,
+          name: user.name,
+          avatar: user.avatar?.url,
         }}
         placeholder="Nhập"
         textInputStyle={messagesScreenStyle.input}
@@ -107,11 +62,10 @@ const messagesScreenStyle = StyleSheet.create({
     height: '100%',
     backgroundColor: '#FFF',
   },
-  header: { ...header },
   input: {
     padding: 15,
     backgroundColor: '#FFF',
   },
 });
 
-export default SendMessageScreen;
+export default MessageScreen;

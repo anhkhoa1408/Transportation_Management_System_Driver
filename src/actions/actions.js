@@ -28,10 +28,11 @@ export const saveShipmentState = payload => {
   };
 };
 
-export const storeMessages = payload => {
+export const addMessage = (payload, room) => {
   return {
-    type: types.SAVE_MESSAGE,
+    type: types.ADD_MESSAGE,
     payload: payload,
+    room: room,
   };
 };
 

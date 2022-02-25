@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import { MAIN_URL } from '../api/config';
-import { storeMessages, addRoom } from '../actions/actions';
+import { addMessage, addRoom } from '../actions/actions';
 
 // Initialize Socket IO:
 export const socket = io(MAIN_URL);
@@ -18,12 +18,10 @@ export const startSocketIO = store => {
   });
 
   socket.on('join', data => {
-    console.log('Join: ' + data);
     store.dispatch(addRoom(data));
   });
 
-  socket.on('chat', message => {
-    console.log('HI' + message);
-    store.dispatch(storeMessages([message]));
+  socket.on('chat', (message, room) => {
+    store.dispatch(addMessage(message, room));
   });
 };
