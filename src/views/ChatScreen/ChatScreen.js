@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import img from '../../assets/images/download.jpg';
 import { socket } from '../../config/socketIO';
+import { MAIN_URL } from '../../api/config';
 
 const ChatScreen = props => {
   const { userInfo, messenger, navigation } = props;
@@ -14,7 +15,7 @@ const ChatScreen = props => {
   const [historyChatList, setHistoryChatList] = React.useState([]);
 
   React.useEffect(() => {
-    console.log(JSON.stringify(messenger));
+    // console.log(JSON.stringify(messenger));
     const _historyChatList = Object.keys(messenger).map(room => {
       const lastMessage = messenger[room][0];
       return {
@@ -62,7 +63,7 @@ const ChatScreen = props => {
     navigation.navigate('MessageScreen', {
       room: element.room,
       user: userInfo.user,
-      messages: messenger[element.room],
+      // messages: messenger[element.room],
     });
   };
 
@@ -96,7 +97,9 @@ const ChatScreen = props => {
                 <Avatar
                   size="medium"
                   avatarStyle={{ borderRadius: 10 }}
-                  source={element.avatar}
+                  source={{
+                    uri: MAIN_URL + element.avatar,
+                  }}
                 />
                 <ListItem.Content style={{ display: 'flex' }}>
                   <View>

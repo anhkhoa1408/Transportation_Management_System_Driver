@@ -10,6 +10,9 @@ import { socket } from '../../config/socketIO';
 import { addMessage } from '../../actions/actions';
 import { useDispatch } from 'react-redux';
 import { connect } from 'react-redux';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 const MessageScreen = props => {
   const { navigation, route, messenger } = props;
@@ -25,7 +28,7 @@ const MessageScreen = props => {
     socket.emit('chat', newMessages[0], room);
 
     setMessages(previousMessages => {
-      useDispatch()(addMessage(newMessages[0], room));
+      props.addMessage(newMessages[0], room);
       return GiftedChat.append(previousMessages, newMessages);
     });
   }, []);
@@ -79,4 +82,8 @@ const mapStateToProps = state => ({
   messenger: state.messenger,
 });
 
-export default connect(mapStateToProps)(MessageScreen);
+const mapDispatchToProps = dispatch => ({
+  addMessage: (message, room) => dispatch(addMessage(message, room)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageScreen);
