@@ -16,7 +16,7 @@ import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
 
-function HomeScreen({ navigation, ...props }) {
+function HomeScreen({ navigation, userInfo, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
@@ -24,11 +24,8 @@ function HomeScreen({ navigation, ...props }) {
 
   const [user, setUser] = useState({
     name: 'Shiba',
-    avatar:
-      'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
+    avatar: '',
   });
-
-  const { userInfo } = props;
 
   useEffect(() => {
     if (userInfo.user.avatar && userInfo.user.avatar.url)
@@ -36,10 +33,11 @@ function HomeScreen({ navigation, ...props }) {
         ...user,
         avatar: userInfo.user.avatar.url,
       });
-    setUser({
-      ...user,
-      name: userInfo.user.name,
-    });
+    else
+      setUser({
+        ...user,
+        name: userInfo.user.name,
+      });
   }, [userInfo]);
 
   useEffect(() => {
