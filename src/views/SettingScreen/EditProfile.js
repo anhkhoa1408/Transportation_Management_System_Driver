@@ -133,9 +133,10 @@ const EditProfile = ({ navigation }) => {
                         });
                       })
                       .catch(err => {
+                        console.error(err);
                         setLoading(false);
                         setAlert({
-                          type: 'error',
+                          type: 'danger',
                           message: 'Cập nhật ảnh đại diện thất bại',
                         });
                       });

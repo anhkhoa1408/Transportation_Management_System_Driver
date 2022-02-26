@@ -16,7 +16,7 @@ import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
 
-function HomeScreen({ navigation, userInfo, ...props }) {
+function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
