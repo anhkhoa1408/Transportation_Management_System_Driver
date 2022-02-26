@@ -9,10 +9,10 @@ const axiosClient = axios.create({
   },
 });
 
-axiosClient.interceptors.request.use(request => {
-  console.log('Starting Request', JSON.stringify(request, null, 2));
-  return request;
-});
+// axiosClient.interceptors.request.use(request => {
+//   console.log('Starting Request', JSON.stringify(request, null, 2));
+//   return request;
+// });
 
 // axiosClient.interceptors.response.use(response => {
 //   console.log('Response:', JSON.stringify(response, null, 2));
