@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import img from '../../assets/images/download.jpg';
 import { socket } from '../../config/socketIO';
 import { MAIN_URL } from '../../api/config';
+import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
 
 const ChatScreen = props => {
   const { userInfo, messenger, navigation } = props;
@@ -75,7 +76,7 @@ const ChatScreen = props => {
           rounded
           size="small"
           source={{
-            uri: userInfo?.user?.avatar?.url,
+            uri: getAvatarFromUser(userInfo.user),
           }}
         />
       </View>
@@ -98,7 +99,7 @@ const ChatScreen = props => {
                   size="medium"
                   avatarStyle={{ borderRadius: 10 }}
                   source={{
-                    uri: MAIN_URL + element.avatar,
+                    uri: getAvatarFromUri(element.avatar),
                   }}
                 />
                 <ListItem.Content style={{ display: 'flex' }}>
