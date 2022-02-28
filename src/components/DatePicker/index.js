@@ -5,7 +5,7 @@ import { Input, Button, Card } from 'react-native-elements';
 import { shadowCard, shadowInput } from '../../styles/layoutStyle';
 import { TouchableOpacity } from 'react-native';
 
-export const DatePicker = () => {
+export const DatePicker = ({ onDateChange }) => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -14,6 +14,7 @@ export const DatePicker = () => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
+    onDateChange && onDateChange(currentDate);
   };
 
   const showMode = currentMode => {

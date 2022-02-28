@@ -15,6 +15,8 @@ import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
 
 const EditProfile = ({ navigation }) => {
   const [data, setData] = useState({
@@ -22,9 +24,7 @@ const EditProfile = ({ navigation }) => {
     email: '',
     phone: '',
   });
-  const [avatar, setAvatar] = useState(
-    'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  );
+  const [avatar, setAvatar] = useState(getAvatarFromUser());
   const [dataChange, setDataChange] = useState(true);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
@@ -55,8 +55,8 @@ const EditProfile = ({ navigation }) => {
         email: userInfo.user.email,
         phone: userInfo.user.phone,
       });
-      if ('avatar' in userInfo.user)
-        if ('url' in userInfo.user.avatar) setAvatar(userInfo.user.avatar.url);
+      if (userInfo.user?.avatar?.url !== undefined)
+        setAvatar(userInfo.user.avatar.url);
       setDataChange(false);
       setDataChange(true);
     });
@@ -107,14 +107,41 @@ const EditProfile = ({ navigation }) => {
           <Avatar
             size={150}
             source={{
-              uri: avatar,
+              uri: getAvatarFromUser(userInfo.user),
             }}
             rounded>
             <Avatar.Accessory
               underlayColor="#CCC"
               style={{ backgroundColor: COLORS.primary }}
               color={COLORS.white}
-              // onPress={() => console.log(1)}
+              onPress={() =>
+                launchImageLibrary({
+                  mediaTypes: 'photo',
+                  quality: 1,
+                }).then(data => {
+                  if (data.assets && data.assets.length > 0) {
+                    setLoading(true);
+                    authApi
+                      .updateAvatar(data.assets[0])
+                      .then(response => {
+                        setLoading(false);
+                        dispatch(saveInfo({ user: response }));
+                        setAlert({
+                          type: 'success',
+                          message: 'Cập nhật ảnh đại diện thành công',
+                        });
+                      })
+                      .catch(err => {
+                        console.error(err);
+                        setLoading(false);
+                        setAlert({
+                          type: 'danger',
+                          message: 'Cập nhật ảnh đại diện thất bại',
+                        });
+                      });
+                  }
+                })
+              }
               size={35}
             />
           </Avatar>

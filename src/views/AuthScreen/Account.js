@@ -14,6 +14,8 @@ import { COLORS } from '../../styles';
 import { useDispatch } from 'react-redux';
 import { success, warning, danger, backdropColor } from '../../styles/color';
 import { connect } from 'react-redux';
+import { socket } from '../../config/socketIO';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
 
 const Account = ({ navigation, userInfo }) => {
   const dispatch = useDispatch();
@@ -78,6 +80,7 @@ const Account = ({ navigation, userInfo }) => {
     return (
       <TouchableOpacity
         onPress={() => {
+          socket.close();
           item.navigate
             ? navigation.navigate(item.navigate)
             : dispatch({ type: 'CLEAN_STORE' });
@@ -198,7 +201,7 @@ const Account = ({ navigation, userInfo }) => {
           rounded
           size="large"
           source={{
-            uri: userInfo?.user?.avatar?.url,
+            uri: getAvatarFromUser(userInfo.user),
           }}
         />
         <View style={{ marginLeft: 20, flex: 1 }}>

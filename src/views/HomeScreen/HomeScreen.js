@@ -15,32 +15,14 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
-
-  const [user, setUser] = useState({
-    name: 'Shiba',
-    avatar:
-      'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  });
-
   const { userInfo } = props;
-
-  useEffect(() => {
-    if (userInfo.user.avatar && userInfo.user.avatar.url)
-      setUser({
-        ...user,
-        avatar: userInfo.user.avatar.url,
-      });
-    setUser({
-      ...user,
-      name: userInfo.user.name,
-    });
-  }, [userInfo]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -73,10 +55,10 @@ function HomeScreen({ navigation, ...props }) {
               onPress={() => navigation.navigate('Notification')}
             />
           }
-          headerText={'Xin chào ' + user.name}
+          headerText={'Xin chào ' + userInfo?.user?.name}
           rightElement={
             <HeaderAvatar
-              url={user.avatar}
+              url={getAvatarFromUser(userInfo.user)}
               onPressAction={() => navigation.navigate('EditProfile')}
             />
           }

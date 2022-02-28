@@ -8,6 +8,8 @@ import { store } from '../../config/configureStore';
 import Loading from '../../components/Loading';
 import { COLORS } from '../../styles';
 import { backdropColor } from '../../styles/color';
+import ModalMess from '../../components/ModalMess';
+import shipmentApi from '../../api/shipmentAPI';
 
 const VehicleScreen = () => {
   const carr = {
@@ -20,9 +22,20 @@ const VehicleScreen = () => {
   const [errorForm, setError] = useState(false);
   const [car, setCar] = useState(carr);
   const carInfo = store.getState().userInfo.user.car;
+  const userInfo = store.getState().userInfo.user;
+  const [successModal, setSuccessModal] = useState(null);
+  const [failModal, setFailModal] = useState(null);
+  const [shipment, setShipment] = useState(null);
+  const [assistance, setAssistance] = useState({
+    name: '',
+    phone: '',
+  });
 
   useEffect(() => {
     setCar(carInfo);
+    shipmentApi.assistanceInfo().then(response => {
+      setAssistance(response);
+    });
   }, []);
 
   return (
@@ -47,8 +60,20 @@ const VehicleScreen = () => {
 
         <Card containerStyle={vehicleStyle.infoContainer}>
           <ScrollView contentContainerStyle={{ paddingHorizontal: 5 }}>
+            <ModalMess
+              type={'success'}
+              message={'Cập nhật thành công.'}
+              alert={successModal}
+              setAlert={setSuccessModal}
+            />
+            <ModalMess
+              type={'danger'}
+              message={'Cập nhật thất bại.'}
+              alert={failModal}
+              setAlert={setFailModal}
+            />
             <Card containerStyle={vehicleStyle.truckContainer}>
-              <View style={vehicleStyle.infoItem}>
+              <View style={[vehicleStyle.infoItem, { alignItems: 'center' }]}>
                 <Icon
                   type="feather"
                   name="truck"
@@ -56,7 +81,7 @@ const VehicleScreen = () => {
                   size={18}
                   color="#f0531f"
                   containerStyle={{
-                    marginRight: 10,
+                    marginRight: 15,
                     marginLeft: 0,
                   }}
                 />
@@ -67,14 +92,14 @@ const VehicleScreen = () => {
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Phương tiện</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'type' in car ? car.type : 'Loading...'}
+                    {'type' in car ? car.type : 'Đang cập nhật'}
                   </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Tải trọng tối đa</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'load' in car ? car.load : 'Loading...'} Kg
+                    {'load' in car ? car.load : 'Đang cập nhật'} Kg
                   </Text>
                 </View>
               </View>
@@ -87,21 +112,21 @@ const VehicleScreen = () => {
                   <Text style={vehicleStyle.infoContent}>
                     {'size' in car
                       ? `${car.size.len} m x ${car.size.width} m x ${car.size.height} m`
-                      : 'Loading...'}
+                      : 'Đang cập nhật'}
                   </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Biển số xe</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'licence' in car ? car.licence : 'Loading...'}
+                    {'licence' in car ? car.licence : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
             </Card>
 
             <Card containerStyle={vehicleStyle.truckContainer}>
-              <View style={vehicleStyle.infoItem}>
+              <View style={[vehicleStyle.infoItem, { alignItems: 'center' }]}>
                 <Icon
                   type="feather"
                   name="user"
@@ -109,7 +134,7 @@ const VehicleScreen = () => {
                   size={18}
                   color="#2ed964"
                   containerStyle={{
-                    marginRight: 10,
+                    marginRight: 12,
                     marginLeft: 0,
                   }}
                 />
@@ -119,24 +144,28 @@ const VehicleScreen = () => {
               <View style={vehicleStyle.infoItem}>
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Tên</Text>
-                  <Text style={vehicleStyle.infoContent}>Uchiha shisui</Text>
+                  <Text style={vehicleStyle.infoContent}>{userInfo.name}</Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Số điện thoại</Text>
-                  <Text style={vehicleStyle.infoContent}>012345678</Text>
+                  <Text style={vehicleStyle.infoContent}>{userInfo.phone}</Text>
                 </View>
               </View>
 
               <View style={vehicleStyle.infoItem}>
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Người hỗ trợ</Text>
-                  <Text style={vehicleStyle.infoContent}>Danzo</Text>
+                  <Text style={vehicleStyle.infoContent}>
+                    {assistance.name}
+                  </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>SDT người hỗ trợ</Text>
-                  <Text style={vehicleStyle.infoContent}>012345689</Text>
+                  <Text style={vehicleStyle.infoContent}>
+                    {assistance.phone}
+                  </Text>
                 </View>
               </View>
             </Card>
@@ -155,7 +184,12 @@ const VehicleScreen = () => {
             padding: 30,
           }}
           isVisible={errorForm}>
-          <ErrorForm setError={setError} />
+          <ErrorForm
+            setError={setError}
+            car={carInfo}
+            onSuccess={setSuccessModal}
+            onFailure={setFailModal}
+          />
         </Overlay>
       </SafeAreaView>
     </>
@@ -176,14 +210,15 @@ const vehicleStyle = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: '#FFF',
-    paddingVertical: 30,
+    paddingVertical: 20,
     zIndex: 1,
+    paddingHorizontal: 0,
   },
   truckContainer: {
     display: 'flex',
     justifyContent: 'flex-start',
     borderRadius: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
     marginBottom: 20,
     borderWidth: 0,
     ...shadowCard,
