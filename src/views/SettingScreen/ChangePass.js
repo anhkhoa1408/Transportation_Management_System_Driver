@@ -15,8 +15,11 @@ import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
+import passwordchangeapi from '../../api/passwrodchange';
+import ModalMess from '../../components/ModalMess';
 
-const ChangePass = ({ navigation }) => {
+const ChangePass = ( props ) => {
+  const {navigation} = props;
   const [data, setData] = useState({
     currPass: '',
     password: '',
@@ -33,7 +36,7 @@ const ChangePass = ({ navigation }) => {
       currPass: Bonk.string().required('Thông tin bắt buộc'),
       password: Bonk.string()
         .required('Thông tin bắt buộc')
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, 'Mật khẩu không hợp lệ')
+        // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, 'Mật khẩu không hợp lệ')
         .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
       confirmPassword: Bonk.string()
         .required('Thông tin bắt buộc')
@@ -45,6 +48,17 @@ const ChangePass = ({ navigation }) => {
     }),
     onSubmit: values => {
       handleSubmit(values);
+      console.log("change passw");
+      passwordchangeapi
+            .changepassword({
+              password: values.currPass,
+              newPassword: values.password,
+            })
+            .then(data => {
+              props.onSuccess();
+              props.setError(false);
+            })
+            .catch(error => props.onFailure());
     },
   });
 
