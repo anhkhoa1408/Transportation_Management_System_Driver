@@ -15,6 +15,7 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
+import ModalMess from '../../components/ModalMess';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
@@ -22,6 +23,9 @@ function HomeScreen({ navigation, ...props }) {
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
 
+  const [successModal, setSuccessModal] = useState(null);
+  const [failModal, setFailModal] = useState(null);
+  
   const [user, setUser] = useState({
     name: 'Shiba',
     avatar:
@@ -123,6 +127,18 @@ function HomeScreen({ navigation, ...props }) {
           iconContainerStyle={{
             backgroundColor: COLORS.primary,
           }}>
+          <ModalMess
+            type={'success'}
+            message={'Cập nhật thành công.'}
+            alert={successModal}
+            setAlert={setSuccessModal}
+          />
+          <ModalMess
+            type={'danger'}
+            message={'Cập nhật thất bại.'}
+            alert={failModal}
+            setAlert={setFailModal}
+          />
           <SpeedDial.Action
             icon={{ name: 'snooze', color: '#fff', type: 'material' }}
             iconContainerStyle={{
@@ -146,7 +162,10 @@ function HomeScreen({ navigation, ...props }) {
             padding: 30,
           }}
           visible={absenceForm}>
-          <AbsenceForm setAbsence={setAbsence} />
+          <AbsenceForm setAbsence={setAbsence} 
+            onSuccess={setSuccessModal}
+            onFailure={setFailModal}
+            />
         </Overlay>
       </View>
     </>

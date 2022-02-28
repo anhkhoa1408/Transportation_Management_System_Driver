@@ -42,7 +42,7 @@ const AbsenceForm = props => {
             })
             .then(data => {
               props.onSuccess();
-              props.setError(false);
+              props.setAbsence(false);
             })
             .catch(error => props.onFailure())
           }
