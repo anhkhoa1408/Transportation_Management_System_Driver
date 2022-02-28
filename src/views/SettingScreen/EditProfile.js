@@ -16,6 +16,7 @@ import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
 
 const EditProfile = ({ navigation }) => {
   const [data, setData] = useState({
@@ -23,9 +24,7 @@ const EditProfile = ({ navigation }) => {
     email: '',
     phone: '',
   });
-  const [avatar, setAvatar] = useState(
-    'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  );
+  const [avatar, setAvatar] = useState(getAvatarFromUser());
   const [dataChange, setDataChange] = useState(true);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
@@ -108,7 +107,7 @@ const EditProfile = ({ navigation }) => {
           <Avatar
             size={150}
             source={{
-              uri: avatar,
+              uri: getAvatarFromUser(userInfo.user),
             }}
             rounded>
             <Avatar.Accessory
