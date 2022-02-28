@@ -15,7 +15,6 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
-import { getAvatarFromUser } from '../../utils/avatarUltis';
 import ModalMess from '../../components/ModalMess';
 
 function HomeScreen({ navigation, ...props }) {
@@ -34,6 +33,18 @@ function HomeScreen({ navigation, ...props }) {
   });
 
   const { userInfo } = props;
+
+  useEffect(() => {
+    if (userInfo.user.avatar && userInfo.user.avatar.url)
+      setUser({
+        ...user,
+        avatar: userInfo.user.avatar.url,
+      });
+    setUser({
+      ...user,
+      name: userInfo.user.name,
+    });
+  }, [userInfo]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -66,10 +77,10 @@ function HomeScreen({ navigation, ...props }) {
               onPress={() => navigation.navigate('Notification')}
             />
           }
-          headerText={'Xin chào ' + userInfo?.user?.name}
+          headerText={'Xin chào ' + user.name}
           rightElement={
             <HeaderAvatar
-              url={getAvatarFromUser(userInfo.user)}
+              url={user.avatar}
               onPressAction={() => navigation.navigate('EditProfile')}
             />
           }

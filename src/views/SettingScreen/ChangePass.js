@@ -16,10 +16,10 @@ import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
 import passwordchangeapi from '../../api/passwrodchange';
-import ModalMess from '../../components/ModalMess';
 
 const ChangePass = ( props ) => {
   const {navigation} = props;
+  const dispatch = useDispatch();
   const [data, setData] = useState({
     currPass: '',
     password: '',
@@ -48,18 +48,17 @@ const ChangePass = ( props ) => {
     }),
     onSubmit: values => {
       handleSubmit(values);
-      console.log("change passw");
       passwordchangeapi
             .changepassword({
               password: values.currPass,
               newPassword: values.password,
             })
-            .then(data => {
-              props.onSuccess();
-              props.setError(false);
-            })
-            .catch(error => props.onFailure());
-    },
+            .then(dispatch({ type: 'CLEAN_STORE' }))
+            .catch(error => setAlert({
+                    type: 'error',
+                    message: 'Cập nhật thông tin thất bại',
+                  }))
+            },
   });
 
   // useEffect(() => {
@@ -123,6 +122,7 @@ const ChangePass = ( props ) => {
       />
 
       <ScrollView contentContainerStyle={{ padding: 25 }}>
+
         <Text
           style={{
             textAlign: 'center',
