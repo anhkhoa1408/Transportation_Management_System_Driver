@@ -15,8 +15,11 @@ import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
+import passwordchangeapi from '../../api/passwrodchange';
 
-const ChangePass = ({ navigation }) => {
+const ChangePass = ( props ) => {
+  const {navigation} = props;
+  const dispatch = useDispatch();
   const [data, setData] = useState({
     currPass: '',
     password: '',
@@ -33,7 +36,7 @@ const ChangePass = ({ navigation }) => {
       currPass: Bonk.string().required('Thông tin bắt buộc'),
       password: Bonk.string()
         .required('Thông tin bắt buộc')
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, 'Mật khẩu không hợp lệ')
+        // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, 'Mật khẩu không hợp lệ')
         .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
       confirmPassword: Bonk.string()
         .required('Thông tin bắt buộc')
@@ -45,7 +48,17 @@ const ChangePass = ({ navigation }) => {
     }),
     onSubmit: values => {
       handleSubmit(values);
-    },
+      passwordchangeapi
+            .changepassword({
+              password: values.currPass,
+              newPassword: values.password,
+            })
+            .then(dispatch({ type: 'CLEAN_STORE' }))
+            .catch(error => setAlert({
+                    type: 'error',
+                    message: 'Cập nhật thông tin thất bại',
+                  }))
+            },
   });
 
   // useEffect(() => {
@@ -109,6 +122,7 @@ const ChangePass = ({ navigation }) => {
       />
 
       <ScrollView contentContainerStyle={{ padding: 25 }}>
+
         <Text
           style={{
             textAlign: 'center',
