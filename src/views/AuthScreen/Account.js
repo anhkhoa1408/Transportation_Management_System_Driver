@@ -80,10 +80,12 @@ const Account = ({ navigation, userInfo }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          socket.close();
-          item.navigate
-            ? navigation.navigate(item.navigate)
-            : dispatch({ type: 'CLEAN_STORE' });
+          if (item.navigate) {
+            navigation.navigate(item.navigate);
+          } else {
+            socket.close();
+            dispatch({ type: 'CLEAN_STORE' });
+          }
         }}
         style={{ width: '100%' }}>
         <ListItem
