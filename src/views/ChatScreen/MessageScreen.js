@@ -83,7 +83,7 @@ const messagesScreenStyle = StyleSheet.create({
 
 const mapStateToProps = state => ({
   messenger: state.messenger,
-  user: state.userInfo,
+  user: state.userInfo.user,
   customerInfo: state.customerInfo,
 });
 
