@@ -15,6 +15,7 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
 import ModalMess from '../../components/ModalMess';
 
 function HomeScreen({ navigation, ...props }) {
@@ -25,7 +26,7 @@ function HomeScreen({ navigation, ...props }) {
 
   const [successModal, setSuccessModal] = useState(null);
   const [failModal, setFailModal] = useState(null);
-  
+
   const [user, setUser] = useState({
     name: 'Shiba',
     avatar:
@@ -33,18 +34,6 @@ function HomeScreen({ navigation, ...props }) {
   });
 
   const { userInfo } = props;
-
-  useEffect(() => {
-    if (userInfo.user.avatar && userInfo.user.avatar.url)
-      setUser({
-        ...user,
-        avatar: userInfo.user.avatar.url,
-      });
-    setUser({
-      ...user,
-      name: userInfo.user.name,
-    });
-  }, [userInfo]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -77,10 +66,10 @@ function HomeScreen({ navigation, ...props }) {
               onPress={() => navigation.navigate('Notification')}
             />
           }
-          headerText={'Xin chào ' + user.name}
+          headerText={'Xin chào ' + userInfo?.user?.name}
           rightElement={
             <HeaderAvatar
-              url={user.avatar}
+              url={getAvatarFromUser(userInfo.user)}
               onPressAction={() => navigation.navigate('EditProfile')}
             />
           }
@@ -162,10 +151,11 @@ function HomeScreen({ navigation, ...props }) {
             padding: 30,
           }}
           visible={absenceForm}>
-          <AbsenceForm setAbsence={setAbsence} 
+          <AbsenceForm
+            setAbsence={setAbsence}
             onSuccess={setSuccessModal}
             onFailure={setFailModal}
-            />
+          />
         </Overlay>
       </View>
     </>
