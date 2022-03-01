@@ -8,7 +8,9 @@ import furloughApi from '../../api/furloughApi';
 
 const AbsenceForm = props => {
   const [cause, setCause] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
   return (
     <View style={formStyle.form}>
       <Icon
@@ -22,30 +24,34 @@ const AbsenceForm = props => {
           flexDirection: 'column',
           alignItems: 'flex-start',
         }}>
-        <Card.Title>Thời gian</Card.Title>
-        <DatePicker onDateChange={setDate}/>
+        <Card.Title>Bắt đầu</Card.Title>
+        <DatePicker onDateChange={setStartDate} mode="datetime" />
+        <Card.Title style={{ marginTop: 15 }}>Kết thúc</Card.Title>
+        <DatePicker onDateChange={setEndDate} />
         <Card.Title style={{ marginTop: 15 }}>Lý do</Card.Title>
-        <CustomInput multiline={true} numberOfLines={5} 
-        onChangeText={text => setCause(text)} 
+        <CustomInput
+          multiline={true}
+          numberOfLines={5}
+          onChangeText={text => setCause(text)}
         />
-      </View >
-      <PillButton 
-      title="Gửi" 
-      containerStyle={formStyle.button} 
-      type="solid"
-      onPress={() => 
-        furloughApi
+      </View>
+      <PillButton
+        title="Gửi"
+        containerStyle={formStyle.button}
+        type="solid"
+        onPress={() =>
+          furloughApi
             .create({
               reason: cause,
-              start_time: date,
-              end_time: date,
+              start_time: startDate,
+              end_time: endDate,
             })
             .then(data => {
               props.onSuccess();
               props.setAbsence(false);
             })
             .catch(error => props.onFailure())
-          }
+        }
       />
     </View>
   );
