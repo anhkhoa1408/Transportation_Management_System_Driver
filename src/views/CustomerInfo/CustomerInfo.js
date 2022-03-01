@@ -2,11 +2,12 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Avatar, Card, Text } from 'react-native-elements';
 import { container, header } from '../../styles/layoutStyle';
-import banner from '../../assets/images/download.jpg';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../../styles';
 
-const CustomerInfo = ({ navigation }) => {
+const CustomerInfo = ({ navigation, route }) => {
+  const { avatar, name = 'Shibe', phone = '0123456789' } = route.params;
+
   return (
     <View style={customerInfoStyle.container}>
       <View style={customerInfoStyle.header}>
@@ -24,10 +25,10 @@ const CustomerInfo = ({ navigation }) => {
             alignItems: 'center',
           }}>
           <Card containerStyle={{ borderRadius: 100, padding: 5 }}>
-            <Avatar size="xlarge" rounded source={banner} />
+            <Avatar size="xlarge" rounded source={{ uri: avatar }} />
           </Card>
           <Text h4 style={{ color: '#FFF', fontSize: 40, marginVertical: 20 }}>
-            Nguyen Anh Khoa
+            {name}
           </Text>
         </View>
       </View>
@@ -54,10 +55,10 @@ const CustomerInfo = ({ navigation }) => {
             />
             <Text>Phone number</Text>
           </View>
-          <Text>akhoa981@gmail.com</Text>
+          <Text>{phone}</Text>
         </View>
 
-        <View
+        {/* <View
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -79,7 +80,7 @@ const CustomerInfo = ({ navigation }) => {
             <Text>Address</Text>
           </View>
           <Text>akhoa981@gmail.com</Text>
-        </View>
+        </View> */}
       </Card>
     </View>
   );

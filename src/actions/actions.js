@@ -35,3 +35,11 @@ export const addMessage = (payload, room) => {
     room: room,
   };
 };
+
+export const addCustomer = (payload, room) => {
+  return {
+    type: types.ADD_CUSTOMER,
+    payload: payload,
+    room: room,
+  };
+};

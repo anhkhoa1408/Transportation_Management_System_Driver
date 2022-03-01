@@ -4,21 +4,18 @@ import { Avatar, Text } from 'react-native-elements';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import img from './../../assets/images/download.jpg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { socket } from '../../config/socketIO';
 import { addMessage } from '../../actions/actions';
-import { useDispatch } from 'react-redux';
 import { connect } from 'react-redux';
-import { LogBox } from 'react-native';
-
-LogBox.ignoreLogs(['EventEmitter.removeListener']);
+import { getAvatarFromUri } from '../../utils/avatarUltis';
 
 const MessageScreen = props => {
-  const { navigation, route, messenger } = props;
-  const { room, user } = route.params;
+  const { navigation, route, messenger, user, customerInfo } = props;
+  const { room } = route.params;
 
   const [messages, setMessages] = useState();
+  const [customer, setCustomer] = useState(customerInfo[room]);
 
   useEffect(() => {
     setMessages(messenger[room]);
@@ -43,12 +40,18 @@ const MessageScreen = props => {
             onPress={() => navigation.goBack()}
           />
         </TouchableOpacity>
-        <Text h4>Uchiha papasuker</Text>
+        <Text h4>{customer?.name}</Text>
         <Avatar
           rounded
           size="small"
-          source={img}
-          onPress={() => navigation.navigate('CustomerInfo')}
+          source={{ uri: getAvatarFromUri(customer?.avatar?.url) }}
+          onPress={() =>
+            navigation.navigate('CustomerInfo', {
+              avatar: getAvatarFromUri(customer?.avatar?.url),
+              name: customer?.name,
+              phone: customer?.phone,
+            })
+          }
         />
       </View>
       <GiftedChat
@@ -80,6 +83,8 @@ const messagesScreenStyle = StyleSheet.create({
 
 const mapStateToProps = state => ({
   messenger: state.messenger,
+  user: state.userInfo,
+  customerInfo: state.customerInfo,
 });
 
 const mapDispatchToProps = dispatch => ({
