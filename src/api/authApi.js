@@ -23,8 +23,11 @@ class AuthorApi {
       name: avatar.fileName,
       type: 'multipart/form-data',
     });
-
     return axiosClient.put(url, formData);
+  };
+  changepassword = data => {
+    const url = MAIN_URL.concat(`/auth/password/update`);
+    return axiosClient.post(url, data);
   };
 }
 const authApi = new AuthorApi();
