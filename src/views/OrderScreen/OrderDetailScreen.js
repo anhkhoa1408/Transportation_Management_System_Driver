@@ -15,9 +15,13 @@ import { joinAddress } from '../../utils/addressUltis';
 import PackageItem from './components/PackageItem';
 import InfoField from '../../components/InfoField';
 import shipmentApi from '../../api/shipmentAPI';
+import { socket } from '../../config/socketIO';
+import { connect } from 'react-redux';
 
-export default function OrderDetailScreen({ navigation, route }) {
+function OrderDetailScreen(props) {
   const [data, setData] = useState([]);
+
+  const { userInfo, navigation, route } = props;
 
   useEffect(() => {
     if (route.params.shipmentID)
@@ -29,6 +33,19 @@ export default function OrderDetailScreen({ navigation, route }) {
   const renderItem = ({ item, index }) => (
     <PackageItem item={item} navigation={navigation} />
   );
+
+  const handleChatButton = () => {
+    socket.emit('join', {
+      userId: userInfo.user.id,
+      anotherId: data?.customer,
+      roomId: false,
+    });
+    socket.once('join', room => {
+      navigation.navigate('MessageScreen', {
+        room: room,
+      });
+    });
+  };
 
   return (
     <View style={{ ...STYLES.container }}>
@@ -66,7 +83,9 @@ export default function OrderDetailScreen({ navigation, route }) {
               borderRadius: 15,
               elevation: 5,
             }}>
-            <Icon name="comment" type="font-awesome" color={COLORS.primary} />
+            <TouchableOpacity onPress={handleChatButton}>
+              <Icon name="comment" type="font-awesome" color={COLORS.primary} />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -127,3 +146,9 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.primary,
   },
 });
+
+const mapStateToProps = state => ({
+  userInfo: state.userInfo,
+});
+
+export default connect(mapStateToProps)(OrderDetailScreen);

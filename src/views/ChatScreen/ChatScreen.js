@@ -11,7 +11,7 @@ import { MAIN_URL } from '../../api/config';
 import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
 
 const ChatScreen = props => {
-  const { userInfo, messenger, navigation } = props;
+  const { userInfo, messenger, navigation, customerInfo } = props;
 
   const [historyChatList, setHistoryChatList] = React.useState([]);
 
@@ -21,14 +21,13 @@ const ChatScreen = props => {
       const lastMessage = messenger[room][0];
       return {
         room: room,
-        avatar: lastMessage.user.avatar,
-        name: lastMessage.user.name,
+        avatar: customerInfo[room]?.avatar.url,
+        name: customerInfo[room]?.name,
         lastMessage: lastMessage.text,
         time: formatDate(lastMessage.createdAt),
       };
     });
     setHistoryChatList([..._historyChatList, temp]);
-    // setHistoryChatList(temp);
   }, [messenger]);
 
   const temp = {
@@ -36,7 +35,7 @@ const ChatScreen = props => {
     avatar: img,
     name: 'Uchiha sasuker',
     lastMessage: 'Bạn: hãy giao vào lúc 10h',
-    time: '10:30 PM',
+    time: '10:30:56',
   };
 
   const formatDate = dateString => {
@@ -57,14 +56,10 @@ const ChatScreen = props => {
 
   const onChoose = element => {
     socket.emit('join', {
-      userId: userInfo.user.id,
-      anotherId: userInfo.user,
-      roomId: false,
+      roomId: element.room,
     });
     navigation.navigate('MessageScreen', {
       room: element.room,
-      user: userInfo.user,
-      // messages: messenger[element.room],
     });
   };
 
@@ -142,6 +137,7 @@ const chatScreenStyle = StyleSheet.create({
 const mapStateToProps = state => ({
   messenger: state.messenger,
   userInfo: state.userInfo,
+  customerInfo: state.customerInfo,
 });
 
 export default connect(mapStateToProps)(ChatScreen);
