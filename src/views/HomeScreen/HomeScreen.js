@@ -26,7 +26,7 @@ function HomeScreen({ navigation, ...props }) {
 
   const [successModal, setSuccessModal] = useState(null);
   const [failModal, setFailModal] = useState(null);
-  
+
   const [user, setUser] = useState({
     name: 'Shiba',
     avatar:
@@ -151,10 +151,11 @@ function HomeScreen({ navigation, ...props }) {
             padding: 30,
           }}
           visible={absenceForm}>
-          <AbsenceForm setAbsence={setAbsence} 
+          <AbsenceForm
+            setAbsence={setAbsence}
             onSuccess={setSuccessModal}
             onFailure={setFailModal}
-            />
+          />
         </Overlay>
       </View>
     </>
