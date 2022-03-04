@@ -7,8 +7,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import img from '../../assets/images/download.jpg';
 import { socket } from '../../config/socketIO';
-import { MAIN_URL } from '../../api/config';
 import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
+import { formatDate } from '../../utils/dateUtils';
 
 const ChatScreen = props => {
   const { userInfo, messenger, navigation, customerInfo } = props;
@@ -27,36 +27,14 @@ const ChatScreen = props => {
         time: formatDate(lastMessage.createdAt),
       };
     });
-    setHistoryChatList([..._historyChatList, temp]);
+    setHistoryChatList([..._historyChatList]);
   }, [messenger, customerInfo]);
 
-  const temp = {
-    room: '62189ecbf63eae0268063ab4',
-    avatar: img,
-    name: 'Uchiha sasuker',
-    lastMessage: 'Bạn: hãy giao vào lúc 10h',
-    time: '10:30:56',
-  };
-
-  const formatDate = dateString => {
-    if (dateString === undefined) return '';
-    const today = new Date();
-    const date = new Date(dateString);
-    if (today.toDateString() === date.toDateString()) {
-      return date.toLocaleTimeString('vi-VN', {
-        hour: 'numeric',
-        minute: 'numeric',
-      });
-    }
-    return date.toLocaleDateString('vi-VN', {
-      weekday: 'short',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
   const onChoose = element => {
-    socket.emit('join', {
+    console.log(customerInfo[element.room]);
+    socket.emit('room', {
+      senderId: userInfo.user.id,
+      receiverId: customerInfo[element.room].id,
       roomId: element.room,
     });
     navigation.navigate('MessageScreen', {
