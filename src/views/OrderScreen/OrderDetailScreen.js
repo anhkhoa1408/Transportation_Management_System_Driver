@@ -35,12 +35,11 @@ function OrderDetailScreen(props) {
   );
 
   const handleChatButton = () => {
-    socket.emit('join', {
-      userId: userInfo.user.id,
-      anotherId: data?.customer,
-      roomId: false,
+    socket.emit('room', {
+      senderId: userInfo.user.id,
+      receiverId: data?.customer,
     });
-    socket.once('join', room => {
+    socket.once('room', (room, customer) => {
       navigation.navigate('MessageScreen', {
         room: room,
       });

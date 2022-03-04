@@ -10,15 +10,17 @@ export const startSocketIO = store => {
   socket.connect();
 
   socket.on('connect', () => {
-    console.log('Connect socket');
+    console.log('Connect socket ', socket.id);
+    socket.emit('join', Object.keys(store.getState().customerInfo));
   });
 
   socket.on('disconnect', () => {
     console.log('Disconnect socket');
   });
 
-  socket.on('join', (room, customerId) => {
-    store.dispatch(addCustomer(customerId, room));
+  socket.on('room', (room, customer) => {
+    store.dispatch(addCustomer(customer, room));
+    socket.emit('join', room);
   });
 
   socket.on('chat', (message, room) => {

@@ -14,7 +14,7 @@ const HomeStackScreen = () => {
       screenOptions={routes => ({
         headerShown: false,
       })}
-      initialRouteName="HomeScreen">
+      initialRouteName="Noti">
       <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
       <HomeStack.Screen name="EditProfile" component={EditProfile} />
       <HomeStack.Screen name="Notification" component={NotificationScreen} />

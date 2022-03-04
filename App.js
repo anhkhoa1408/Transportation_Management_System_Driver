@@ -5,9 +5,8 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import { persistor, store } from './src/config/configureStore';
 import Routes from './src/navigation/Routes';
 import { StatusBar } from 'react-native';
-import { startSocketIO } from './src/config/socketIO';
 import {
-  initTokenSync,
+  initDeviceTokenSync,
   initForegroundMessage,
 } from './src/config/cloudMessage';
 
@@ -16,10 +15,8 @@ LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 export default function App(props) {
   React.useEffect(() => {
-    startSocketIO(store);
-
-    initTokenSync();
-    const unsubscribe = initForegroundMessage();
+    initDeviceTokenSync();
+    const unsubscribe = initForegroundMessage(store);
     return unsubscribe;
   }, []);
 

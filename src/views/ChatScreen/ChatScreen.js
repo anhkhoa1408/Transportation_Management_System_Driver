@@ -18,17 +18,17 @@ const ChatScreen = props => {
   React.useEffect(() => {
     // console.log(JSON.stringify(messenger));
     const _historyChatList = Object.keys(customerInfo).map(room => {
-      const lastMessage = messenger[room][0];
+      const lastMessage = messenger[room] ? messenger[room][0] : {};
       return {
         room: room,
-        avatar: customerInfo[room]?.avatar.url,
+        avatar: customerInfo[room]?.avatar,
         name: customerInfo[room]?.name,
-        lastMessage: lastMessage?.text === undefined ? '' : lastMessage.text,
-        time: formatDate(lastMessage?.createdAt),
+        lastMessage: lastMessage.text ? lastMessage.text : '',
+        time: formatDate(lastMessage.createdAt),
       };
     });
     setHistoryChatList([..._historyChatList, temp]);
-  }, [messenger]);
+  }, [messenger, customerInfo]);
 
   const temp = {
     room: '62189ecbf63eae0268063ab4',
@@ -39,6 +39,7 @@ const ChatScreen = props => {
   };
 
   const formatDate = dateString => {
+    if (dateString === undefined) return '';
     const today = new Date();
     const date = new Date(dateString);
     if (today.toDateString() === date.toDateString()) {

@@ -19,7 +19,7 @@ const MessageScreen = props => {
 
   useEffect(() => {
     setMessages(messenger[room]);
-  }, []);
+  }, [messenger]);
 
   const onSend = useCallback((newMessages = []) => {
     socket.emit('chat', newMessages[0], room);
@@ -44,10 +44,10 @@ const MessageScreen = props => {
         <Avatar
           rounded
           size="small"
-          source={{ uri: getAvatarFromUri(customer?.avatar?.url) }}
+          source={{ uri: getAvatarFromUri(customer?.avatar) }}
           onPress={() =>
             navigation.navigate('CustomerInfo', {
-              avatar: getAvatarFromUri(customer?.avatar?.url),
+              avatar: getAvatarFromUri(customer?.avatar),
               name: customer?.name,
               phone: customer?.phone,
             })
