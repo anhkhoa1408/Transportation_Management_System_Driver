@@ -17,14 +17,14 @@ const ChatScreen = props => {
 
   React.useEffect(() => {
     // console.log(JSON.stringify(messenger));
-    const _historyChatList = Object.keys(messenger).map(room => {
+    const _historyChatList = Object.keys(customerInfo).map(room => {
       const lastMessage = messenger[room][0];
       return {
         room: room,
         avatar: customerInfo[room]?.avatar.url,
         name: customerInfo[room]?.name,
-        lastMessage: lastMessage.text,
-        time: formatDate(lastMessage.createdAt),
+        lastMessage: lastMessage?.text === undefined ? '' : lastMessage.text,
+        time: formatDate(lastMessage?.createdAt),
       };
     });
     setHistoryChatList([..._historyChatList, temp]);

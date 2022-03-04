@@ -6,10 +6,21 @@ import { persistor, store } from './src/config/configureStore';
 import Routes from './src/navigation/Routes';
 import { StatusBar } from 'react-native';
 import { startSocketIO } from './src/config/socketIO';
+import {
+  initTokenSync,
+  initForegroundMessage,
+} from './src/config/cloudMessage';
+
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 export default function App(props) {
   React.useEffect(() => {
     startSocketIO(store);
+
+    initTokenSync();
+    const unsubscribe = initForegroundMessage();
+    return unsubscribe;
   }, []);
 
   return (

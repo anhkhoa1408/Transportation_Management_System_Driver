@@ -29,6 +29,10 @@ class AuthorApi {
     const url = MAIN_URL.concat(`/auth/password/update`);
     return axiosClient.post(url, data);
   };
+  updateDeviceToken = async token => {
+    const url = MAIN_URL.concat(`/users/device_token`);
+    return axiosClient.put(url, { device_token: token });
+  };
 }
 const authApi = new AuthorApi();
 export default authApi;
