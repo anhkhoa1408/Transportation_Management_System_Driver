@@ -53,8 +53,8 @@ const SignIn = ({ navigation }) => {
         password: values.password,
       })
       .then(data => {
-        socket.connect();
         dispatch(saveInfo(data));
+        socket.connect();
         syncToken();
         setLoading(false);
       })

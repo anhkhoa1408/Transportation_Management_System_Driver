@@ -43,3 +43,18 @@ export const addCustomer = (payload, room) => {
     room: room,
   };
 };
+
+export const saveMessages = (payload, room) => {
+  return {
+    type: types.SAVE_MESSAGES,
+    payload: payload,
+    room: room,
+  };
+};
+
+export const saveCustomers = payload => {
+  return {
+    type: types.SAVE_CUSTOMERS,
+    payload: payload,
+  };
+};

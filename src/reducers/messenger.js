@@ -1,4 +1,4 @@
-import { ADD_MESSAGE } from '../constants/types';
+import { ADD_MESSAGE, SAVE_MESSAGES } from '../constants/types';
 
 const reducer = (state = {}, action) => {
   switch (action.type) {
@@ -7,6 +7,11 @@ const reducer = (state = {}, action) => {
       return {
         ...state,
         [action.room]: [action.payload, ...room],
+      };
+    case SAVE_MESSAGES:
+      return {
+        ...state,
+        [action.room]: action.payload,
       };
     default:
       return state;

@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar, SearchBar, Text, ListItem } from 'react-native-elements';
+import { Avatar, Text, ListItem } from 'react-native-elements';
 import CustomSearch from '../../components/CustomSearch/CustomSearch';
 import { container, header } from '../../styles/layoutStyle';
 import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import img from '../../assets/images/download.jpg';
 import { socket } from '../../config/socketIO';
 import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
 import { formatDate } from '../../utils/dateUtils';
@@ -16,7 +15,6 @@ const ChatScreen = props => {
   const [historyChatList, setHistoryChatList] = React.useState([]);
 
   React.useEffect(() => {
-    // console.log(JSON.stringify(messenger));
     const _historyChatList = Object.keys(customerInfo).map(room => {
       const lastMessage = messenger[room] ? messenger[room][0] : {};
       return {
@@ -31,7 +29,6 @@ const ChatScreen = props => {
   }, [messenger, customerInfo]);
 
   const onChoose = element => {
-    console.log(customerInfo[element.room]);
     socket.emit('room', {
       senderId: userInfo.user.id,
       receiverId: customerInfo[element.room].id,

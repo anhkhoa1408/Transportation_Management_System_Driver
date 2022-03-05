@@ -44,7 +44,6 @@ export function initForegroundMessage(store) {
     const { room, type, ...data } = remoteMessage.data;
     switch (type) {
       case 'ROOM':
-        console.log(data);
         store.dispatch(addCustomer(data, room));
         socket.emit('join', room);
         break;

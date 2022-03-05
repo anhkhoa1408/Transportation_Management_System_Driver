@@ -26,7 +26,7 @@ const MessageScreen = props => {
 
     setMessages(previousMessages => {
       props.addMessage(newMessages[0], room);
-      return GiftedChat.append(previousMessages, newMessages);
+      // return GiftedChat.append(previousMessages, newMessages);
     });
   }, []);
 
@@ -64,6 +64,7 @@ const MessageScreen = props => {
         }}
         placeholder="Nhập"
         textInputStyle={messagesScreenStyle.input}
+        renderAvatar={null}
       />
     </View>
   );
