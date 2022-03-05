@@ -19,14 +19,14 @@ const MessageScreen = props => {
 
   useEffect(() => {
     setMessages(messenger[room]);
-  }, []);
+  }, [messenger]);
 
   const onSend = useCallback((newMessages = []) => {
     socket.emit('chat', newMessages[0], room);
 
     setMessages(previousMessages => {
       props.addMessage(newMessages[0], room);
-      return GiftedChat.append(previousMessages, newMessages);
+      // return GiftedChat.append(previousMessages, newMessages);
     });
   }, []);
 
@@ -44,10 +44,10 @@ const MessageScreen = props => {
         <Avatar
           rounded
           size="small"
-          source={{ uri: getAvatarFromUri(customer?.avatar?.url) }}
+          source={{ uri: getAvatarFromUri(customer?.avatar) }}
           onPress={() =>
             navigation.navigate('CustomerInfo', {
-              avatar: getAvatarFromUri(customer?.avatar?.url),
+              avatar: getAvatarFromUri(customer?.avatar),
               name: customer?.name,
               phone: customer?.phone,
             })
@@ -64,6 +64,7 @@ const MessageScreen = props => {
         }}
         placeholder="Nhập"
         textInputStyle={messagesScreenStyle.input}
+        renderAvatar={null}
       />
     </View>
   );

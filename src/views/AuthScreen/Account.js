@@ -16,6 +16,7 @@ import { success, warning, danger, backdropColor } from '../../styles/color';
 import { connect } from 'react-redux';
 import { socket } from '../../config/socketIO';
 import { getAvatarFromUser } from '../../utils/avatarUltis';
+import { removeToken } from '../../config/cloudMessage';
 
 const Account = ({ navigation, userInfo }) => {
   const dispatch = useDispatch();
@@ -84,6 +85,7 @@ const Account = ({ navigation, userInfo }) => {
             navigation.navigate(item.navigate);
           } else {
             socket.close();
+            removeToken();
             dispatch({ type: 'CLEAN_STORE' });
           }
         }}

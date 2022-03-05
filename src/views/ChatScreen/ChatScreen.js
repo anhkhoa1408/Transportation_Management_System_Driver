@@ -1,14 +1,13 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar, SearchBar, Text, ListItem } from 'react-native-elements';
+import { Avatar, Text, ListItem } from 'react-native-elements';
 import CustomSearch from '../../components/CustomSearch/CustomSearch';
 import { container, header } from '../../styles/layoutStyle';
 import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import img from '../../assets/images/download.jpg';
 import { socket } from '../../config/socketIO';
-import { MAIN_URL } from '../../api/config';
 import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
+import { formatDate } from '../../utils/dateUtils';
 
 const ChatScreen = props => {
   const { userInfo, messenger, navigation, customerInfo } = props;
@@ -16,46 +15,23 @@ const ChatScreen = props => {
   const [historyChatList, setHistoryChatList] = React.useState([]);
 
   React.useEffect(() => {
-    // console.log(JSON.stringify(messenger));
-    const _historyChatList = Object.keys(messenger).map(room => {
-      const lastMessage = messenger[room][0];
+    const _historyChatList = Object.keys(customerInfo).map(room => {
+      const lastMessage = messenger[room] ? messenger[room][0] : {};
       return {
         room: room,
-        avatar: customerInfo[room]?.avatar.url,
+        avatar: customerInfo[room]?.avatar,
         name: customerInfo[room]?.name,
-        lastMessage: lastMessage.text,
+        lastMessage: lastMessage.text ? lastMessage.text : '',
         time: formatDate(lastMessage.createdAt),
       };
     });
-    setHistoryChatList([..._historyChatList, temp]);
-  }, [messenger]);
-
-  const temp = {
-    room: '62189ecbf63eae0268063ab4',
-    avatar: img,
-    name: 'Uchiha sasuker',
-    lastMessage: 'Bạn: hãy giao vào lúc 10h',
-    time: '10:30:56',
-  };
-
-  const formatDate = dateString => {
-    const today = new Date();
-    const date = new Date(dateString);
-    if (today.toDateString() === date.toDateString()) {
-      return date.toLocaleTimeString('vi-VN', {
-        hour: 'numeric',
-        minute: 'numeric',
-      });
-    }
-    return date.toLocaleDateString('vi-VN', {
-      weekday: 'short',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+    setHistoryChatList([..._historyChatList]);
+  }, [messenger, customerInfo]);
 
   const onChoose = element => {
-    socket.emit('join', {
+    socket.emit('room', {
+      senderId: userInfo.user.id,
+      receiverId: customerInfo[element.room].id,
       roomId: element.room,
     });
     navigation.navigate('MessageScreen', {

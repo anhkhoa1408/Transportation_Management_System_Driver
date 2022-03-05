@@ -6,5 +6,7 @@ export const CLEAN_STORE = 'CLEAN_STORE';
 export const SAVE_SHIPMENT_STATE = 'SAVE_SHIPMENT_STATE';
 
 export const ADD_MESSAGE = 'ADD_MESSAGE';
+export const SAVE_MESSAGES = 'SAVE_MESSAGE';
 
 export const ADD_CUSTOMER = 'ADD_CUSTOMER';
+export const SAVE_CUSTOMERS = 'SAVE_CUSTOMER';

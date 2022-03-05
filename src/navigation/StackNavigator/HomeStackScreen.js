@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../../views/HomeScreen/HomeScreen';
 import EditProfile from '../../views/SettingScreen/EditProfile';
 import NotificationScreen from '../../views/NotificationScreen/NotificationScreen';
-import Notification from '../../views/NotificationScreen/Notification';
 import CustomerInfo from '../../views/CustomerInfo/CustomerInfo';
 
 const HomeStack = createStackNavigator();
@@ -18,7 +17,6 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
       <HomeStack.Screen name="EditProfile" component={EditProfile} />
       <HomeStack.Screen name="Notification" component={NotificationScreen} />
-      <HomeStack.Screen name="Noti" component={Notification} />
       <HomeStack.Screen name="CustomerInfo" component={CustomerInfo} />
     </HomeStack.Navigator>
   );
