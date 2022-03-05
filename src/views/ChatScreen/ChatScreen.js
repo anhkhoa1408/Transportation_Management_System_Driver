@@ -21,8 +21,8 @@ const ChatScreen = props => {
         room: room,
         avatar: customerInfo[room]?.avatar,
         name: customerInfo[room]?.name,
-        lastMessage: lastMessage.text ? lastMessage.text : '',
-        time: formatDate(lastMessage.createdAt),
+        lastMessage: lastMessage?.text ? lastMessage.text : '',
+        time: formatDate(lastMessage?.createdAt),
       };
     });
     setHistoryChatList([..._historyChatList]);
