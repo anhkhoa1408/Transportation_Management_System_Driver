@@ -17,7 +17,7 @@ import { saveInfo } from '../../actions/actions';
 import Loading from './../../components/Loading';
 import ModalMess from '../../components/ModalMess';
 import banner from './../../assets/images/banner_signin.jpg';
-import { Icon, Image, Text } from 'react-native-elements';
+import { Icon, Image, Text, SocialIcon } from 'react-native-elements';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 
 const SignIn = ({ navigation }) => {
@@ -92,7 +92,9 @@ const SignIn = ({ navigation }) => {
         <Text h2 style={{ marginBottom: 10 }}>
           Xin chào
         </Text>
-        <Text>Đăng nhập để bắt đầu sử dụng dịch vụ của chúng tôi</Text>
+        <Text style={styles.subTitle}>
+          Đăng nhập để bắt đầu sử dụng dịch vụ của chúng tôi
+        </Text>
       </View>
 
       <View style={{ ...styles.form, flex: 1 }}>
@@ -145,6 +147,35 @@ const SignIn = ({ navigation }) => {
           <Text style={styles.forgot}>Quên mật khẩu?</Text>
         </TouchableOpacity>
         <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
+      </View>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={styles.subTitle}>Đăng nhập với</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 25,
+          }}>
+          <Icon
+            name="google"
+            type="font-awesome"
+            color="#4285F4"
+            containerStyle={styles.icon}
+          />
+          <Icon
+            name="facebook"
+            type="font-awesome"
+            color="#4267B2"
+            containerStyle={styles.icon}
+          />
+          <Icon
+            name="phone"
+            type="font-awesome"
+            color={COLORS.warning}
+            containerStyle={styles.icon}
+          />
+        </View>
       </View>
       <View style={[styles.container1]}>
         <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
@@ -203,5 +234,16 @@ export const styles = StyleSheet.create({
   form: {
     paddingHorizontal: 30,
     paddingTop: 15,
+  },
+  icon: {
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    backgroundColor: '#FFF',
+    elevation: 10,
+    shadowColor: COLORS.primary,
+    marginHorizontal: 8,
+  },
+  subTitle: {
+    color: 'rgba(0,0,0,0.5)',
   },
 });
