@@ -147,11 +147,14 @@ function HomeScreen({ navigation, ...props }) {
           }}
           overlayStyle={{
             width: '90%',
-            borderRadius: 20,
-            padding: 30,
+            height: '55%',
+            borderRadius: 12,
+            paddingVertical: 30,
+            paddingHorizontal: 15,
           }}
           visible={absenceForm}>
           <AbsenceForm
+            onOpen={setOpen}
             setAbsence={setAbsence}
             onSuccess={setSuccessModal}
             onFailure={setFailModal}

@@ -6,25 +6,27 @@ import PackageImage from '../../../assets/images/package.png';
 import { ListItem, Button, Icon } from 'react-native-elements';
 import { simplifyString } from '../../../utils/simplifyString';
 
-const PackageItem = ({ item, navigation }) => {
+const PackageItem = ({ item, navigation, isDone }) => {
   return (
     <ListItem.Swipeable
       bottomDivider
       rightContent={
-        <Button
-          title="Chụp ảnh"
-          icon={{ name: 'camera', color: 'white' }}
-          buttonStyle={{
-            backgroundColor: COLORS.header,
-            minHeight: '100%',
-          }}
-          onPress={() =>
-            navigation.navigate('ConfirmOrder', {
-              packageId: item.id,
-              packageImage: item.images,
-            })
-          }
-        />
+        !isDone && (
+          <Button
+            title="Chụp ảnh"
+            icon={{ name: 'camera', color: 'white' }}
+            buttonStyle={{
+              backgroundColor: COLORS.header,
+              minHeight: '100%',
+            }}
+            onPress={() =>
+              navigation.navigate('ConfirmOrder', {
+                packageId: item.id,
+                packageImage: item.images,
+              })
+            }
+          />
+        )
       }
       leftContent={
         <Button

@@ -1,31 +1,60 @@
-import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
-import { Card } from 'react-native-elements';
-import { shadowInput } from '../../styles/layoutStyle';
+import React, { useState, useRef } from 'react';
+import { View, TextInput, StyleSheet } from 'react-native';
+import { Text } from 'react-native-elements';
+import { COLORS } from './../../styles';
 
 const CustomInput = props => {
+  const ref = useRef(null);
+  const [focus, setFocus] = useState(null);
+
+  const handleFocus = () => {
+    setFocus({
+      borderColor: COLORS.primary,
+      borderWidth: 2,
+    });
+  };
+
+  const handleBlur = () => {
+    setFocus({
+      borderWidth: 0,
+    });
+    props.onBlur && props.onBlur();
+  };
+
   return (
-    <Card
-      wrapperStyle={{
-        margin: 0,
-        paddingHorizontal: 10,
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-      }}
-      containerStyle={style.container}>
-      <TextInput maxLength={400} numberOfLines={5} {...props} />
-    </Card>
+    <View style={{ marginBottom: 15 }}>
+      {props.title && <Text style={style.title}>{props.title}</Text>}
+      <TextInput
+        style={[style.container, focus]}
+        maxLength={400}
+        numberOfLines={5}
+        value={props.value}
+        onChangeText={props.onChangeText}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        {...props}
+      />
+    </View>
   );
 };
 
 const style = StyleSheet.create({
   container: {
     width: '100%',
-    borderRadius: 10,
+    borderRadius: 8,
     margin: 0,
-    padding: 0,
-    ...shadowInput,
+    marginVertical: 15,
+    borderWidth: 0,
+    backgroundColor: '#F3F3FA',
+    paddingHorizontal: 25,
+    paddingVertical: 10,
     height: 100,
+    fontSize: 17,
+    color: '#000',
+  },
+  title: {
+    fontSize: 20,
+    color: '#000000',
   },
 });
 

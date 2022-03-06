@@ -23,6 +23,8 @@ function OrderDetailScreen(props) {
 
   const { userInfo, navigation, route } = props;
 
+  console.log(route.params);
+
   useEffect(() => {
     if (route.params.shipmentID)
       shipmentApi.shipmentDetail(route.params.shipmentID).then(response => {
@@ -31,7 +33,11 @@ function OrderDetailScreen(props) {
   }, []);
 
   const renderItem = ({ item, index }) => (
-    <PackageItem item={item} navigation={navigation} />
+    <PackageItem
+      item={item}
+      navigation={navigation}
+      isDone={route?.params?.isDone}
+    />
   );
 
   const handleChatButton = () => {
