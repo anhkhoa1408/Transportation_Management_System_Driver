@@ -152,6 +152,8 @@ const style = StyleSheet.create({
     height: 90,
     marginHorizontal: 20,
     bottom: 15,
+    shadowColor: COLORS.primary,
+    elevation: 20,
     borderRadius: 20,
     alignItems: 'center',
     flexDirection: 'row',
