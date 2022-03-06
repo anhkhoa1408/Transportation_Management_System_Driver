@@ -70,11 +70,14 @@ function OrderScreen({ navigation, ...props }) {
 
   const renderItem = ({ item, index }) => (
     <ShipmentItem
-      onPress={() =>
-        navigation.navigate('OrderDetail', { shipmentID: item.id })
-      }
       item={item}
       isDone={!item.arrived_time && shipmentState[item.id].checked}
+      onPress={() =>
+        navigation.navigate('OrderDetail', {
+          shipmentID: item.id,
+          isDone: item.arrived_time,
+        })
+      }
       checkBoxHandler={updateShipmentState}
     />
   );
