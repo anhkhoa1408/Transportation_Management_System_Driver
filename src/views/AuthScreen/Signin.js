@@ -196,12 +196,6 @@ export const styles = StyleSheet.create({
     ...STYLES.container,
     alignItems: 'stretch',
   },
-  btnContainer: {
-    width: '100%',
-    marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container1: {
     marginBottom: 30,
     display: 'flex',
@@ -209,27 +203,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loginBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    backgroundColor: COLORS.primary,
-    borderRadius: 5,
-    padding: 15,
-  },
   forgot: {
     color: COLORS.primary,
     fontSize: 18,
     fontWeight: 'bold',
     alignSelf: 'flex-end',
-  },
-  background: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   form: {
     paddingHorizontal: 30,
