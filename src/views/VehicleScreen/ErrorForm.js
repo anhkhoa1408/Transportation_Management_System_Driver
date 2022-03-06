@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { Card, Icon } from 'react-native-elements';
+import { Card, Icon, Text } from 'react-native-elements';
 import PillButton from '../../components/CustomButton/PillButton';
 import { DatePicker } from './../../components/DatePicker';
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -22,11 +22,10 @@ const ErrorForm = props => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
         }}>
-        <Card.Title>Thời gian</Card.Title>
+        <Text>Thời gian</Text>
         <DatePicker onDateChange={setDate} />
-        <Card.Title style={{ marginTop: 20 }}>Nguyên nhân</Card.Title>
+        <Text style={{ marginTop: 20 }}>Nguyên nhân</Text>
         <CustomInput
           multiline={true}
           numberOfLines={5}

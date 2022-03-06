@@ -180,7 +180,7 @@ const VehicleScreen = () => {
           }}
           overlayStyle={{
             width: '90%',
-            borderRadius: 20,
+            borderRadius: 12,
             padding: 30,
           }}
           isVisible={errorForm}>
@@ -220,8 +220,8 @@ const vehicleStyle = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 12,
     marginBottom: 20,
-    borderWidth: 0,
-    ...shadowCard,
+    shadowColor: COLORS.primary,
+    elevation: 12,
   },
   assistContainer: {
     display: 'flex',
