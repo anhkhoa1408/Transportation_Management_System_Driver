@@ -19,6 +19,8 @@ import ModalMess from '../../components/ModalMess';
 import banner from './../../assets/images/banner_signin.jpg';
 import { Icon, Image, Text, SocialIcon } from 'react-native-elements';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
+import { socket } from '../../config/socketIO';
+import { syncToken } from '../../config/cloudMessage';
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -55,6 +57,8 @@ const SignIn = ({ navigation }) => {
       })
       .then(data => {
         dispatch(saveInfo(data));
+        socket.connect();
+        syncToken();
         setLoading(null);
       })
       .catch(err => {
