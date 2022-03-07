@@ -15,6 +15,7 @@ export default function TextField({
   onChangeText,
   value,
   title,
+  style,
   ...props
 }) {
   const [focus, setFocus] = useState(false);
@@ -30,58 +31,63 @@ export default function TextField({
 
   return (
     <View style={{ marginBottom: 15 }}>
-      <View>
-        {title && <Text style={styles.texttitle}>{title}</Text>}
-        <View
-          style={[
-            styles.inputView,
-            {
-              borderColor: error
-                ? COLORS.danger
-                : focus
-                ? COLORS.primary
-                : COLORS.gray,
-            },
-          ]}>
-          {icon && (
-            <Icon
-              name={icon}
-              iconStyle={[
-                {
-                  color: error
-                    ? COLORS.danger
-                    : focus
-                    ? COLORS.primary
-                    : 'rgba(0,0,0,0.4)',
-                },
-              ]}
-            />
-          )}
-          <TextInput
-            name={name}
-            style={[styles.fsize, { flex: 1 }, disabled && styles.disabled]}
-            placeholderTextColor={
-              error ? COLORS.danger : focus ? COLORS.primary : 'rgba(0,0,0,0.4)'
-            }
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChangeText={onChangeText}
-            value={value}
-            {...props}
+      {title && <Text style={styles.texttitle}>{title}</Text>}
+      <View
+        style={[
+          styles.inputView,
+          {
+            borderColor: error
+              ? COLORS.danger
+              : focus
+              ? COLORS.primary
+              : COLORS.gray,
+          },
+        ]}>
+        {icon && (
+          <Icon
+            name={icon}
+            iconStyle={[
+              {
+                color: error
+                  ? COLORS.danger
+                  : focus
+                  ? COLORS.primary
+                  : 'rgba(0,0,0,0.4)',
+              },
+            ]}
           />
-          {afterText && (
-            <Text
-              style={{
-                ...styles.fsize,
-                color: 'rgba(0, 0, 0, 0.5)',
-                marginRight: 10,
-                textAlign: 'right',
-              }}>
-              {afterText}
-            </Text>
-          )}
-          {afterComponent && afterComponent}
-        </View>
+        )}
+        <TextInput
+          name={name}
+          style={[
+            styles.fsize,
+            {
+              flex: 1,
+            },
+            disabled && styles.disabled,
+            style,
+          ]}
+          placeholderTextColor={
+            error ? COLORS.danger : focus ? COLORS.primary : 'rgba(0,0,0,0.4)'
+          }
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChangeText={onChangeText}
+          value={value}
+          {...props}
+        />
+        {afterText && (
+          <Text
+            style={{
+              ...styles.fsize,
+              color: 'rgba(0, 0, 0, 0.5)',
+              marginRight: 10,
+              textAlign: 'right',
+            }}>
+            {afterText}
+          </Text>
+        )}
+        {afterComponent && afterComponent}
       </View>
 
       {error ? (

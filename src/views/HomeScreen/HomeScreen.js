@@ -1,7 +1,7 @@
 // Import Component
 import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, View, FlatList } from 'react-native';
-import { Icon, withBadge, SpeedDial, Overlay } from 'react-native-elements';
+import { Icon, withBadge, Overlay } from 'react-native-elements';
 import AbsenceForm from './AbsenceForm';
 import Loading from '../../components/Loading';
 import Header from '../../components/Header';
@@ -17,6 +17,7 @@ import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
 import { getAvatarFromUser } from '../../utils/avatarUltis';
 import ModalMess from '../../components/ModalMess';
+import SpeedDial from './SpeedDial';
 
 function HomeScreen({ navigation, ...props }) {
   const BadgedIcon = withBadge(10)(Icon);
@@ -93,32 +94,13 @@ function HomeScreen({ navigation, ...props }) {
           </View>
         )}
 
+        {/* Absence form */}
         <SpeedDial
-          isOpen={open}
-          icon={{ name: 'sliders-h', color: '#fff', type: 'font-awesome-5' }}
-          openIcon={{ name: 'close', color: '#fff' }}
-          onOpen={() => setOpen(!open)}
-          onClose={() => {
-            setOpen(!open);
-            setAbsence(false);
-          }}
-          containerStyle={{
-            bottom: 20,
-            marginTop: 20,
-          }}
-          overlayColor="rgba(0,0,0,0.15)"
-          iconContainerStyle={{
-            backgroundColor: COLORS.primary,
-          }}>
-          <SpeedDial.Action
-            icon={{ name: 'snooze', color: '#fff', type: 'material' }}
-            iconContainerStyle={{
-              backgroundColor: COLORS.primary,
-            }}
-            title="Nghỉ phép"
-            onPress={() => setAbsence(!absenceForm)}
-          />
-        </SpeedDial>
+          open={open}
+          setOpen={setOpen}
+          setAbsence={setAbsence}
+          absenceForm={absenceForm}
+        />
 
         <ModalMess
           type={'success'}

@@ -90,7 +90,8 @@ const ChangePass = props => {
       />
 
       <KeyboardAvoidingView>
-        <ScrollView contentContainerStyle={{ padding: 25 }}>
+        <ScrollView
+          contentContainerStyle={{ padding: 25, alignItems: 'stretch' }}>
           <Text
             style={{
               textAlign: 'center',
@@ -112,7 +113,6 @@ const ChangePass = props => {
 
           <TextField
             title="Mật khẩu mới"
-            style={styles.fsize}
             value={formik.values.password}
             secureTextEntry
             onChangeText={text => formik.setFieldValue('password', text)}
@@ -122,7 +122,6 @@ const ChangePass = props => {
 
           <TextField
             title="Xác nhận mật khẩu"
-            style={styles.fsize}
             value={formik.values.confirmPassword}
             secureTextEntry
             onChangeText={text => formik.setFieldValue('confirmPassword', text)}
@@ -152,11 +151,5 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     flexDirection: 'column',
     alignItems: 'stretch',
-  },
-  fsize: {
-    fontSize: 17,
-    color: '#000',
-    paddingLeft: 20,
-    paddingVertical: 8,
   },
 });
