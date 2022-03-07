@@ -89,10 +89,7 @@ const ChangePass = props => {
         headerText="Đổi mật khẩu"
       />
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding"
-        keyboardVerticalOffset={10}>
+      <KeyboardAvoidingView>
         <ScrollView contentContainerStyle={{ padding: 25 }}>
           <Text
             style={{

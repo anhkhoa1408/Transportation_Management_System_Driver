@@ -24,14 +24,7 @@ function HomeScreen({ navigation, ...props }) {
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
 
-  const [successModal, setSuccessModal] = useState(null);
-  const [failModal, setFailModal] = useState(null);
-
-  const [user, setUser] = useState({
-    name: 'Shiba',
-    avatar:
-      'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  });
+  const [modal, setModal] = useState(null);
 
   const { userInfo } = props;
 
@@ -47,6 +40,7 @@ function HomeScreen({ navigation, ...props }) {
           console.log(err);
         });
     });
+    // TODO: Add check absence
     return unsubscribe;
   }, [navigation]);
 
@@ -116,18 +110,6 @@ function HomeScreen({ navigation, ...props }) {
           iconContainerStyle={{
             backgroundColor: COLORS.primary,
           }}>
-          <ModalMess
-            type={'success'}
-            message={'Cập nhật thành công.'}
-            alert={successModal}
-            setAlert={setSuccessModal}
-          />
-          <ModalMess
-            type={'danger'}
-            message={'Cập nhật thất bại.'}
-            alert={failModal}
-            setAlert={setFailModal}
-          />
           <SpeedDial.Action
             icon={{ name: 'snooze', color: '#fff', type: 'material' }}
             iconContainerStyle={{
@@ -137,6 +119,13 @@ function HomeScreen({ navigation, ...props }) {
             onPress={() => setAbsence(!absenceForm)}
           />
         </SpeedDial>
+
+        <ModalMess
+          type={'success'}
+          message={'Cập nhật thành công.'}
+          alert={modal}
+          setAlert={setModal}
+        />
 
         <Overlay
           backdropStyle={{
@@ -156,8 +145,7 @@ function HomeScreen({ navigation, ...props }) {
           <AbsenceForm
             onOpen={setOpen}
             setAbsence={setAbsence}
-            onSuccess={setSuccessModal}
-            onFailure={setFailModal}
+            setModal={setModal}
           />
         </Overlay>
       </View>

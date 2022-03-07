@@ -74,10 +74,7 @@ const SignIn = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={50}
-        behavior={'padding'}>
+      <KeyboardAvoidingView>
         <ScrollView>
           {alert && (
             <ModalMess
@@ -183,16 +180,16 @@ const SignIn = ({ navigation }) => {
               />
             </View>
           </View>
+          <View style={[styles.container1]}>
+            <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+              <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
+                Đăng ký
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <View style={[styles.container1]}>
-        <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-          <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
-            Đăng ký
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -205,7 +202,8 @@ export const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   container1: {
-    marginBottom: 30,
+    marginTop: 10,
+    marginBottom: 40,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

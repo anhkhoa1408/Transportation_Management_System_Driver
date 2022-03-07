@@ -50,10 +50,18 @@ const AbsenceForm = props => {
                 end_time: endDate,
               })
               .then(data => {
-                props.onSuccess();
-                props.setAbsence(false);
+                props.setModal({
+                  type: 'success',
+                  message: 'Cập nhật thành công!',
+                });
+                props.setAbsence(false); // TODO: update absence
               })
-              .catch(error => props.onFailure())
+              .catch(error =>
+                props.onFailure({
+                  type: 'warning',
+                  message: 'Bruh!', // TODO: Check error type
+                }),
+              )
           }
         />
       </ScrollView>

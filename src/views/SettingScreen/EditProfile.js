@@ -108,10 +108,7 @@ const EditProfile = ({ navigation }) => {
         headerText="Thông tin cá nhân"
       />
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding"
-        keyboardVerticalOffset={10}>
+      <KeyboardAvoidingView>
         <ScrollView contentContainerStyle={{ padding: 25 }}>
           <View style={{ alignItems: 'center' }}>
             <Avatar
