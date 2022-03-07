@@ -74,7 +74,6 @@ const style = StyleSheet.create({
     flexDirection: 'row',
   },
   modal: {
-    height: '28%',
     width: '80%',
     backgroundColor: '#FFF',
     position: 'absolute',
