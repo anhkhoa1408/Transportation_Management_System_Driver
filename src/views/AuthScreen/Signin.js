@@ -75,9 +75,10 @@ const SignIn = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView contentContainerStyle={styles.container}>
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={50}
+        behavior={'padding'}>
+        <ScrollView>
           {alert && (
             <ModalMess
               type={alert.type}
@@ -116,16 +117,10 @@ const SignIn = ({ navigation }) => {
               onBlur={() => {
                 formik.setFieldTouched('email');
               }}
+              error={formik.touched.email && formik.errors.email}
+              errorMessage={formik.errors.email}
             />
-            {formik.touched.email && formik.errors.email ? (
-              <Text
-                style={{
-                  color: danger,
-                  fontWeight: 'bold',
-                }}>
-                {formik.errors.email}
-              </Text>
-            ) : null}
+
             <TextField
               name="password"
               icon="https"
@@ -142,24 +137,24 @@ const SignIn = ({ navigation }) => {
                   color={COLORS.primary}
                 />
               }
+              error={formik.touched.password && formik.errors.password}
+              errorMessage={formik.errors.password}
             />
-            {formik.touched.password && formik.errors.password ? (
-              <Text
-                style={{
-                  color: danger,
-                  fontWeight: 'bold',
-                }}>
-                {formik.errors.password}
-              </Text>
-            ) : null}
+
             <TouchableOpacity
               onPress={() => navigation.navigate('forgotPassword')}>
               <Text style={styles.forgot}>Quên mật khẩu?</Text>
             </TouchableOpacity>
             <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
           </View>
+
           <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 10,
+            }}>
             <Text style={styles.subTitle}>Đăng nhập với</Text>
             <View
               style={{
@@ -188,16 +183,16 @@ const SignIn = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={[styles.container1]}>
-            <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-              <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
-                Đăng ký
-              </Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <View style={[styles.container1]}>
+        <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+          <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
+            Đăng ký
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };

@@ -3,38 +3,62 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';
 import { COLORS } from './../../styles';
 
-const CustomInput = props => {
-  const ref = useRef(null);
-  const [focus, setFocus] = useState(null);
+const CustomInput = ({
+  disabled,
+  error,
+  errorMessage,
+  onBlur,
+  onChangeText,
+  title,
+  value,
+  ...props
+}) => {
+  const [focus, setFocus] = useState(false);
 
   const handleFocus = () => {
-    setFocus({
-      borderColor: COLORS.primary,
-      borderWidth: 2,
-    });
+    setFocus(true);
   };
 
   const handleBlur = () => {
-    setFocus({
-      borderWidth: 0,
-    });
-    props.onBlur && props.onBlur();
+    setFocus(false);
+    onBlur && onBlur();
   };
 
   return (
-    <View style={{ marginBottom: 15 }}>
-      {props.title && <Text style={style.title}>{props.title}</Text>}
-      <TextInput
-        style={[style.container, focus]}
-        maxLength={400}
-        numberOfLines={5}
-        value={props.value}
-        onChangeText={props.onChangeText}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        {...props}
-      />
-    </View>
+    <>
+      <View style={{ marginBottom: 15 }}>
+        {title && <Text style={style.title}>{title}</Text>}
+        <TextInput
+          style={[
+            style.container,
+            {
+              borderColor: error
+                ? COLORS.danger
+                : focus
+                ? COLORS.primary
+                : COLORS.gray,
+            },
+            disabled && style.disabled,
+          ]}
+          maxLength={400}
+          numberOfLines={5}
+          value={value}
+          onChangeText={onChangeText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...props}
+        />
+      </View>
+      {error ? (
+        <Text
+          style={{
+            color: COLORS.danger,
+            fontWeight: 'bold',
+          }}>
+          {errorMessage}
+        </Text>
+      ) : null}
+    </>
   );
 };
 
@@ -46,6 +70,7 @@ const style = StyleSheet.create({
     marginVertical: 15,
     borderWidth: 0,
     backgroundColor: '#F3F3FA',
+    borderWidth: 2,
     paddingHorizontal: 25,
     paddingVertical: 10,
     height: 100,
@@ -55,6 +80,9 @@ const style = StyleSheet.create({
   title: {
     fontSize: 20,
     color: '#000000',
+  },
+  disabled: {
+    color: 'rgba(0, 0, 0, 0.5)',
   },
 });
 
