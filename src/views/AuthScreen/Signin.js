@@ -7,6 +7,7 @@ import {
   Keyboard,
   ScrollView,
   KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native';
 import { COLORS, STYLES, FONTS } from '../../styles';
 import TextField from '../../components/TextField';
@@ -23,6 +24,7 @@ import { Icon, Image, Text, SocialIcon } from 'react-native-elements';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { socket } from '../../config/socketIO';
 import { syncToken } from '../../config/cloudMessage';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -74,122 +76,121 @@ const SignIn = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          {alert && (
-            <ModalMess
-              type={alert.type}
-              message={alert.message}
-              alert={alert}
-              setAlert={setAlert}
-            />
-          )}
-          {loading}
-          <Image
-            source={banner}
-            resizeMode="contain"
-            style={{
-              height: 130,
-              alignSelf: 'center',
-              display: 'flex',
-              marginBottom: 20,
-            }}
+      <KeyboardAwareScrollView enableOnAndroid enableAutomaticScroll>
+        {alert && (
+          <ModalMess
+            type={alert.type}
+            message={alert.message}
+            alert={alert}
+            setAlert={setAlert}
           />
-          <View style={{ alignItems: 'center' }}>
-            <Text h2 style={{ marginBottom: 10 }}>
-              Xin chào
-            </Text>
-            <Text style={styles.subTitle}>
-              Đăng nhập để bắt đầu sử dụng dịch vụ của chúng tôi
-            </Text>
-          </View>
+        )}
+        {loading}
+        <Image
+          source={banner}
+          resizeMode="contain"
+          style={{
+            height: 130,
+            alignSelf: 'center',
+            display: 'flex',
+            marginBottom: 20,
+          }}
+        />
+        <View style={{ alignItems: 'center' }}>
+          <Text h2 style={{ marginBottom: 10 }}>
+            Xin chào
+          </Text>
+          <Text style={styles.subTitle}>
+            Đăng nhập để bắt đầu sử dụng dịch vụ của chúng tôi
+          </Text>
+        </View>
 
-          <View style={{ ...styles.form }}>
-            <TextField
-              name="email"
-              icon="person-outline"
-              placeholder="Tên đăng nhập"
-              value={formik.values.email}
-              onChangeText={setEmail}
-              onBlur={() => {
-                formik.setFieldTouched('email');
-              }}
-              error={formik.touched.email && formik.errors.email}
-              errorMessage={formik.errors.email}
-            />
+        <View style={{ ...styles.form }}>
+          <TextField
+            name="email"
+            icon="person-outline"
+            placeholder="Tên đăng nhập"
+            value={formik.values.email}
+            onChangeText={setEmail}
+            onBlur={() => {
+              formik.setFieldTouched('email');
+            }}
+            error={formik.touched.email && formik.errors.email}
+            errorMessage={formik.errors.email}
+          />
 
-            <TextField
-              name="password"
-              icon="https"
-              placeholder="Mật khẩu"
-              value={formik.values.password}
-              secureTextEntry={!showPass}
-              onChangeText={setPassword}
-              onBlur={() => formik.setFieldTouched('password')}
-              afterComponent={
-                <Icon
-                  onPress={() => setShowPass(!showPass)}
-                  name={!showPass ? 'visibility' : 'visibility-off'}
-                  size={25}
-                  color={COLORS.primary}
-                />
-              }
-              error={formik.touched.password && formik.errors.password}
-              errorMessage={formik.errors.password}
-            />
+          <TextField
+            name="password"
+            icon="https"
+            placeholder="Mật khẩu"
+            value={formik.values.password}
+            secureTextEntry={!showPass}
+            onChangeText={setPassword}
+            onBlur={() => formik.setFieldTouched('password')}
+            afterComponent={
+              <Icon
+                onPress={() => setShowPass(!showPass)}
+                name={!showPass ? 'visibility' : 'visibility-off'}
+                size={25}
+                color={COLORS.primary}
+              />
+            }
+            error={formik.touched.password && formik.errors.password}
+            errorMessage={formik.errors.password}
+          />
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate('forgotPassword')}>
-              <Text style={styles.forgot}>Quên mật khẩu?</Text>
-            </TouchableOpacity>
-            <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('forgotPassword')}>
+            <Text style={styles.forgot}>Quên mật khẩu?</Text>
+          </TouchableOpacity>
+          <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
+        </View>
 
+        <View
+          style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+            flex: 1,
+          }}>
+          <Text style={styles.subTitle}>Đăng nhập với</Text>
           <View
             style={{
-              flex: 1,
-              alignItems: 'center',
+              flexDirection: 'row',
               justifyContent: 'center',
-              marginTop: 10,
+              alignItems: 'center',
+              flex: 1,
             }}>
-            <Text style={styles.subTitle}>Đăng nhập với</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: 25,
-              }}>
-              <Icon
-                name="google"
-                type="font-awesome"
-                color="#4285F4"
-                containerStyle={styles.icon}
-              />
-              <Icon
-                name="facebook"
-                type="font-awesome"
-                color="#4267B2"
-                containerStyle={styles.icon}
-              />
-              <Icon
-                name="phone"
-                type="font-awesome"
-                color={COLORS.warning}
-                containerStyle={styles.icon}
-              />
-            </View>
+            <Icon
+              name="google"
+              type="font-awesome"
+              color="#4285F4"
+              containerStyle={styles.icon}
+            />
+            <Icon
+              name="facebook"
+              type="font-awesome"
+              color="#4267B2"
+              containerStyle={styles.icon}
+            />
+            <Icon
+              name="phone"
+              type="font-awesome"
+              color={COLORS.warning}
+              containerStyle={styles.icon}
+            />
           </View>
-          <View style={[styles.container1]}>
-            <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-              <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
-                Đăng ký
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </View>
+      </KeyboardAwareScrollView>
+      <View style={[styles.container1]}>
+        <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+          <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
+            Đăng ký
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -200,14 +201,14 @@ export const styles = StyleSheet.create({
   container: {
     ...STYLES.container,
     alignItems: 'stretch',
+    paddingVertical: 25,
   },
   container1: {
-    marginTop: 10,
-    marginBottom: 40,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
   forgot: {
     color: COLORS.primary,
@@ -223,11 +224,12 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 30,
     backgroundColor: '#FFF',
-    elevation: 10,
+    elevation: 15,
     shadowColor: COLORS.primary,
     marginHorizontal: 8,
   },
   subTitle: {
     color: 'rgba(0,0,0,0.5)',
+    marginBottom: 10,
   },
 });
