@@ -54,7 +54,7 @@ const TabNavigatior = () => {
                 backgroundColor: focused ? null : '#FFF',
               },
             ]}>
-            <Icon name={iconName} color={focused ? COLORS.white : '#CCC'} />
+            <Icon name={iconName} color={focused ? COLORS.white : '#DFDFDF'} />
             <Animatable.View duration={duration} ref={textViewRef}>
               {focused && (
                 <Text
@@ -147,7 +147,7 @@ const getTabBarVisibility = route => {
 
 const style = StyleSheet.create({
   container: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 15,
     backgroundColor: COLORS.white,
     height: 90,
     marginHorizontal: 20,

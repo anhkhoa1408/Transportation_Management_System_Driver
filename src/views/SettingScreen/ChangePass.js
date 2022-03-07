@@ -18,6 +18,7 @@ import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import Loading from '../../components/Loading';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ChangePass = props => {
   const { navigation } = props;
@@ -89,56 +90,56 @@ const ChangePass = props => {
         headerText="Đổi mật khẩu"
       />
 
-      <KeyboardAvoidingView>
-        <ScrollView
-          contentContainerStyle={{ padding: 25, alignItems: 'stretch' }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              marginBottom: 25,
-            }}>
-            Mật khẩu mới phải tối thiểu 8 ký tự, bao gồm chữ in hoa, số và khác
-            với mật khẩu hiện tại
-          </Text>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        contentContainerStyle={{ padding: 25 }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            marginBottom: 25,
+          }}>
+          Mật khẩu mới phải tối thiểu 8 ký tự, bao gồm chữ in hoa, số và khác
+          với mật khẩu hiện tại
+        </Text>
 
-          <TextField
-            title="Mật khẩu hiện tại"
-            style={styles.fsize}
-            value={formik.values.currPass}
-            secureTextEntry
-            onChangeText={text => formik.setFieldValue('currPass', text)}
-            error={formik.touched.currPass && formik.errors.currPass}
-            errorMessage={formik.errors.currPass}
-          />
+        <TextField
+          title="Mật khẩu hiện tại"
+          style={styles.fsize}
+          value={formik.values.currPass}
+          secureTextEntry
+          onChangeText={text => formik.setFieldValue('currPass', text)}
+          error={formik.touched.currPass && formik.errors.currPass}
+          errorMessage={formik.errors.currPass}
+        />
 
-          <TextField
-            title="Mật khẩu mới"
-            value={formik.values.password}
-            secureTextEntry
-            onChangeText={text => formik.setFieldValue('password', text)}
-            error={formik.touched.password && formik.errors.password}
-            errorMessage={formik.errors.password}
-          />
+        <TextField
+          title="Mật khẩu mới"
+          value={formik.values.password}
+          secureTextEntry
+          onChangeText={text => formik.setFieldValue('password', text)}
+          error={formik.touched.password && formik.errors.password}
+          errorMessage={formik.errors.password}
+        />
 
-          <TextField
-            title="Xác nhận mật khẩu"
-            value={formik.values.confirmPassword}
-            secureTextEntry
-            onChangeText={text => formik.setFieldValue('confirmPassword', text)}
-            error={
-              formik.touched.confirmPassword && formik.errors.confirmPassword
-            }
-            errorMessage={formik.errors.confirmPassword}
-          />
+        <TextField
+          title="Xác nhận mật khẩu"
+          value={formik.values.confirmPassword}
+          secureTextEntry
+          onChangeText={text => formik.setFieldValue('confirmPassword', text)}
+          error={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
+          errorMessage={formik.errors.confirmPassword}
+        />
 
-          <PrimaryButton
-            title="Cập nhật"
-            backgroundColor={COLORS.success}
-            onPress={formik.submitForm}
-            containerStyle={{ marginTop: 30 }}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        <PrimaryButton
+          title="Cập nhật"
+          backgroundColor={COLORS.success}
+          onPress={formik.submitForm}
+          containerStyle={{ marginTop: 30 }}
+        />
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
