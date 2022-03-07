@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Keyboard,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { COLORS, STYLES, FONTS } from '../../styles';
 import TextField from '../../components/TextField';
@@ -72,123 +74,130 @@ const SignIn = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {alert && (
-        <ModalMess
-          type={alert.type}
-          message={alert.message}
-          alert={alert}
-          setAlert={setAlert}
-        />
-      )}
-      {loading}
-      <Image
-        source={banner}
-        resizeMode="contain"
-        style={{
-          height: 130,
-          alignSelf: 'center',
-          display: 'flex',
-          marginBottom: 20,
-        }}
-      />
-
-      <View style={{ alignItems: 'center' }}>
-        <Text h2 style={{ marginBottom: 10 }}>
-          Xin chào
-        </Text>
-        <Text style={styles.subTitle}>
-          Đăng nhập để bắt đầu sử dụng dịch vụ của chúng tôi
-        </Text>
-      </View>
-
-      <View style={{ ...styles.form, flex: 1 }}>
-        <TextField
-          name="email"
-          icon="person-outline"
-          placeholder="Tên đăng nhập"
-          value={formik.values.email}
-          onChangeText={setEmail}
-          onBlur={() => {
-            formik.setFieldTouched('email');
-          }}
-        />
-        {formik.touched.email && formik.errors.email ? (
-          <Text
-            style={{
-              color: danger,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.email}
-          </Text>
-        ) : null}
-        <TextField
-          name="password"
-          icon="https"
-          placeholder="Mật khẩu"
-          value={formik.values.password}
-          secureTextEntry={!showPass}
-          onChangeText={setPassword}
-          onBlur={() => formik.setFieldTouched('password')}
-          afterComponent={
-            <Icon
-              onPress={() => setShowPass(!showPass)}
-              name={!showPass ? 'visibility' : 'visibility-off'}
-              size={25}
-              color={COLORS.primary}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView contentContainerStyle={styles.container}>
+          {alert && (
+            <ModalMess
+              type={alert.type}
+              message={alert.message}
+              alert={alert}
+              setAlert={setAlert}
             />
-          }
-        />
-        {formik.touched.password && formik.errors.password ? (
-          <Text
+          )}
+          {loading}
+          <Image
+            source={banner}
+            resizeMode="contain"
             style={{
-              color: danger,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.password}
-          </Text>
-        ) : null}
-        <TouchableOpacity onPress={() => navigation.navigate('forgotPassword')}>
-          <Text style={styles.forgot}>Quên mật khẩu?</Text>
-        </TouchableOpacity>
-        <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
-      </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={styles.subTitle}>Đăng nhập với</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 25,
-          }}>
-          <Icon
-            name="google"
-            type="font-awesome"
-            color="#4285F4"
-            containerStyle={styles.icon}
+              height: 130,
+              alignSelf: 'center',
+              display: 'flex',
+              marginBottom: 20,
+            }}
           />
-          <Icon
-            name="facebook"
-            type="font-awesome"
-            color="#4267B2"
-            containerStyle={styles.icon}
-          />
-          <Icon
-            name="phone"
-            type="font-awesome"
-            color={COLORS.warning}
-            containerStyle={styles.icon}
-          />
-        </View>
-      </View>
-      <View style={[styles.container1]}>
-        <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-          <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
-            Đăng ký
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <View style={{ alignItems: 'center' }}>
+            <Text h2 style={{ marginBottom: 10 }}>
+              Xin chào
+            </Text>
+            <Text style={styles.subTitle}>
+              Đăng nhập để bắt đầu sử dụng dịch vụ của chúng tôi
+            </Text>
+          </View>
+
+          <View style={{ ...styles.form }}>
+            <TextField
+              name="email"
+              icon="person-outline"
+              placeholder="Tên đăng nhập"
+              value={formik.values.email}
+              onChangeText={setEmail}
+              onBlur={() => {
+                formik.setFieldTouched('email');
+              }}
+            />
+            {formik.touched.email && formik.errors.email ? (
+              <Text
+                style={{
+                  color: danger,
+                  fontWeight: 'bold',
+                }}>
+                {formik.errors.email}
+              </Text>
+            ) : null}
+            <TextField
+              name="password"
+              icon="https"
+              placeholder="Mật khẩu"
+              value={formik.values.password}
+              secureTextEntry={!showPass}
+              onChangeText={setPassword}
+              onBlur={() => formik.setFieldTouched('password')}
+              afterComponent={
+                <Icon
+                  onPress={() => setShowPass(!showPass)}
+                  name={!showPass ? 'visibility' : 'visibility-off'}
+                  size={25}
+                  color={COLORS.primary}
+                />
+              }
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <Text
+                style={{
+                  color: danger,
+                  fontWeight: 'bold',
+                }}>
+                {formik.errors.password}
+              </Text>
+            ) : null}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('forgotPassword')}>
+              <Text style={styles.forgot}>Quên mật khẩu?</Text>
+            </TouchableOpacity>
+            <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
+          </View>
+          <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={styles.subTitle}>Đăng nhập với</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 25,
+              }}>
+              <Icon
+                name="google"
+                type="font-awesome"
+                color="#4285F4"
+                containerStyle={styles.icon}
+              />
+              <Icon
+                name="facebook"
+                type="font-awesome"
+                color="#4267B2"
+                containerStyle={styles.icon}
+              />
+              <Icon
+                name="phone"
+                type="font-awesome"
+                color={COLORS.warning}
+                containerStyle={styles.icon}
+              />
+            </View>
+          </View>
+          <View style={[styles.container1]}>
+            <Text style={[FONTS.Medium]}>Chưa có tài khoản? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+              <Text style={{ ...FONTS.BigBold, color: COLORS.primary }}>
+                Đăng ký
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
