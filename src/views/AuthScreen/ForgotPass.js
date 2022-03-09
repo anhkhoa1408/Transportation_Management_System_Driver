@@ -10,33 +10,79 @@ import Loading from './../../components/Loading';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { COLORS, STYLES, FONTS } from '../../styles';
 import authApi from '../../api/authApi';
+import { getPhoneNumberVerificator, getPhoneToken } from '../../config/OAuth';
 
-const ForgotPass = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const ForgotPass = ({ navigation, route }) => {
+  const [phone, setPhone] = useState('');
   const [isFocus, setFocus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [meta, setMeta] = useState({});
+  const [verificator, setVerificator] = useState(null);
+
+  const routeMetas = {
+    forgot: {
+      title: 'Quên mật khẩu',
+      banner: '',
+      navigate: '',
+    },
+    signin: {
+      title: 'Đăng nhập',
+      banner: '',
+      navigate: '',
+    },
+  };
+
+  useEffect(() => {
+    setMeta(routeMetas[route.params.type]);
+  }, []);
+
+  useEffect(() => {
+    if (route.params?.code) {
+      if (route.params.type === 'signin')
+        getPhoneToken(verificator, route.params?.code)
+          .then(data =>
+            navigation.navigate({
+              name: 'Signin',
+              params: { token: data },
+              merge: true,
+            }),
+          )
+          .catch(err => console.log(err));
+      else {
+        // TODO: Forgot password
+      }
+    }
+  }, [route.params?.code]);
+
+  const formatPhone = phone => {
+    return '+84' + phone.slice(1);
+  };
 
   const dispatch = useDispatch();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      email: email,
-      password: password,
+      phone: phone,
     },
-    // validationSchema: Bonk.object({
-    //   email: Bonk.string().required('Thông tin bắt buộc'),
-    //   password: Bonk.string()
-    //     .required('Thông tin bắt buộc')
-    //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
-    // }),
+    validationSchema: Bonk.object({
+      phone: Bonk.string()
+        .required('Thông tin bắt buộc')
+        .min(10, 'Tối thiểu 10 chữ số')
+        .max(11, 'Tối đa 11 chữ số')
+        .matches(/(0[0-9]{9,10})/g, 'Số điện thoại không hợp lệ'),
+    }),
     onSubmit: values => {
       handleSubmit(values);
     },
   });
 
   const handleSubmit = values => {
-    navigation.navigate('inputOtp');
+    getPhoneNumberVerificator(formatPhone(values.phone))
+      .then(data => {
+        setVerificator(data);
+        navigation.navigate('inputOtp');
+      })
+      .catch(err => console.log(err));
   };
 
   return (
@@ -51,7 +97,7 @@ const ForgotPass = ({ navigation }) => {
         }}
       />
       <View style={{ paddingHorizontal: 15 }}>
-        <Text style={styles.title}>Quên mật khẩu</Text>
+        <Text style={styles.title}>{meta?.title}</Text>
         <Text
           style={{
             fontSize: 15,
@@ -63,20 +109,11 @@ const ForgotPass = ({ navigation }) => {
           keyboardType="numeric"
           icon="phone"
           placeholder="Số điện thoại"
-          value={formik.values.email}
-          onChangeText={setEmail}
+          value={formik.values.phone}
+          onChangeText={setPhone}
+          error={formik.touched.phone && formik.errors.phone}
+          errorMessage={formik.errors.phone}
         />
-
-        {formik.touched.email && formik.errors.email ? (
-          <Text
-            style={{
-              color: COLORS.danger,
-              marginBottom: 15,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.email}
-          </Text>
-        ) : null}
 
         <PrimaryButton
           backgroundColor="#f55651"

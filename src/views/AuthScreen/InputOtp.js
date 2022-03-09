@@ -13,26 +13,26 @@ import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { Divider, Image, Text } from 'react-native-elements';
 
 const InputOtp = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [vCode, setVCode] = useState('');
   const [timer, setTimer] = useState(60);
 
   const dispatch = useDispatch();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      email: email,
-      password: password,
+      code: vCode,
     },
-    // validationSchema: Bonk.object({
-    //   email: Bonk.string().required('Thông tin bắt buộc'),
-    //   password: Bonk.string()
-    //     .required('Thông tin bắt buộc')
-    //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
-    // }),
+    validationSchema: Bonk.object({
+      code: Bonk.string()
+        .required('Thông tin bắt buộc')
+        .length(6, 'Mã xác nhận gồm 6 chữ số'),
+    }),
     onSubmit: values => {
-      handleSubmit(values);
+      navigation.navigate({
+        name: 'forgotPassword',
+        params: { code: values.code },
+        merge: true,
+      });
     },
   });
 
@@ -72,26 +72,16 @@ const InputOtp = ({ navigation }) => {
         <TextField
           icon="phone"
           placeholder="Nhập mã OTP"
-          value={formik.values.email}
-          onChangeText={setEmail}
+          value={formik.values.code}
+          onChangeText={setVCode}
+          error={formik.touched.code && formik.errors.code}
+          errorMessage={formik.errors.code}
         />
-
-        {formik.touched.email && formik.errors.email ? (
-          <Text
-            style={{
-              ...FONTS.Big,
-              color: danger,
-              marginBottom: 15,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.email}
-          </Text>
-        ) : null}
 
         <PrimaryButton
           title="Xác nhận"
           backgroundColor={COLORS.header}
-          onPress={handleSubmit}
+          onPress={formik.submitForm}
         />
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
