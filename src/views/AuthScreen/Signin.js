@@ -25,8 +25,14 @@ import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { socket } from '../../config/socketIO';
 import { syncToken } from '../../config/cloudMessage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {
+  onFacebookButtonPress,
+  onGoogleButtonPress,
+  getPhoneNumberVerificator,
+  onPhoneLogin,
+} from '../../config/OAuth';
 
-const SignIn = ({ navigation }) => {
+const SignIn = ({ navigation, route }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(null);
@@ -51,14 +57,34 @@ const SignIn = ({ navigation }) => {
     },
   });
 
-  const handleSubmit = values => {
+  React.useEffect(() => {
+    if (route.params?.token) {
+      handleSubmit('phone', route.params?.token);
+    }
+  }, [route.params?.token]);
+
+  const handleSubmit = (values, token) => {
+    let handler;
+    switch (values) {
+      case 'google':
+        handler = onGoogleButtonPress();
+        break;
+      case 'facebook':
+        handler = onFacebookButtonPress();
+        break;
+      case 'phone':
+        handler = authApi.loginWithProvider('phone', token);
+        break;
+      default:
+        handler = authApi.login({
+          identifier: values.email,
+          password: values.password,
+        });
+        break;
+    }
     Keyboard.dismiss();
     setLoading(<Loading />);
-    authApi
-      .login({
-        identifier: values.email,
-        password: values.password,
-      })
+    handler
       .then(data => {
         dispatch(saveInfo(data));
         socket.connect();
@@ -66,10 +92,17 @@ const SignIn = ({ navigation }) => {
         setLoading(null);
       })
       .catch(err => {
-        setAlert({
-          type: 'warning',
-          message: 'Tài khoản hoặc mật khẩu không đúng!',
-        });
+        const message = err.response.data.data[0].messages[0].id;
+        if (message === 'Auth.form.error.email.taken')
+          setAlert({
+            type: 'warning',
+            message: 'Email đã được sử dụng!',
+          });
+        else
+          setAlert({
+            type: 'warning',
+            message: 'Tài khoản hoặc mật khẩu không đúng!',
+          });
         setLoading(null);
       });
   };
@@ -140,7 +173,9 @@ const SignIn = ({ navigation }) => {
           />
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('forgotPassword')}>
+            onPress={() =>
+              navigation.navigate('forgotPassword', { type: 'forgot' })
+            }>
             <Text style={styles.forgot}>Quên mật khẩu?</Text>
           </TouchableOpacity>
           <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
@@ -162,24 +197,33 @@ const SignIn = ({ navigation }) => {
               alignItems: 'center',
               flex: 1,
             }}>
-            <Icon
-              name="google"
-              type="font-awesome"
-              color="#4285F4"
-              containerStyle={styles.icon}
-            />
-            <Icon
-              name="facebook"
-              type="font-awesome"
-              color="#4267B2"
-              containerStyle={styles.icon}
-            />
-            <Icon
-              name="phone"
-              type="font-awesome"
-              color={COLORS.warning}
-              containerStyle={styles.icon}
-            />
+            <TouchableOpacity onPress={() => handleSubmit('google')}>
+              <Icon
+                name="google"
+                type="font-awesome"
+                color="#4285F4"
+                containerStyle={styles.icon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSubmit('facebook')}>
+              <Icon
+                name="facebook"
+                type="font-awesome"
+                color="#4267B2"
+                containerStyle={styles.icon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('forgotPassword', { type: 'signin' })
+              }>
+              <Icon
+                name="phone"
+                type="font-awesome"
+                color={COLORS.warning}
+                containerStyle={styles.icon}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAwareScrollView>

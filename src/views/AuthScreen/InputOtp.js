@@ -11,33 +11,45 @@ import banner from './../../assets/images/otp_banner.png';
 import Loading from './../../components/Loading';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { Divider, Image, Text } from 'react-native-elements';
+import { getPhoneNumberVerificator, getPhoneToken } from '../../config/OAuth';
 
-const InputOtp = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+const InputOtp = ({ navigation, route }) => {
+  const { meta, phone } = route.params;
+  const [vCode, setVCode] = useState('');
   const [timer, setTimer] = useState(60);
+  const [verificator, setVerificator] = useState(null);
 
   const dispatch = useDispatch();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      email: email,
-      password: password,
+      code: vCode,
     },
-    // validationSchema: Bonk.object({
-    //   email: Bonk.string().required('Thông tin bắt buộc'),
-    //   password: Bonk.string()
-    //     .required('Thông tin bắt buộc')
-    //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
-    // }),
+    validationSchema: Bonk.object({
+      code: Bonk.string()
+        .required('Thông tin bắt buộc')
+        .length(6, 'Mã xác nhận gồm 6 chữ số'),
+    }),
     onSubmit: values => {
       handleSubmit(values);
     },
   });
 
   const handleSubmit = values => {
-    navigation.navigate('resetPass');
+    if (verificator) {
+      getPhoneToken(verificator, values.code).then(token =>
+        navigation.navigate({
+          name: meta.navigate,
+          params: { token: token },
+          merge: true,
+        }),
+      );
+    }
+  };
+
+  const reSent = () => {
+    setTimer(60);
+    getPhoneNumberVerificator(phone, true).then(data => setVerificator(data));
   };
 
   useEffect(() => {
@@ -49,6 +61,10 @@ const InputOtp = ({ navigation }) => {
 
     return () => clearInterval(interval);
   }, [timer]);
+
+  useEffect(() => {
+    getPhoneNumberVerificator(phone, true).then(data => setVerificator(data));
+  }, [route.params?.phone]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,28 +86,19 @@ const InputOtp = ({ navigation }) => {
           Kiểm tra điện thoại của bạn và nhập mã OTP từ tin nhắn
         </Text>
         <TextField
+          keyboardType="numeric"
           icon="phone"
           placeholder="Nhập mã OTP"
-          value={formik.values.email}
-          onChangeText={setEmail}
+          value={formik.values.code}
+          onChangeText={setVCode}
+          error={formik.touched.code && formik.errors.code}
+          errorMessage={formik.errors.code}
         />
-
-        {formik.touched.email && formik.errors.email ? (
-          <Text
-            style={{
-              ...FONTS.Big,
-              color: danger,
-              marginBottom: 15,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.email}
-          </Text>
-        ) : null}
 
         <PrimaryButton
           title="Xác nhận"
           backgroundColor={COLORS.header}
-          onPress={handleSubmit}
+          onPress={formik.submitForm}
         />
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -115,6 +122,7 @@ const InputOtp = ({ navigation }) => {
           }}
           title={`Gửi lại mã ${timer ? '(' + timer + ')' : ''}`}
           backgroundColor={COLORS.warning}
+          onPress={reSent}
         />
       </View>
     </SafeAreaView>

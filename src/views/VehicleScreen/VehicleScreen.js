@@ -32,7 +32,7 @@ const VehicleScreen = () => {
   });
 
   useEffect(() => {
-    setCar(carInfo);
+    setCar({ ...carr, ...carInfo });
     shipmentApi.assistanceInfo().then(response => {
       setAssistance(response);
     });
