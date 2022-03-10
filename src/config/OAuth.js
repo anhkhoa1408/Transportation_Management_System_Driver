@@ -37,8 +37,8 @@ export async function onGoogleButtonPress() {
   return authApi.loginWithProvider('google', accessToken);
 }
 
-export async function getPhoneNumberVerificator(phoneNumber) {
-  return await auth().signInWithPhoneNumber(phoneNumber);
+export async function getPhoneNumberVerificator(phoneNumber, reSent = false) {
+  return await auth().signInWithPhoneNumber(phoneNumber, reSent);
 }
 
 export async function getPhoneToken(confirm, code) {

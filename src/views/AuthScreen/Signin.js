@@ -92,11 +92,17 @@ const SignIn = ({ navigation, route }) => {
         setLoading(null);
       })
       .catch(err => {
-        console.log(err);
-        setAlert({
-          type: 'warning',
-          message: 'Tài khoản hoặc mật khẩu không đúng!',
-        });
+        const message = err.response.data.data[0].messages[0].id;
+        if (message === 'Auth.form.error.email.taken')
+          setAlert({
+            type: 'warning',
+            message: 'Email đã được sử dụng!',
+          });
+        else
+          setAlert({
+            type: 'warning',
+            message: 'Tài khoản hoặc mật khẩu không đúng!',
+          });
         setLoading(null);
       });
   };

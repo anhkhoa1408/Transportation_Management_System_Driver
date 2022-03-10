@@ -11,10 +11,13 @@ import banner from './../../assets/images/otp_banner.png';
 import Loading from './../../components/Loading';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { Divider, Image, Text } from 'react-native-elements';
+import { getPhoneNumberVerificator, getPhoneToken } from '../../config/OAuth';
 
-const InputOtp = ({ navigation }) => {
+const InputOtp = ({ navigation, route }) => {
+  const { meta, phone } = route.params;
   const [vCode, setVCode] = useState('');
   const [timer, setTimer] = useState(60);
+  const [verificator, setVerificator] = useState(null);
 
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -28,16 +31,25 @@ const InputOtp = ({ navigation }) => {
         .length(6, 'Mã xác nhận gồm 6 chữ số'),
     }),
     onSubmit: values => {
-      navigation.navigate({
-        name: 'forgotPassword',
-        params: { code: values.code },
-        merge: true,
-      });
+      handleSubmit(values);
     },
   });
 
   const handleSubmit = values => {
-    navigation.navigate('resetPass');
+    if (verificator) {
+      getPhoneToken(verificator, values.code).then(token =>
+        navigation.navigate({
+          name: meta.navigate,
+          params: { token: token },
+          merge: true,
+        }),
+      );
+    }
+  };
+
+  const reSent = () => {
+    setTimer(60);
+    getPhoneNumberVerificator(phone, true).then(data => setVerificator(data));
   };
 
   useEffect(() => {
@@ -49,6 +61,10 @@ const InputOtp = ({ navigation }) => {
 
     return () => clearInterval(interval);
   }, [timer]);
+
+  useEffect(() => {
+    getPhoneNumberVerificator(phone).then(data => setVerificator(data));
+  }, [route.params?.phone]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,6 +86,7 @@ const InputOtp = ({ navigation }) => {
           Kiểm tra điện thoại của bạn và nhập mã OTP từ tin nhắn
         </Text>
         <TextField
+          keyboardType="numeric"
           icon="phone"
           placeholder="Nhập mã OTP"
           value={formik.values.code}
@@ -105,6 +122,7 @@ const InputOtp = ({ navigation }) => {
           }}
           title={`Gửi lại mã ${timer ? '(' + timer + ')' : ''}`}
           backgroundColor={COLORS.warning}
+          onPress={reSent}
         />
       </View>
     </SafeAreaView>

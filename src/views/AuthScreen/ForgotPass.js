@@ -9,15 +9,12 @@ import banner from './../../assets/images/password_banner.png';
 import Loading from './../../components/Loading';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { COLORS, STYLES, FONTS } from '../../styles';
-import authApi from '../../api/authApi';
-import { getPhoneNumberVerificator, getPhoneToken } from '../../config/OAuth';
 
 const ForgotPass = ({ navigation, route }) => {
   const [phone, setPhone] = useState('');
   const [isFocus, setFocus] = useState('');
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({});
-  const [verificator, setVerificator] = useState(null);
 
   const routeMetas = {
     forgot: {
@@ -28,31 +25,13 @@ const ForgotPass = ({ navigation, route }) => {
     signin: {
       title: 'Đăng nhập',
       banner: '',
-      navigate: '',
+      navigate: 'Signin',
     },
   };
 
   useEffect(() => {
     setMeta(routeMetas[route.params.type]);
   }, []);
-
-  useEffect(() => {
-    if (route.params?.code) {
-      if (route.params.type === 'signin')
-        getPhoneToken(verificator, route.params?.code)
-          .then(data =>
-            navigation.navigate({
-              name: 'Signin',
-              params: { token: data },
-              merge: true,
-            }),
-          )
-          .catch(err => console.log(err));
-      else {
-        // TODO: Forgot password
-      }
-    }
-  }, [route.params?.code]);
 
   const formatPhone = phone => {
     return '+84' + phone.slice(1);
@@ -77,12 +56,10 @@ const ForgotPass = ({ navigation, route }) => {
   });
 
   const handleSubmit = values => {
-    getPhoneNumberVerificator(formatPhone(values.phone))
-      .then(data => {
-        setVerificator(data);
-        navigation.navigate('inputOtp');
-      })
-      .catch(err => console.log(err));
+    navigation.navigate('inputOtp', {
+      phone: formatPhone(values.phone),
+      meta,
+    });
   };
 
   return (
