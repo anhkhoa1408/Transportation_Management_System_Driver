@@ -7,7 +7,6 @@ import { COLORS } from '../../styles';
 function PrimaryButton(props) {
   return (
     <Button
-      {...props}
       containerStyle={{
         ...props.containerStyle,
         borderRadius: 8,
@@ -27,6 +26,7 @@ function PrimaryButton(props) {
       }}
       TouchableComponent={TouchableOpacity}
       activeOpacity={0.7}
+      {...props}
     />
   );
 }
