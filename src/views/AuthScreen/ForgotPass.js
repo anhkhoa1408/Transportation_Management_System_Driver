@@ -20,7 +20,7 @@ const ForgotPass = ({ navigation, route }) => {
     forgot: {
       title: 'Quên mật khẩu',
       banner: '',
-      navigate: '',
+      navigate: 'resetPass',
     },
     signin: {
       title: 'Đăng nhập',

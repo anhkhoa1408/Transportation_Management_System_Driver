@@ -46,7 +46,6 @@ const Account = ({ navigation, userInfo }) => {
     {
       title: 'Đăng xuất',
       icon: 'logout',
-      navigate: '',
       color: danger,
     },
   ];

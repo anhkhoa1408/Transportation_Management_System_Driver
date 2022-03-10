@@ -4,43 +4,89 @@ import { Text } from 'react-native-elements';
 import { COLORS, STYLES, FONTS } from '../../styles';
 import TextField from '../../components/TextField';
 import authApi from '../../api/authApi';
-import { useDispatch } from 'react-redux';
 import * as Bonk from 'yup';
 import { useFormik } from 'formik';
 import { danger, success } from '../../styles/color';
 import Loading from './../../components/Loading';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
+import ModalMess from '../../components/ModalMess';
 
-const ResetPass = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isFocus, setFocus] = useState('');
+const ResetPass = ({ navigation, route }) => {
+  const [data, setData] = useState({
+    password: '',
+    confirmPassword: '',
+  });
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
-  const dispatch = useDispatch();
+  const alertType = {
+    error: {
+      type: 'danger',
+      message: 'Cập nhật mật khẩu thất bại',
+    },
+    success: {
+      type: 'success',
+      message: 'Cập nhật mật khẩu thành công',
+      btnText: 'Đăng nhập',
+    },
+  };
+
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: {
-      email: email,
-      password: password,
-    },
-    // validationSchema: Bonk.object({
-    //   email: Bonk.string().required('Thông tin bắt buộc'),
-    //   password: Bonk.string()
-    //     .required('Thông tin bắt buộc')
-    //     .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
-    // }),
+    initialValues: data,
+    validationSchema: Bonk.object({
+      password: Bonk.string()
+        .required('Thông tin bắt buộc')
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+          'Mật khẩu mới phải tối thiểu 8 ký tự, bao gồm chữ in hoa',
+        )
+        .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
+      confirmPassword: Bonk.string()
+        .required('Thông tin bắt buộc')
+        .oneOf(
+          [Bonk.ref('password'), null],
+          'Mật khẩu và xác nhận mật khẩu không khớp',
+        )
+        .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
+    }),
     onSubmit: values => {
-      handleSubmit(values);
+      handleSubmit(values.password);
     },
   });
 
-  const handleSubmit = values => {
-    navigation.navigate('Signin');
+  const handleSubmit = newPassword => {
+    setLoading(<Loading />);
+    authApi
+      .resetPassword({ token: route.params.token, newPassword })
+      .then(data => {
+        setLoading(false);
+        setAlert(alertType.success);
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err.response.status, JSON.stringify(err.response.data));
+        setAlert(alertType.error);
+      });
+  };
+
+  const onAlertConfirm = value => {
+    setAlert(value);
+    if (alert.type === 'success') {
+      navigation.navigate('Signin');
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      {alert && (
+        <ModalMess
+          type={alert.type}
+          message={alert.message}
+          setAlert={onAlertConfirm}
+          alert={alert}
+        />
+      )}
       <View style={{ paddingHorizontal: 20, marginTop: '40%', flex: 1 }}>
         <Text style={styles.title}>Đổi mật khẩu</Text>
         <Text
@@ -53,41 +99,26 @@ const ResetPass = ({ navigation }) => {
         <TextField
           icon="https"
           placeholder="Mật khẩu mới"
-          value={formik.values.email}
-          onChangeText={setEmail}
+          secureTextEntry
+          value={formik.values.password}
+          onChangeText={text => formik.setFieldValue('password', text)}
+          error={formik.touched.password && formik.errors.password}
+          errorMessage={formik.errors.password}
         />
-
-        {formik.touched.email && formik.errors.email ? (
-          <Text
-            style={{
-              color: danger,
-              marginBottom: 15,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.email}
-          </Text>
-        ) : null}
 
         <TextField
           icon="https"
           placeholder="Xác nhận mật khẩu"
-          value={formik.values.password}
+          value={formik.values.confirmPassword}
           secureTextEntry
-          onChangeText={setPassword}
+          onChangeText={text => formik.setFieldValue('confirmPassword', text)}
+          error={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
+          errorMessage={formik.errors.confirmPassword}
         />
 
-        {formik.touched.password && formik.errors.password ? (
-          <Text
-            style={{
-              color: danger,
-              marginBottom: 15,
-              fontWeight: 'bold',
-            }}>
-            {formik.errors.password}
-          </Text>
-        ) : null}
-
-        <PrimaryButton title="Xác nhận" />
+        <PrimaryButton title="Xác nhận" onPress={formik.submitForm} />
       </View>
       <View style={[styles.container1]}>
         <Text style={[FONTS.Medium]}>Đổi mật khẩu thành công? </Text>

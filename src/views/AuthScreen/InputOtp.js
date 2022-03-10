@@ -63,7 +63,7 @@ const InputOtp = ({ navigation, route }) => {
   }, [timer]);
 
   useEffect(() => {
-    getPhoneNumberVerificator(phone).then(data => setVerificator(data));
+    getPhoneNumberVerificator(phone, true).then(data => setVerificator(data));
   }, [route.params?.phone]);
 
   return (
