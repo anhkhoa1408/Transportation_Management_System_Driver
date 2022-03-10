@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
@@ -14,10 +14,12 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['EventEmitter.removeListener']);
 
 export default function App(props) {
-  React.useEffect(() => {
-    initDeviceTokenSync();
-    const unsubscribe = initForegroundMessage(store);
-    return unsubscribe;
+  useEffect(() => {
+    return initForegroundMessage();
+  }, []);
+
+  useEffect(() => {
+    return initDeviceTokenSync();
   }, []);
 
   return (
