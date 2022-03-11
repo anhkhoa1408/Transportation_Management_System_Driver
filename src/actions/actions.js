@@ -58,3 +58,23 @@ export const saveCustomers = payload => {
     payload: payload,
   };
 };
+
+export const addNotification = payload => {
+  return {
+    type: types.ADD_NOTIFICATION,
+    payload: payload,
+  };
+};
+
+export const removeNotification = payload => {
+  return {
+    type: types.DEL_NOTIFICATION,
+    payload: payload,
+  };
+};
+
+export const cleanNotification = () => {
+  return {
+    type: types.CLEAN_NOTIFICATION,
+  };
+};

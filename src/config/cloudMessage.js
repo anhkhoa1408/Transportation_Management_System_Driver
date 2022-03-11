@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import authApi from '../api/authApi';
-import { addCustomer } from '../actions/actions';
+import { addCustomer, addNotification } from '../actions/actions';
 import { socket } from './socketIO';
 import { store } from './configureStore';
 import notifee from '@notifee/react-native';
@@ -12,13 +12,13 @@ export function initDeviceTokenSync() {
   syncToken();
 
   return messageApp.onTokenRefresh(newToken => {
-    // new Promise(resolve => setTimeout(resolve, 500)).then(() => {
-    // if (store.getState().userInfo.user)
-    authApi
-      .updateDeviceToken(newToken)
-      .then(() => console.log('Device Token Updated By Refresh'))
-      .catch(err => console.log(err));
-    // });
+    new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+      if (store.getState().userInfo.user)
+        authApi
+          .updateDeviceToken(newToken)
+          .then(() => console.log('Device Token Updated By Refresh'))
+          .catch(err => console.log(err));
+    });
   });
 }
 
@@ -44,6 +44,7 @@ export function removeToken() {
 export function initForegroundMessage() {
   return messageApp.onMessage(async remoteMessage => {
     const { room, type, ...data } = remoteMessage.data;
+    const { messageId: id, sentTime } = remoteMessage;
     switch (type) {
       case 'ROOM':
         store.dispatch(addCustomer(data, room));
@@ -61,6 +62,7 @@ export function initForegroundMessage() {
           .catch(err => console.log(err));
         break;
       default:
+        store.dispatch(addNotification({ id, sentTime, ...data }));
         break;
     }
   });
@@ -69,6 +71,7 @@ export function initForegroundMessage() {
 export async function initBackgroudMessage() {
   return messageApp.setBackgroundMessageHandler(async remoteMessage => {
     const { room, type, ...data } = remoteMessage.data;
+    const { messageId: id, sentTime } = remoteMessage;
     switch (type) {
       case 'ROOM':
         store.dispatch(addCustomer(data, room));
@@ -85,6 +88,7 @@ export async function initBackgroudMessage() {
           .catch(err => console.log(err));
         break;
       default:
+        store.dispatch(addNotification({ id, sentTime, ...data }));
         break;
     }
   });
