@@ -9,250 +9,125 @@ import {
 import { Icon, CheckBox, Avatar, Text } from 'react-native-elements';
 import { COLORS, FONTS, STYLES } from '../../styles';
 import img from '../../assets/images/download.jpg';
-import { container, header } from '../../styles/layoutStyle';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../../components/Header';
+import { joinAddress } from '../../utils/addressUltis';
+import PackageItem from './components/PackageItem';
+import InfoField from '../../components/InfoField';
+import shipmentApi from '../../api/shipmentAPI';
+import { socket } from '../../config/socketIO';
+import { connect } from 'react-redux';
 
-export default function OrderDetailScreen({ navigation }) {
-  const tempData = [
-    {
-      quantity: 133,
-      weight: 1,
-      state: 0,
-      _id: '61a983c312c1a70016415259',
-      package_type: {
-        package_type: 'normal',
-      },
-      code: '784544',
-      current_address: 'Kho Hà Nội',
-      order: {
-        state: 0,
-        _id: '61a982b712c1a7001641524f',
-        sender_phone: '0946853324',
-        fee: 2000,
-        remain_fee: 2000,
-        sender_name: 'Duong Tran',
-        receiver_name: 'Tran Duong',
-        receiver_phone: '0986657442',
-        from_address: {
-          street: '123 Ly Thuong Kiet',
-          ward: 'Thanh Thanh',
-          province: 'Quan 3',
-          city: 'Ho Chi Minh',
-        },
-        to_address: {
-          street: '02 Tran Hung Dao',
-          ward: 'Phuong 3',
-          province: 'An Ba',
-          city: 'An Giang',
-        },
-        id: '61a982b712c1a7001641524f',
-      },
-      size: {
-        len: 5,
-        width: 20,
-        height: 10,
-      },
-      imports: [],
-      exports: [],
-      shipments: [],
-      id: '61a983c312c1a70016415259',
-    },
-    {
-      quantity: 20,
-      weight: 3,
-      state: 0,
-      package_type: {
-        package_type: 'normal',
-      },
-      code: '16516518791',
-      current_address: 'Kho Hà Nội',
-      order: {
-        state: 0,
-        sender_phone: '0946853324',
-        fee: 2000,
-        remain_fee: 2000,
-        sender_name: 'Duong Tran',
-        receiver_name: 'Tran Duong',
-        receiver_phone: '0986657442',
-        from_address: {
-          street: '123 Ly Thuong Kiet',
-          ward: 'Thanh Thanh',
-          province: 'Quan 3',
-          city: 'Ho Chi Minh',
-        },
-        to_address: {
-          street: '02 Tran Hung Dao',
-          ward: 'Phuong 3',
-          province: 'An Ba',
-          city: 'An Giang',
-        },
-        id: '61a982b712c1a7001641524f',
-      },
-      size: {
-        len: 101,
-        width: 20,
-        height: 30,
-      },
-      id: '61a9840512c1a7001641525c',
-    },
-  ];
-  const [data, setData] = useState(tempData);
+function OrderDetailScreen(props) {
+  const [data, setData] = useState([]);
+
+  const { userInfo, navigation, route } = props;
+
+  console.log(route.params);
+
+  useEffect(() => {
+    if (route.params.shipmentID)
+      shipmentApi.shipmentDetail(route.params.shipmentID).then(response => {
+        setData(response);
+      });
+  }, []);
 
   const renderItem = ({ item, index }) => (
-    <View
-      style={{
-        ...STYLES.subContainer,
-        ...STYLES.shadowCard,
-        padding: 20,
-        borderRadius: 12,
-        backgroundColor: COLORS.white,
-      }}>
-      <View style={{ ...STYLES.row }}>
-        <Image
-          style={{
-            tintColor: '#000000',
-            resizeMode: 'contain',
-            height: 50,
-            width: 50,
-            marginTop: 10,
-          }}
-          source={require('../../assets/images/package.png')}
-        />
-        <View
-          style={{
-            ...STYLES.column,
-            flex: 1,
-            marginLeft: 20,
-          }}>
-          <Text style={{ ...FONTS.Big }}>ID: {item.id}</Text>
-          <Text style={{ ...FONTS.Smol }}>
-            Số lượng: <Text style={{ ...FONTS.SmolBold }}>{item.quantity}</Text>
-          </Text>
-          <Text style={{ ...FONTS.Smol }}>
-            Địa điểm hiện tại:{' '}
-            <Text style={{ ...FONTS.SmolBold }}>{item.current_address}</Text>
-          </Text>
-        </View>
-      </View>
-    </View>
+    <PackageItem
+      item={item}
+      navigation={navigation}
+      isDone={route?.params?.isDone}
+    />
   );
+
+  const handleChatButton = () => {
+    socket.emit('room', {
+      senderId: userInfo.user.id,
+      receiverId: data?.customer,
+    });
+    socket.once('room', (room, customer) => {
+      navigation.navigate('MessageScreen', {
+        room: room,
+      });
+    });
+  };
 
   return (
     <View style={{ ...STYLES.container }}>
       <Header
         leftElement={
-          <TouchableOpacity>
-            <MaterialIcon
-              name="west"
-              size={30}
-              onPress={() => navigation.goBack()}
-            />
-          </TouchableOpacity>
+          <Icon name="west" size={30} onPress={() => navigation.goBack()} />
         }
         headerText={'Chi tiết đơn hàng'}
       />
 
-      {data.length > 0 && (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View
+          style={{
+            ...STYLES.row,
+            ...STYLES.subContainer,
+            padding: 0,
+            paddingBottom: 20,
+            ...styles.borderBottom,
+          }}>
+          <Avatar
+            size="medium"
+            avatarStyle={{ borderRadius: 10 }}
+            source={img}
+          />
+          <View style={{ flex: 1 }}>
+            <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
+              <Text>{data.sender_name}</Text>
+              <Text>SĐT: {data.sender_phone}</Text>
+            </View>
+          </View>
           <View
             style={{
-              ...STYLES.row,
-              ...STYLES.subContainer,
-              padding: 0,
-              paddingBottom: 20,
-              ...styles.borderBottom,
+              backgroundColor: COLORS.white,
+              padding: 12,
+              borderRadius: 15,
+              elevation: 5,
             }}>
-            <Avatar
-              size="medium"
-              avatarStyle={{ borderRadius: 10 }}
-              source={img}
-            />
-            <View style={{ flex: 1 }}>
-              <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
-                <Text>{data[0].order.sender_name}</Text>
-                <Text>SĐT: {data[0].order.sender_phone}</Text>
-              </View>
-            </View>
-            <Icon
-              name={'sms'}
-              size={50}
-              color={COLORS.primary}
-              type="material"
-            />
+            <TouchableOpacity onPress={handleChatButton}>
+              <Icon name="comment" type="font-awesome" color={COLORS.primary} />
+            </TouchableOpacity>
           </View>
-
-          <View
-            style={{
-              ...STYLES.subContainer,
-              paddingBottom: 18,
-              ...styles.borderBottom,
-            }}>
-            <View style={{ ...STYLES.row }}>
-              <View
-                style={{
-                  ...STYLES.column,
-                  flex: 1,
-                  marginRight: 20,
-                }}>
-                <Text style={{ ...styles.title }}>Địa chỉ</Text>
-              </View>
-              <View style={{ ...STYLES.column, flex: 0.8 }}>
-                <Text style={{ ...styles.title }}>Cần vận chuyển</Text>
-              </View>
-            </View>
-            <View style={{ ...STYLES.row }}>
-              <View
-                style={{
-                  ...STYLES.column,
-                  flex: 1,
-                  alignItems: 'flex-start',
-                  marginRight: 20,
-                }}>
-                <Text style={{ ...FONTS.SmolBold }}>
-                  {data[0].current_address === null
-                    ? data[0].order.from_address.street +
-                      ', ' +
-                      data[0].order.from_address.ward +
-                      ', ' +
-                      data[0].order.from_address.province +
-                      ', ' +
-                      data[0].order.from_address.city
-                    : data[0].current_address}
-                </Text>
-              </View>
-              <View
-                style={{
-                  ...STYLES.column,
-                  flex: 0.8,
-                  alignItems: 'flex-start',
-                }}>
-                <Text style={{ ...FONTS.SmolBold }}>
-                  {data.reduce(
-                    (previous, current) =>
-                      previous + current.weight * current.quantity,
-                    0,
-                  )}{' '}
-                  Kg
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={{ flex: 1, alignItems: 'stretch' }}>
-            <FlatList
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={item => `${item.id}`}
-            />
-          </View>
-          <TouchableOpacity style={STYLES.button}>
-            <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
-              Chụp ảnh
-            </Text>
-          </TouchableOpacity>
         </View>
-      )}
+
+        <View
+          style={{
+            ...STYLES.row,
+            ...STYLES.subContainer,
+            ...styles.borderBottom,
+            paddingBottom: 18,
+          }}>
+          <InfoField
+            title={'Địa chỉ'}
+            style={{ flex: 1 }}
+            content={
+              data && data.from_address && joinAddress(data.from_address)
+            }
+          />
+          <InfoField
+            title={'Khối lượng'}
+            style={{ flex: 0.8 }}
+            content={
+              Array.isArray(data.packages) &&
+              data.packages.reduce(
+                (previous, current) =>
+                  previous + current.weight * current.quantity,
+                0,
+              ) + ' Kg'
+            }
+          />
+        </View>
+
+        <FlatList
+          data={data.packages}
+          renderItem={renderItem}
+          keyExtractor={item => `${item.id}`}
+        />
+      </View>
 
       {data.length == 0 && (
         <View
@@ -276,3 +151,9 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.primary,
   },
 });
+
+const mapStateToProps = state => ({
+  userInfo: state.userInfo,
+});
+
+export default connect(mapStateToProps)(OrderDetailScreen);

@@ -36,6 +36,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF',
     zIndex: 9999,
+    elevation: 100,
   },
   containerOverlay: {
     ...containerOverlay,

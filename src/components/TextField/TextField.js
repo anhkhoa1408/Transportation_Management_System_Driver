@@ -1,77 +1,134 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, Image } from 'react-native';
-import { Icon, Tooltip } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { COLORS } from '../../styles';
 
-export default function TextField(props) {
+export default function TextField({
+  afterText,
+  afterComponent,
+  disabled,
+  error,
+  errorMessage,
+  icon,
+  name,
+  onBlur,
+  onChangeText,
+  value,
+  title,
+  style,
+  ...props
+}) {
+  const [focus, setFocus] = useState(false);
+
+  const handleFocus = () => {
+    setFocus(true);
+  };
+
+  const handleBlur = () => {
+    setFocus(false);
+    onBlur && onBlur();
+  };
+
   return (
-    <View>
-      {'title' in props && <Text style={styles.texttitle}>{props.title}</Text>}
-      <View style={styles.inputView}>
-        {'icon' in props && <Icon name={props.icon} />}
-        <TextInput style={{ ...styles.fsize }} {...props} />
-        {'afterText' in props && (
+    <View style={{ marginBottom: 15 }}>
+      {title && <Text style={styles.texttitle}>{title}</Text>}
+      <View
+        style={[
+          styles.inputView,
+          {
+            borderColor: error
+              ? COLORS.danger
+              : focus
+              ? COLORS.primary
+              : COLORS.gray,
+          },
+        ]}>
+        {icon && (
+          <Icon
+            name={icon}
+            iconStyle={[
+              {
+                color: error
+                  ? COLORS.danger
+                  : focus
+                  ? COLORS.primary
+                  : 'rgba(0,0,0,0.4)',
+              },
+            ]}
+          />
+        )}
+        <TextInput
+          name={name}
+          style={[
+            styles.fsize,
+            {
+              flex: 1,
+            },
+            disabled && styles.disabled,
+            style,
+          ]}
+          placeholderTextColor={
+            error ? COLORS.danger : focus ? COLORS.primary : 'rgba(0,0,0,0.4)'
+          }
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChangeText={onChangeText}
+          value={value}
+          {...props}
+        />
+        {afterText && (
           <Text
-            style={{ ...styles.fsize, marginRight: 10, textAlign: 'right' }}>
-            {props.afterText}
+            style={{
+              ...styles.fsize,
+              color: 'rgba(0, 0, 0, 0.5)',
+              marginRight: 10,
+              textAlign: 'right',
+            }}>
+            {afterText}
           </Text>
         )}
-        {'afterImage' in props && props.afterImage}
-        {/* <Tooltip
-          height={100}
-          width={250}
-          overlayColor="rgba(0,0,0,0.2)"
-          backgroundColor="#FFF"
-          containerStyle={{ alignSelf: 'flex-end' }}
-          popover={
-            <Text style={{ color: COLORS.danger, fontSize: 16 }}>
-              Mật khẩu phải tối thiểu 9 ký tự chữ cái
-            </Text>
-          }>
-          <Icon name="error" color="red" />
-        </Tooltip> */}
+        {afterComponent && afterComponent}
       </View>
+
+      {error ? (
+        <Text
+          style={{
+            color: COLORS.danger,
+            fontWeight: 'bold',
+          }}>
+          {errorMessage}
+        </Text>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 3,
-  },
   texttitle: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#000000',
   },
   inputView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
-    backgroundColor: 'white',
-    borderRadius: 35,
-    padding: 5,
-    paddingHorizontal: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: COLORS.gray,
+    borderRadius: 8,
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    borderWidth: 2,
   },
   fsize: {
     fontSize: 17,
     color: '#000',
     paddingLeft: 20,
     paddingVertical: 8,
+  },
+  textFocus: {
+    color: COLORS.primary,
+  },
+  disabled: {
+    color: 'rgba(0, 0, 0, 0.5)',
   },
 });

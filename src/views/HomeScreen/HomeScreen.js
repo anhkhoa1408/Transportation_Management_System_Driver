@@ -1,7 +1,7 @@
 // Import Component
 import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, View, FlatList } from 'react-native';
-import { Icon, withBadge, SpeedDial, Overlay } from 'react-native-elements';
+import { Icon, withBadge, Overlay } from 'react-native-elements';
 import AbsenceForm from './AbsenceForm';
 import Loading from '../../components/Loading';
 import Header from '../../components/Header';
@@ -15,32 +15,19 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
+import ModalMess from '../../components/ModalMess';
+import SpeedDial from './SpeedDial';
 
 function HomeScreen({ navigation, ...props }) {
-  const BadgedIcon = withBadge(10)(Icon);
+  const [badge, setBadge] = useState(null);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
 
-  const [user, setUser] = useState({
-    name: 'Shiba',
-    avatar:
-      'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  });
+  const [modal, setModal] = useState(null);
 
-  const { userInfo } = props;
-
-  useEffect(() => {
-    if (userInfo.user.avatar && userInfo.user.avatar.url)
-      setUser({
-        ...user,
-        avatar: userInfo.user.avatar.url,
-      });
-    setUser({
-      ...user,
-      name: userInfo.user.name,
-    });
-  }, [userInfo]);
+  const { userInfo, noties } = props;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -57,6 +44,22 @@ function HomeScreen({ navigation, ...props }) {
     return unsubscribe;
   }, [navigation]);
 
+  useEffect(() => {
+    setBadge(Badge(Object.keys(noties).length));
+  }, [noties]);
+
+  const Badge = totalNoties => {
+    const BadgedIcon = withBadge(totalNoties)(Icon);
+    return (
+      <BadgedIcon
+        name="notifications"
+        color={COLORS.primary}
+        size={30}
+        onPress={() => navigation.navigate('Notification')}
+      />
+    );
+  };
+
   const renderItem = ({ item }) => <InfoCard item={item} />;
   const keyExtractor = (item, index) => index.toString();
 
@@ -65,18 +68,11 @@ function HomeScreen({ navigation, ...props }) {
       {!listData.length && <Loading />}
       <View style={homeStyle.container}>
         <Header
-          leftElement={
-            <BadgedIcon
-              name="notifications"
-              color={COLORS.primary}
-              size={30}
-              onPress={() => navigation.navigate('Notification')}
-            />
-          }
-          headerText={'Xin chào ' + user.name}
+          leftElement={badge}
+          headerText={'Xin chào ' + userInfo?.user?.name}
           rightElement={
             <HeaderAvatar
-              url={user.avatar}
+              url={getAvatarFromUser(userInfo.user)}
               onPressAction={() => navigation.navigate('EditProfile')}
             />
           }
@@ -106,32 +102,20 @@ function HomeScreen({ navigation, ...props }) {
           </View>
         )}
 
+        {/* Absence form */}
         <SpeedDial
-          isOpen={open}
-          icon={{ name: 'sliders-h', color: '#fff', type: 'font-awesome-5' }}
-          openIcon={{ name: 'close', color: '#fff' }}
-          onOpen={() => setOpen(!open)}
-          onClose={() => {
-            setOpen(!open);
-            setAbsence(false);
-          }}
-          containerStyle={{
-            bottom: 20,
-            marginTop: 20,
-          }}
-          overlayColor="rgba(0,0,0,0.15)"
-          iconContainerStyle={{
-            backgroundColor: COLORS.primary,
-          }}>
-          <SpeedDial.Action
-            icon={{ name: 'snooze', color: '#fff', type: 'material' }}
-            iconContainerStyle={{
-              backgroundColor: COLORS.primary,
-            }}
-            title="Nghỉ phép"
-            onPress={() => setAbsence(!absenceForm)}
-          />
-        </SpeedDial>
+          open={open}
+          setOpen={setOpen}
+          setAbsence={setAbsence}
+          absenceForm={absenceForm}
+        />
+
+        <ModalMess
+          type={'success'}
+          message={'Cập nhật thành công.'}
+          alert={modal}
+          setAlert={setModal}
+        />
 
         <Overlay
           backdropStyle={{
@@ -142,11 +126,17 @@ function HomeScreen({ navigation, ...props }) {
           }}
           overlayStyle={{
             width: '90%',
-            borderRadius: 20,
-            padding: 30,
+            height: '55%',
+            borderRadius: 12,
+            paddingVertical: 30,
+            paddingHorizontal: 15,
           }}
           visible={absenceForm}>
-          <AbsenceForm setAbsence={setAbsence} />
+          <AbsenceForm
+            onOpen={setOpen}
+            setAbsence={setAbsence}
+            setModal={setModal}
+          />
         </Overlay>
       </View>
     </>
@@ -169,6 +159,7 @@ const homeStyle = StyleSheet.create({
 
 const mapStateToProps = state => ({
   userInfo: state.userInfo,
+  noties: state.notification,
 });
 
 export default connect(mapStateToProps)(HomeScreen);

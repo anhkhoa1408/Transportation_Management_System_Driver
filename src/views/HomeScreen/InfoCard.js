@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon, ListItem } from 'react-native-elements';
+import { COLORS } from '../../styles';
 import { shadowCard } from '../../styles/layoutStyle';
 
 const InfoCard = ({ item }) => {
@@ -47,7 +48,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     marginHorizontal: 12,
     borderRadius: 20,
-    ...shadowCard,
+    elevation: 15,
+    shadowColor: COLORS.primary,
   },
   titleFont: {
     fontSize: 16,

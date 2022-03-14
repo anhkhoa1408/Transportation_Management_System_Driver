@@ -1,64 +1,43 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar, SearchBar, Text, ListItem } from 'react-native-elements';
+import { Avatar, Text, ListItem } from 'react-native-elements';
 import CustomSearch from '../../components/CustomSearch/CustomSearch';
 import { container, header } from '../../styles/layoutStyle';
-import img from '../../assets/images/download.jpg';
 import { ScrollView } from 'react-native-gesture-handler';
-import { store } from '../../config/configureStore';
+import { connect } from 'react-redux';
+import { socket } from '../../config/socketIO';
+import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
+import { formatDate } from '../../utils/dateUtils';
 
-const ChatScreen = ({ navigation }) => {
-  const { userInfo } = store.getState();
-  const historyChatList = [
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-    {
-      avatar: img,
-      name: 'Uchiha sasuker',
-      lastMessage: 'Bạn: hãy giao vào lúc 10h',
-      time: '10:30 PM',
-    },
-  ];
+const ChatScreen = props => {
+  const { userInfo, messenger, navigation, customerInfo } = props;
+
+  const [historyChatList, setHistoryChatList] = React.useState([]);
+
+  React.useEffect(() => {
+    const _historyChatList = Object.keys(customerInfo).map(room => {
+      const lastMessage = messenger[room] ? messenger[room][0] : {};
+      return {
+        room: room,
+        avatar: customerInfo[room]?.avatar,
+        name: customerInfo[room]?.name,
+        lastMessage: lastMessage?.text ? lastMessage.text : '',
+        time: formatDate(lastMessage?.createdAt),
+      };
+    });
+    setHistoryChatList([..._historyChatList]);
+  }, [messenger, customerInfo]);
+
+  const onChoose = element => {
+    socket.emit('room', {
+      senderId: userInfo.user.id,
+      receiverId: customerInfo[element.room].id,
+      roomId: element.room,
+    });
+    navigation.navigate('MessageScreen', {
+      room: element.room,
+    });
+  };
 
   return (
     <View style={chatScreenStyle.container}>
@@ -68,7 +47,7 @@ const ChatScreen = ({ navigation }) => {
           rounded
           size="small"
           source={{
-            uri: userInfo?.user?.avatar?.url,
+            uri: getAvatarFromUser(userInfo.user),
           }}
         />
       </View>
@@ -83,14 +62,16 @@ const ChatScreen = ({ navigation }) => {
             <TouchableOpacity
               key={index}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate('SendMessage')}>
+              onPress={() => onChoose(element)}>
               <ListItem
                 underlayColor="#F0F1F5"
                 containerStyle={chatScreenStyle.chatItem}>
                 <Avatar
                   size="medium"
                   avatarStyle={{ borderRadius: 10 }}
-                  source={element.avatar}
+                  source={{
+                    uri: getAvatarFromUri(element.avatar),
+                  }}
                 />
                 <ListItem.Content style={{ display: 'flex' }}>
                   <View>
@@ -117,14 +98,6 @@ const chatScreenStyle = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: '#F0F1F5',
     borderRadius: 15,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
-    // elevation: 3,
   },
   chatList: {
     width: '100%',
@@ -137,4 +110,10 @@ const chatScreenStyle = StyleSheet.create({
   },
 });
 
-export default ChatScreen;
+const mapStateToProps = state => ({
+  messenger: state.messenger,
+  userInfo: state.userInfo,
+  customerInfo: state.customerInfo,
+});
+
+export default connect(mapStateToProps)(ChatScreen);

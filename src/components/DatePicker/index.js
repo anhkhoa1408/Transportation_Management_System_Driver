@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Platform, TextInput, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Input, Button, Card } from 'react-native-elements';
-import { shadowCard, shadowInput } from '../../styles/layoutStyle';
+import { Button, Text } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
+import moment from 'moment';
 
-export const DatePicker = () => {
-  const [date, setDate] = useState(new Date());
+export const DatePicker = props => {
+  const [date, setDate] = useState(
+    (props.date && new Date(props.date)) || new Date(),
+  );
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
@@ -30,60 +32,64 @@ export const DatePicker = () => {
   };
 
   return (
-    <Card
-      wrapperStyle={{ padding: 10, backgroundColor: '#FFF', borderRadius: 10 }}
-      containerStyle={style.container}>
-      <Button
-        onPress={showDatepicker}
-        title={date.toDateString()}
-        buttonStyle={style.button}
-        titleStyle={style.title}
-        iconPosition="right"
-        icon={{
-          name: 'event',
-          size: 20,
-          color: '#000',
-        }}
-        iconContainerStyle={{
-          alignSelf: 'flex-end',
-        }}
-        TouchableComponent={TouchableOpacity}
-      />
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          dateFormat="shortdate"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-          themeVarian="light"
+    <View style={{ marginBottom: 20 }}>
+      {props.title && <Text style={style.containerTitle}>{props.title}</Text>}
+      <View style={style.container}>
+        <Button
+          onPress={showDatepicker}
+          title={moment(date).format('DD-MM-YYYY HH:mm:ss')}
+          buttonStyle={style.button}
+          titleStyle={style.title}
+          iconPosition="right"
+          icon={{
+            name: 'event',
+            size: 20,
+            color: '#000',
+          }}
+          iconContainerStyle={{
+            alignSelf: 'flex-end',
+          }}
+          TouchableComponent={TouchableOpacity}
         />
-      )}
-    </Card>
+        {show && !props.disabled && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+            themeVarian="light"
+          />
+        )}
+      </View>
+    </View>
   );
 };
 
 const style = StyleSheet.create({
   container: {
     width: '100%',
-    borderRadius: 10,
-    padding: 0,
-    margin: 0,
-    ...shadowInput,
+    padding: 10,
+    marginTop: 15,
+    backgroundColor: '#F3F3FA',
+    borderRadius: 8,
   },
   button: {
-    padding: 0,
+    paddingVertical: 7,
+    paddingHorizontal: 15,
     width: '100%',
-    backgroundColor: '#FFF',
+    backgroundColor: '#F3F3FA',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 5,
   },
   title: {
     color: '#000',
     textAlign: 'left',
+  },
+  containerTitle: {
+    fontSize: 20,
+    color: '#000000',
   },
 });

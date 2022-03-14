@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { COLORS } from '../../styles';
 import authApi from '../../api/authApi';
 import { useDispatch } from 'react-redux';
-import { CLEAN_STORE } from '../../constants/types';
 import { store } from '../../config/configureStore';
 import { useFormik } from 'formik';
 import * as Bonk from 'yup';
@@ -15,6 +20,10 @@ import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import PillButton from '../../components/CustomButton/PillButton';
 import Loading from '../../components/Loading';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { getAvatarFromUser } from '../../utils/avatarUltis';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EditProfile = ({ navigation }) => {
   const [data, setData] = useState({
@@ -22,9 +31,7 @@ const EditProfile = ({ navigation }) => {
     email: '',
     phone: '',
   });
-  const [avatar, setAvatar] = useState(
-    'https://res.cloudinary.com/dfnoohdaw/image/upload/v1638692549/avatar_default_de42ce8b3d.png',
-  );
+  const [avatar, setAvatar] = useState(getAvatarFromUser());
   const [dataChange, setDataChange] = useState(true);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
@@ -55,8 +62,8 @@ const EditProfile = ({ navigation }) => {
         email: userInfo.user.email,
         phone: userInfo.user.phone,
       });
-      if ('avatar' in userInfo.user)
-        if ('url' in userInfo.user.avatar) setAvatar(userInfo.user.avatar.url);
+      if (userInfo.user?.avatar?.url !== undefined)
+        setAvatar(userInfo.user.avatar.url);
       setDataChange(false);
       setDataChange(true);
     });
@@ -102,19 +109,49 @@ const EditProfile = ({ navigation }) => {
         headerText="Thông tin cá nhân"
       />
 
-      <ScrollView contentContainerStyle={{ padding: 25 }}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        contentContainerStyle={{ padding: 25 }}>
         <View style={{ alignItems: 'center' }}>
           <Avatar
             size={150}
             source={{
-              uri: avatar,
+              uri: getAvatarFromUser(userInfo.user),
             }}
             rounded>
             <Avatar.Accessory
               underlayColor="#CCC"
               style={{ backgroundColor: COLORS.primary }}
               color={COLORS.white}
-              // onPress={() => console.log(1)}
+              onPress={() =>
+                launchImageLibrary({
+                  mediaTypes: 'photo',
+                  quality: 1,
+                }).then(data => {
+                  if (data.assets && data.assets.length > 0) {
+                    setLoading(true);
+                    authApi
+                      .updateAvatar(data.assets[0])
+                      .then(response => {
+                        setLoading(false);
+                        dispatch(saveInfo({ user: response }));
+                        setAlert({
+                          type: 'success',
+                          message: 'Cập nhật ảnh đại diện thành công',
+                        });
+                      })
+                      .catch(err => {
+                        console.error(err);
+                        setLoading(false);
+                        setAlert({
+                          type: 'danger',
+                          message: 'Cập nhật ảnh đại diện thất bại',
+                        });
+                      });
+                  }
+                })
+              }
               size={35}
             />
           </Avatar>
@@ -127,22 +164,18 @@ const EditProfile = ({ navigation }) => {
             formik.setFieldValue('name', text);
           }}
           value={formik.values.name}
+          error={formik.touched.name && formik.errors.name}
+          errorMessage={formik.errors.name}
         />
-
-        {formik.touched.name && formik.errors.name ? (
-          <Text style={{ color: danger }}>{formik.errors.name}</Text>
-        ) : null}
 
         <TextField
           title="Email"
           style={styles.fsize}
           value={formik.values.email}
           onChangeText={text => formik.setFieldValue('email', text)}
+          error={formik.touched.email && formik.errors.email}
+          errorMessage={formik.errors.email}
         />
-
-        {formik.touched.email && formik.errors.email ? (
-          <Text style={{ color: danger }}>{formik.errors.email}</Text>
-        ) : null}
 
         <TextField
           keyboardType="numeric"
@@ -150,18 +183,16 @@ const EditProfile = ({ navigation }) => {
           style={styles.fsize}
           value={formik.values.phone}
           onChangeText={text => formik.setFieldValue('phone', text)}
+          error={formik.touched.phone && formik.errors.phone}
+          errorMessage={formik.errors.phone}
         />
-
-        {formik.touched.phone && formik.errors.phone ? (
-          <Text style={{ color: danger }}>{formik.errors.phone}</Text>
-        ) : null}
-
-        <PillButton
+        <PrimaryButton
           title="Cập nhật"
-          buttonStyle={{ backgroundColor: success }}
+          backgroundColor={COLORS.success}
           onPress={formik.submitForm}
+          containerStyle={{ marginTop: 30 }}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

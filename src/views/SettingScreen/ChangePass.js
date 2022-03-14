@@ -1,29 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { COLORS } from '../../styles';
 import authApi from '../../api/authApi';
-import { useDispatch } from 'react-redux';
-import { CLEAN_STORE } from '../../constants/types';
-import { store } from '../../config/configureStore';
 import { useFormik } from 'formik';
 import * as Bonk from 'yup';
-import { saveInfo } from '../../actions/actions';
 import ModalMess from '../../components/ModalMess';
 import { danger, success } from '../../styles/color';
-import { Avatar, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
 import TextField from '../../components/TextField';
-import PillButton from '../../components/CustomButton/PillButton';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import Loading from '../../components/Loading';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const ChangePass = ({ navigation }) => {
+const ChangePass = props => {
+  const { navigation } = props;
   const [data, setData] = useState({
     currPass: '',
     password: '',
     confirmPassword: '',
   });
 
-  const { userInfo } = store.getState();
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
@@ -33,7 +37,10 @@ const ChangePass = ({ navigation }) => {
       currPass: Bonk.string().required('Thông tin bắt buộc'),
       password: Bonk.string()
         .required('Thông tin bắt buộc')
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, 'Mật khẩu không hợp lệ')
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+          'Mật khẩu mới phải tối thiểu 8 ký tự, bao gồm chữ in hoa',
+        )
         .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
       confirmPassword: Bonk.string()
         .required('Thông tin bắt buộc')
@@ -44,50 +51,25 @@ const ChangePass = ({ navigation }) => {
         .min(8, 'Mật khẩu phải tối thiểu 8 ký tự'),
     }),
     onSubmit: values => {
-      handleSubmit(values);
+      authApi
+        .changepassword({
+          password: values.currPass,
+          newPassword: values.password,
+        })
+        .then(data => setAlert(alertType.success))
+        .catch(error => setAlert(alertType.error));
     },
   });
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     setUser(userInfo);
-  //     setData({
-  //       ...data,
-  //       name: userInfo.user.name,
-  //       email: userInfo.user.email,
-  //     });
-  //     if ('avatar' in userInfo.user)
-  //       if ('url' in userInfo.user.avatar) setAvatar(userInfo.user.avatar.url);
-  //     setDataChange(false);
-  //     setDataChange(true);
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
-
-  const handleSubmit = values => {
-    // setLoading(true);
-    // let { name, email } = values;
-    // let data = {
-    //   name: name,
-    //   email: email,
-    // };
-    // authApi
-    //   .update(user.user.id, data)
-    //   .then(response => {
-    //     setLoading(false);
-    //     dispatch(saveInfo(user));
-    //     setAlert({
-    //       type: 'success',
-    //       message: 'Cập nhật thông tin thành công',
-    //     });
-    //   })
-    //   .catch(err => {
-    //     setLoading(false);
-    //     setAlert({
-    //       type: 'error',
-    //       message: 'Cập nhật thông tin thất bại',
-    //     });
-    //   });
+  const alertType = {
+    error: {
+      type: 'danger',
+      message: 'Cập nhật mật khẩu thất bại',
+    },
+    success: {
+      type: 'success',
+      message: 'Cập nhật mật khẩu thành công',
+    },
   };
 
   return (
@@ -108,7 +90,10 @@ const ChangePass = ({ navigation }) => {
         headerText="Đổi mật khẩu"
       />
 
-      <ScrollView contentContainerStyle={{ padding: 25 }}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        contentContainerStyle={{ padding: 25 }}>
         <Text
           style={{
             textAlign: 'center',
@@ -124,48 +109,37 @@ const ChangePass = ({ navigation }) => {
           value={formik.values.currPass}
           secureTextEntry
           onChangeText={text => formik.setFieldValue('currPass', text)}
+          error={formik.touched.currPass && formik.errors.currPass}
+          errorMessage={formik.errors.currPass}
         />
-
-        {formik.touched.currPass && formik.errors.currPass ? (
-          <Text style={{ color: danger, marginBottom: 10 }}>
-            {formik.errors.currPass}
-          </Text>
-        ) : null}
 
         <TextField
           title="Mật khẩu mới"
-          style={styles.fsize}
           value={formik.values.password}
           secureTextEntry
           onChangeText={text => formik.setFieldValue('password', text)}
+          error={formik.touched.password && formik.errors.password}
+          errorMessage={formik.errors.password}
         />
-
-        {formik.touched.password && formik.errors.password ? (
-          <Text style={{ color: danger, marginBottom: 10 }}>
-            {formik.errors.password}
-          </Text>
-        ) : null}
 
         <TextField
           title="Xác nhận mật khẩu"
-          style={styles.fsize}
           value={formik.values.confirmPassword}
           secureTextEntry
           onChangeText={text => formik.setFieldValue('confirmPassword', text)}
+          error={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
+          errorMessage={formik.errors.confirmPassword}
         />
 
-        {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-          <Text style={{ color: danger, marginBottom: 10 }}>
-            {formik.errors.confirmPassword}
-          </Text>
-        ) : null}
-
-        <PillButton
+        <PrimaryButton
           title="Cập nhật"
-          buttonStyle={{ backgroundColor: success }}
+          backgroundColor={COLORS.success}
           onPress={formik.submitForm}
+          containerStyle={{ marginTop: 30 }}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -178,11 +152,5 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     flexDirection: 'column',
     alignItems: 'stretch',
-  },
-  fsize: {
-    fontSize: 17,
-    color: '#000',
-    paddingLeft: 20,
-    paddingVertical: 8,
   },
 });

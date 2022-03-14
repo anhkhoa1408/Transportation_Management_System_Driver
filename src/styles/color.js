@@ -6,9 +6,13 @@ export const backdropColor = '#B4B3DB';
 export const black = '#000';
 export const white = '#fff';
 export const red = '#BF3B3B';
-export const green = '#30BA00';
 export const background1 = '#F0F1F5';
 export const header = '#39b2f7';
+export const gray = '#F3F3FA';
+export const neutralPrimary = '#d1f3ff';
+export const neutralSuccess = '#bfffcc';
+export const neutralWarning = '#ffeecc';
+export const neutralDanger = '#ffd4d9';
 
 export default {
   primary,
@@ -19,7 +23,11 @@ export default {
   black,
   white,
   red,
-  green,
   background1,
   header,
+  gray,
+  neutralPrimary,
+  neutralSuccess,
+  neutralWarning,
+  neutralDanger,
 };
