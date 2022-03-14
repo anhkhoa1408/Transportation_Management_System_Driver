@@ -20,14 +20,14 @@ import ModalMess from '../../components/ModalMess';
 import SpeedDial from './SpeedDial';
 
 function HomeScreen({ navigation, ...props }) {
-  const BadgedIcon = withBadge(10)(Icon);
+  const [badge, setBadge] = useState(null);
   const [open, setOpen] = useState(false);
   const [absenceForm, setAbsence] = useState(false);
   const [listData, setListData] = useState([]);
 
   const [modal, setModal] = useState(null);
 
-  const { userInfo } = props;
+  const { userInfo, noties } = props;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -41,9 +41,24 @@ function HomeScreen({ navigation, ...props }) {
           console.log(err);
         });
     });
-    // TODO: Add check absence
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    setBadge(Badge(Object.keys(noties).length));
+  }, [noties]);
+
+  const Badge = totalNoties => {
+    const BadgedIcon = withBadge(totalNoties)(Icon);
+    return (
+      <BadgedIcon
+        name="notifications"
+        color={COLORS.primary}
+        size={30}
+        onPress={() => navigation.navigate('Notification')}
+      />
+    );
+  };
 
   const renderItem = ({ item }) => <InfoCard item={item} />;
   const keyExtractor = (item, index) => index.toString();
@@ -53,14 +68,7 @@ function HomeScreen({ navigation, ...props }) {
       {!listData.length && <Loading />}
       <View style={homeStyle.container}>
         <Header
-          leftElement={
-            <BadgedIcon
-              name="notifications"
-              color={COLORS.primary}
-              size={30}
-              onPress={() => navigation.navigate('Notification')}
-            />
-          }
+          leftElement={badge}
           headerText={'Xin chào ' + userInfo?.user?.name}
           rightElement={
             <HeaderAvatar
@@ -151,6 +159,7 @@ const homeStyle = StyleSheet.create({
 
 const mapStateToProps = state => ({
   userInfo: state.userInfo,
+  noties: state.notification,
 });
 
 export default connect(mapStateToProps)(HomeScreen);

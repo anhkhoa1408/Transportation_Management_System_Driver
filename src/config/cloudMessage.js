@@ -1,34 +1,36 @@
 import messaging from '@react-native-firebase/messaging';
 import authApi from '../api/authApi';
-import { addCustomer } from '../actions/actions';
+import { addCustomer, addNotification } from '../actions/actions';
 import { socket } from './socketIO';
+import { store } from './configureStore';
 import notifee from '@notifee/react-native';
 import { showIncomingMessage } from '../views/NotificationScreen/UnreadMessage';
 
 const messageApp = messaging();
 
 export function initDeviceTokenSync() {
-  messageApp.onTokenRefresh(newToken => {
-    authApi
-      .updateDeviceToken(newToken)
-      .then(() => console.log('Device Token Updated By Refresh'))
-      .catch(err => console.log(err));
-  });
+  syncToken();
 
-  messageApp.getToken().then(async token => {
-    authApi
-      .updateDeviceToken(token)
-      .then(() => console.log('Device Token Updated By getToken'))
-      .catch(err => console.log(err));
+  return messageApp.onTokenRefresh(newToken => {
+    new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+      if (store.getState().userInfo.user)
+        authApi
+          .updateDeviceToken(newToken)
+          .then(() => console.log('Device Token Updated By Refresh'))
+          .catch(err => console.log(err));
+    });
   });
 }
 
 export function syncToken() {
-  messageApp.getToken().then(async token => {
-    authApi
-      .updateDeviceToken(token)
-      .then(() => console.log('Device Token Updated By getToken'))
-      .catch(err => console.log(err));
+  new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+    if (store.getState().userInfo.user)
+      messageApp.getToken().then(async token => {
+        authApi
+          .updateDeviceToken(token)
+          .then(() => console.log('Device Token Updated By getToken'))
+          .catch(err => console.log(err));
+      });
   });
 }
 
@@ -39,9 +41,10 @@ export function removeToken() {
     .catch(err => console.log(err));
 }
 
-export function initForegroundMessage(store) {
+export function initForegroundMessage() {
   return messageApp.onMessage(async remoteMessage => {
     const { room, type, ...data } = remoteMessage.data;
+    const { messageId: id, sentTime } = remoteMessage;
     switch (type) {
       case 'ROOM':
         store.dispatch(addCustomer(data, room));
@@ -59,14 +62,16 @@ export function initForegroundMessage(store) {
           .catch(err => console.log(err));
         break;
       default:
+        store.dispatch(addNotification({ id, sentTime, ...data }));
         break;
     }
   });
 }
 
-export async function initBackgroudMessage(store) {
+export async function initBackgroudMessage() {
   return messageApp.setBackgroundMessageHandler(async remoteMessage => {
     const { room, type, ...data } = remoteMessage.data;
+    const { messageId: id, sentTime } = remoteMessage;
     switch (type) {
       case 'ROOM':
         store.dispatch(addCustomer(data, room));
@@ -83,6 +88,7 @@ export async function initBackgroudMessage(store) {
           .catch(err => console.log(err));
         break;
       default:
+        store.dispatch(addNotification({ id, sentTime, ...data }));
         break;
     }
   });

@@ -6,12 +6,14 @@ import userInfo from './userInfo';
 import shipmentState from './shipmentState';
 import messenger from './messenger';
 import customerInfo from './customerInfo';
+import notification from './notification';
 
 const appReducer = combineReducers({
   userInfo,
   shipmentState,
   messenger,
   customerInfo,
+  notification,
 });
 
 const rootReducer = (state, action) => {

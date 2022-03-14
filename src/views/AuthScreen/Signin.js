@@ -22,7 +22,7 @@ import ModalMess from '../../components/ModalMess';
 import banner from './../../assets/images/banner_signin.jpg';
 import { Icon, Image, Text, SocialIcon } from 'react-native-elements';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
-import { socket } from '../../config/socketIO';
+import { socket, initChat } from '../../config/socketIO';
 import { syncToken } from '../../config/cloudMessage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
@@ -38,6 +38,7 @@ const SignIn = ({ navigation, route }) => {
   const [loading, setLoading] = useState(null);
   const [alert, setAlert] = useState(null);
   const [showPass, setShowPass] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -64,6 +65,8 @@ const SignIn = ({ navigation, route }) => {
   }, [route.params?.token]);
 
   const handleSubmit = (values, token) => {
+    setDisabled(true);
+    setLoading(<Loading />);
     let handler;
     switch (values) {
       case 'google':
@@ -83,11 +86,11 @@ const SignIn = ({ navigation, route }) => {
         break;
     }
     Keyboard.dismiss();
-    setLoading(<Loading />);
     handler
       .then(data => {
         dispatch(saveInfo(data));
-        socket.connect();
+        if (socket.disconnected) socket.connect();
+        else initChat();
         syncToken();
         setLoading(null);
       })
@@ -104,6 +107,7 @@ const SignIn = ({ navigation, route }) => {
             message: 'Tài khoản hoặc mật khẩu không đúng!',
           });
         setLoading(null);
+        setDisabled(false);
       });
   };
 
@@ -178,7 +182,11 @@ const SignIn = ({ navigation, route }) => {
             }>
             <Text style={styles.forgot}>Quên mật khẩu?</Text>
           </TouchableOpacity>
-          <PrimaryButton title="Đăng nhập" onPress={formik.submitForm} />
+          <PrimaryButton
+            title="Đăng nhập"
+            onPress={formik.submitForm}
+            disabled={disabled}
+          />
         </View>
 
         <View
