@@ -1,32 +1,59 @@
 import React from 'react';
-import { View } from 'react-native';
-import NotiItem from './components/NotiItem';
+import MapView, { Polyline } from 'react-native-maps';
+import { StyleSheet } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
+import MapViewDirections from 'react-native-maps-directions';
+import { getDistanceFromCordinateInKm } from '../../utils/addressUltis';
+import { GOOGLE_MAPS_API_KEY } from '@env';
 
 export default function Notification(props) {
-  const items = [
-    {
-      id: 1,
-      title: 'Shober of Justice',
-      subTitle: 'Bạn có tin nhắn mới từ khách hàng',
-      type: 'chat',
-      time: '09:45 sáng',
-      content: 'Hãy giao cho tôi vào lúc 11h sáng',
-      // icon: 'package',
-    },
-    {
-      id: 2,
-      title: 'Hệ thống',
-      subTitle: 'Bạn có đơn vận chuyển mới',
-      type: 'delivery',
-      time: '09:46 sáng',
-      icon: 'package',
-    },
-  ];
+  React.useEffect(() => {
+    // Geolocation.getCurrentPosition(
+    //   info => console.log(info),
+    //   () => {},
+    //   { timeout: 60000, maximumAge: 60000, enableHighAccuracy: true },
+    // );
+  }, []);
 
+  const [region, setRegion] = React.useState({
+    latitude: 37.8025259,
+    longitude: -122.4351431,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  const onRegionChange = region => {
+    setRegion({ region });
+  };
+  const origin = { latitude: 37.3318456, longitude: -122.0296002 };
+  const destination = { latitude: 37.771707, longitude: -122.4053769 };
   return (
-    <View>
-      <NotiItem item={items[0]} navigation={props.navigation} />
-      <NotiItem item={items[1]} navigation={props.navigation} />
-    </View>
+    <MapView
+      style={styles.map}
+      initialRegion={{
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }}>
+      <MapViewDirections
+        // region={'VI'}
+        origin={origin}
+        destination={destination}
+        mode={'DRIVING'}
+        timePrecision={'now'}
+        apikey={GOOGLE_MAPS_API_KEY}
+        channel={'Driver'}
+        strokeWidth={3}
+        strokeColor={'#1a73e8'}
+      />
+    </MapView>
   );
 }
+
+const styles = StyleSheet.create({
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});

@@ -78,6 +78,7 @@ function OrderScreen({ navigation, ...props }) {
           isDone: item.arrived_time,
         })
       }
+      navigation={navigation}
       checkBoxHandler={updateShipmentState}
     />
   );

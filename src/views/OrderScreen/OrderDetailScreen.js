@@ -23,8 +23,6 @@ function OrderDetailScreen(props) {
 
   const { userInfo, navigation, route } = props;
 
-  console.log(route.params);
-
   useEffect(() => {
     if (route.params.shipmentID)
       shipmentApi.shipmentDetail(route.params.shipmentID).then(response => {
@@ -110,7 +108,7 @@ function OrderDetailScreen(props) {
           />
           <InfoField
             title={'Khối lượng'}
-            style={{ flex: 0.8 }}
+            style={{ flex: 0.6 }}
             content={
               Array.isArray(data.packages) &&
               data.packages.reduce(
