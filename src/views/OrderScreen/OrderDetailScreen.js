@@ -51,6 +51,7 @@ function OrderDetailScreen(props) {
   };
 
   return (
+    // TODO: Show order price
     <View style={{ ...STYLES.container }}>
       <Header
         leftElement={
