@@ -140,7 +140,7 @@ const ConfirmOrder = ({ navigation, route }) => {
       )}
       {loading && <Loading />}
       <Header
-        headerText="Xác nhận"
+        headerText="Chụp ảnh đơn hàng"
         leftElement={
           <Icon name="west" size={30} onPress={() => navigation.goBack()} />
         }
