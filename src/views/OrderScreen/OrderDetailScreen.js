@@ -17,9 +17,11 @@ import InfoField from '../../components/InfoField';
 import shipmentApi from '../../api/shipmentAPI';
 import { socket } from '../../config/socketIO';
 import { connect } from 'react-redux';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 
 function OrderDetailScreen(props) {
   const [data, setData] = useState([]);
+  const [meta, setMeta] = useState({});
 
   const { userInfo, navigation, route } = props;
 
@@ -27,6 +29,23 @@ function OrderDetailScreen(props) {
     if (route.params.shipmentID)
       shipmentApi.shipmentDetail(route.params.shipmentID).then(response => {
         setData(response);
+        if (response.from_storage && response.to_storage) {
+          setMeta({
+            address: response.to_storage.to_address,
+          });
+        } else if (response.to_storage) {
+          setMeta({
+            name: response.sender_name,
+            phone: response.sender_phone,
+            address: response.from_address,
+          });
+        } else if (response.from_storage) {
+          setMeta({
+            name: response.receiver_name,
+            phone: response.receiver_phone,
+            address: response.to_address,
+          });
+        }
       });
   }, []);
 
@@ -61,37 +80,43 @@ function OrderDetailScreen(props) {
       />
 
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View
-          style={{
-            ...STYLES.row,
-            ...STYLES.subContainer,
-            padding: 0,
-            paddingBottom: 20,
-            ...styles.borderBottom,
-          }}>
-          <Avatar
-            size="medium"
-            avatarStyle={{ borderRadius: 10 }}
-            source={img}
-          />
-          <View style={{ flex: 1 }}>
-            <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
-              <Text>{data.sender_name}</Text>
-              <Text>SĐT: {data.sender_phone}</Text>
-            </View>
-          </View>
+        {meta.name && (
           <View
             style={{
-              backgroundColor: COLORS.white,
-              padding: 12,
-              borderRadius: 15,
-              elevation: 5,
+              ...STYLES.row,
+              ...STYLES.subContainer,
+              padding: 0,
+              paddingBottom: 20,
+              ...styles.borderBottom,
             }}>
-            <TouchableOpacity onPress={handleChatButton}>
-              <Icon name="comment" type="font-awesome" color={COLORS.primary} />
-            </TouchableOpacity>
+            <Avatar
+              size="medium"
+              avatarStyle={{ borderRadius: 10 }}
+              source={img}
+            />
+            <View style={{ flex: 1 }}>
+              <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
+                <Text>{meta.name}</Text>
+                <Text>SĐT: {meta.phone}</Text>
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                padding: 12,
+                borderRadius: 15,
+                elevation: 5,
+              }}>
+              <TouchableOpacity onPress={handleChatButton}>
+                <Icon
+                  name="comment"
+                  type="font-awesome"
+                  color={COLORS.primary}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
 
         <View
           style={{
@@ -103,9 +128,7 @@ function OrderDetailScreen(props) {
           <InfoField
             title={'Địa chỉ'}
             style={{ flex: 1 }}
-            content={
-              data && data.from_address && joinAddress(data.from_address)
-            }
+            content={meta?.address && joinAddress(meta.address)}
           />
           <InfoField
             title={'Khối lượng'}
@@ -126,6 +149,22 @@ function OrderDetailScreen(props) {
           renderItem={renderItem}
           keyExtractor={item => `${item.id}`}
         />
+
+        {meta.name && (
+          <PrimaryButton
+            title="Thanh toán"
+            backgroundColor={COLORS.header}
+            containerStyle={{ margin: 20 }}
+            onPress={() =>
+              navigation.navigate('PaymentScreen', {
+                name: meta.name,
+                phone: meta.phone,
+                fee: data.remain_fee,
+                order: data.order_id,
+              })
+            }
+          />
+        )}
       </View>
 
       {data.length == 0 && (

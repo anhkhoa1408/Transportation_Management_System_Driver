@@ -45,6 +45,26 @@ class ShipmentAPI {
     const url = MAIN_URL.concat(`/assistance/status`);
     return axiosClient.get(url);
   };
+  payment = (data, receipt) => {
+    const url = MAIN_URL.concat(`/payments/`);
+
+    let formData = new FormData();
+
+    if (receipt)
+      formData.append(
+        `files.receipt`,
+        {
+          name: receipt.fileName,
+          uri: receipt.uri,
+          type: receipt.type,
+        },
+        receipt.fileName,
+      );
+
+    formData.append('data', data);
+
+    return axiosClient.post(url, formData);
+  };
 }
 const shipmentApi = new ShipmentAPI();
 export default shipmentApi;
