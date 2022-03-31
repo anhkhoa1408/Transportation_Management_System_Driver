@@ -17,43 +17,12 @@ import PackageItem from './components/PackageItem';
 import InfoField from '../../components/InfoField';
 import shipmentApi from '../../api/shipmentAPI';
 import PackageImage from './components/PackageImage';
-import Loading from '../../components/Loading';
 
 const PackageDetailScreen = ({ navigation, route }) => {
-  const { packageId } = route.params;
-  const [data, setData] = useState({
-    len: 0,
-    width: 0,
-    height: 0,
-    weight: 0,
-    quantity: 1,
-    package_type: 'Normal',
-    images: null,
-    name: '',
-  });
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (packageId) {
-      setLoading(true);
-      shipmentApi
-        .packageDetail(packageId)
-        .then(response => {
-          console.log(JSON.stringify(response));
-          setData(response);
-          setLoading(false);
-        })
-        .catch(error => {
-          console.log(error);
-          setLoading(false);
-        });
-    }
-  }, []);
+  const { item } = route.params;
 
   return (
     <SafeAreaView style={[STYLES.container]}>
-      {loading && <Loading />}
-
       <Header
         leftElement={
           <Icon name="west" size={30} onPress={() => navigation.goBack()} />
@@ -88,43 +57,44 @@ const PackageDetailScreen = ({ navigation, route }) => {
               />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={{ flex: 1 }}>ID: {packageId}</Text>
-              <Text style={{ flex: 1 }}>Tên kiện hàng: {data.name}</Text>
+              <Text style={{ flex: 1 }}>ID: {item.id}</Text>
+              <Text style={{ flex: 1 }}>
+                Tên kiện hàng: {item.name ? item.name : 'Không có'}
+              </Text>
             </View>
           </View>
         </View>
 
-        {/* <Divider style={styles.divider} color={COLORS.primary} width={2} /> */}
         <View style={[STYLES.column]}>
           <View style={[STYLES.row, STYLES.subContainer]}>
             <InfoField
               style={{ flex: 1 }}
               title="Chiều dài"
-              content={data.len + ' cm'}
+              content={item.size.len + ' cm'}
             />
             <InfoField
               style={{ flex: 1 }}
               title="Chiều rộng"
-              content={data.width + ' cm'}
+              content={item.size.width + ' cm'}
             />
           </View>
           <View style={[STYLES.row, STYLES.subContainer]}>
             <InfoField
               style={{ flex: 1 }}
               title="Chiều cao"
-              content={data.height + ' cm'}
+              content={item.size.height + ' cm'}
             />
             <InfoField
               style={{ flex: 1 }}
               title="Khối lượng"
-              content={`${data.quantity * data.weight} kg`}
+              content={`${item.weight} kg`}
             />
           </View>
           <View style={[STYLES.row, STYLES.subContainer]}>
             <InfoField
               style={{ flex: 1 }}
               title="Loại hàng hoá"
-              content={data.package_type?.package_type}
+              content={item.package_type}
             />
           </View>
           <View style={[STYLES.subContainer]}>
@@ -132,7 +102,7 @@ const PackageDetailScreen = ({ navigation, route }) => {
           </View>
         </View>
       </View>
-      {data.images && <PackageImage images={data.images} />}
+      {item.images && <PackageImage images={item.images} />}
     </SafeAreaView>
   );
 };

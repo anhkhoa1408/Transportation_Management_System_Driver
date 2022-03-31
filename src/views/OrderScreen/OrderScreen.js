@@ -1,8 +1,7 @@
 // Import Component
 import React, { useState, useEffect } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, RefreshControl } from 'react-native';
 import { Tab, Text, TabView } from 'react-native-elements';
-import Loading from '../../components/Loading';
 import Header from '../../components/Header';
 import ShipmentItem from './components/ShipmentItem';
 // Import Function
@@ -10,51 +9,72 @@ import shipmentApi from '../../api/shipmentAPI';
 import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { saveShipmentState } from '../../actions/actions';
+import Geolocation from '@react-native-community/geolocation';
 // Import Asset
 import { COLORS, FONTS, STYLES } from '../../styles';
 
 function OrderScreen({ navigation, ...props }) {
   const [currentShipment, setCurrentShipment] = useState([]);
   const [finishedShipment, setFinishedShipment] = useState([]);
-  const [loadedC, setLoadedC] = useState(false);
-  const [loadedF, setLoadedF] = useState(false);
+  const [refreshingC, setRefreshingC] = useState(true);
+  const [refreshingF, setRefreshingF] = useState(true);
   const [isLoading, setLoading] = useState(false); // is getting finished shipments
   const [pageIndex, setPageIndex] = useState(1); // 10 finished shipments per page
-  const [index, setIndex] = React.useState(0); // Tab index
+  const [index, setIndex] = useState(0); // Tab index
+  const [origin, setOrigin] = React.useState(null);
+
+  React.useEffect(() => {
+    Geolocation.getCurrentPosition(
+      info => {
+        setOrigin(info.coords);
+        updateCurrentShipment(info.coords);
+      },
+      err => console.log(err),
+      { timeout: 5000, maximumAge: 5000, enableHighAccuracy: true },
+    );
+  }, []);
 
   const { shipmentState } = props; // whether driver checked a shipment or not
   const dispatch = useDispatch();
 
   // Load both current and unfinish shipments on first render
   useEffect(() => {
+    setRefreshingC(true);
+    setRefreshingF(true);
+    updateCurrentShipment(origin);
+    updateFinishedShipment();
+  }, []);
+
+  const updateCurrentShipment = coord => {
     shipmentApi
-      .currentShipment()
+      .currentShipment(coord)
       .then(resData => {
         setCurrentShipment(resData);
 
         // Save Shipment's State
         resData.map(item => {
-          if (!(item.id in shipmentState)) {
-            updateShipmentState(item.id, false);
+          if (!(item._id in shipmentState)) {
+            updateShipmentState(item._id, false);
           }
         });
-        setLoadedC(true);
+        setRefreshingC(false);
       })
       .catch(err => {
-        // Handle Error
-        // setLoaded(true);
+        setRefreshingC(false);
       });
+  };
+
+  const updateFinishedShipment = () => {
     shipmentApi
       .finishedShipment()
       .then(resData => {
         setFinishedShipment(resData);
-        setLoadedF(true);
+        setRefreshingF(false);
       })
       .catch(err => {
-        // Handle Error
-        // setLoaded(true);
+        setRefreshingF(false);
       });
-  }, []);
+  };
 
   const updateShipmentState = (id, state) => {
     dispatch(
@@ -71,10 +91,10 @@ function OrderScreen({ navigation, ...props }) {
   const renderItem = ({ item, index }) => (
     <ShipmentItem
       item={item}
-      isDone={!item.arrived_time && shipmentState[item.id].checked}
+      isDone={!item.arrived_time && shipmentState[item._id].checked}
       onPress={() =>
         navigation.navigate('OrderDetail', {
-          shipmentID: item.id,
+          shipmentID: item._id,
           isDone: item.arrived_time,
         })
       }
@@ -95,8 +115,6 @@ function OrderScreen({ navigation, ...props }) {
       })
       .catch(err => {
         setLoading(false);
-        // Handle Error
-        // setLoaded(true);
       });
   };
 
@@ -133,25 +151,23 @@ function OrderScreen({ navigation, ...props }) {
       {/* List display shipments */}
       <TabView value={index} onChange={setIndex} animationType="spring">
         <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
-          {loadedC && (
-            <FlatList
-              data={currentShipment}
-              renderItem={renderItem}
-              keyExtractor={item => `${item.id}`}
-            />
-          )}
-
-          {/* {!loadedC && <Loading />} */}
+          <FlatList
+            data={currentShipment}
+            renderItem={renderItem}
+            keyExtractor={item => `${item._id}`}
+            onRefresh={() => updateCurrentShipment()}
+            refreshing={refreshingC}
+          />
         </TabView.Item>
         <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
-          {loadedF && (
-            <FlatList
-              data={finishedShipment}
-              renderItem={renderItem}
-              keyExtractor={item => `${item.id}`}
-              onEndReached={handleLoadMore}
-            />
-          )}
+          <FlatList
+            data={finishedShipment}
+            renderItem={renderItem}
+            keyExtractor={item => `${item._id}`}
+            onEndReached={handleLoadMore}
+            onRefresh={() => updateFinishedShipment()}
+            refreshing={refreshingF}
+          />
         </TabView.Item>
       </TabView>
     </View>

@@ -38,7 +38,7 @@ const PackageItem = ({ item, navigation, isDone }) => {
           }}
           onPress={() =>
             navigation.navigate('PackageDetail', {
-              packageId: item.id,
+              item: item,
             })
           }
         />

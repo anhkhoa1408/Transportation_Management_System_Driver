@@ -2,8 +2,10 @@ import axiosClient from './axiosClient';
 import { MAIN_URL } from './config';
 
 class ShipmentAPI {
-  currentShipment = () => {
-    const url = MAIN_URL.concat('/current-shipments');
+  currentShipment = origin => {
+    const url = MAIN_URL.concat(
+      `/current-shipments?latitude=${origin?.latitude}&longitude=${origin?.longitude}`,
+    );
     return axiosClient.get(url);
   };
   finishedShipment = (pageIndex = 0) => {
@@ -17,6 +19,10 @@ class ShipmentAPI {
   packageDetail = id => {
     const url = MAIN_URL.concat(`/packages/${id}`);
     return axiosClient.get(url);
+  };
+  acceptOrder = id => {
+    const url = MAIN_URL.concat(`/shipments/accept/${id}`);
+    return axiosClient.put(url);
   };
   updatePackageImage = (id, uploadList, deleteList) => {
     const url = MAIN_URL.concat(`/packages/images/${id}`);

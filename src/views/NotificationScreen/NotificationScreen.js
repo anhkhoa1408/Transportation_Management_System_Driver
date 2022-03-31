@@ -23,7 +23,7 @@ const NotificationScreen = props => {
 
   const ref = useRef();
 
-  const keyExtractor = (item, index) => index.toString();
+  const keyExtractor = (item, index) => item.id;
 
   const handleShowMore = () => {
     // if (count <= appList.length - 3) {
