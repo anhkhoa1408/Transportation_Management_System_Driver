@@ -5,11 +5,12 @@ import PillButton from '../../components/CustomButton/PillButton';
 import { DatePicker } from '../../components/DatePicker';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import furloughApi from '../../api/furloughApi';
+import TextField from '../../components/TextField';
 
 const AbsenceForm = props => {
   const [cause, setCause] = useState('');
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [absenceDays, setAbsenceDays] = useState('1');
 
   return (
     <View>
@@ -27,10 +28,17 @@ const AbsenceForm = props => {
             display: 'flex',
             flexDirection: 'column',
           }}>
-          <Text>Bắt đầu</Text>
+          <Text>Ngày bắt đầu nghỉ</Text>
           <DatePicker onDateChange={setStartDate} mode="datetime" />
-          <Text>Kết thúc</Text>
-          <DatePicker onDateChange={setEndDate} />
+          <Text>Số ngày nghỉ</Text>
+          <TextField
+            name="Số ngày nghỉ"
+            keyboardType="numeric"
+            value={absenceDays}
+            onChangeText={setAbsenceDays}
+            error={parseInt(absenceDays) < 1}
+            errorMessage={'Số ngày nghỉ phải lớn hơn 0'}
+          />
           <Text>Lý do</Text>
           <CustomInput
             multiline={true}
@@ -47,7 +55,7 @@ const AbsenceForm = props => {
               .create({
                 reason: cause,
                 start_time: startDate,
-                end_time: endDate,
+                days: absenceDays,
               })
               .then(data => {
                 props.setModal({

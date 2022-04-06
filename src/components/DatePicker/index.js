@@ -37,7 +37,7 @@ export const DatePicker = props => {
       <View style={style.container}>
         <Button
           onPress={showDatepicker}
-          title={moment(date).format('DD-MM-YYYY HH:mm:ss')}
+          title={moment(date).format('DD-MM-YYYY')}
           buttonStyle={style.button}
           titleStyle={style.title}
           iconPosition="right"

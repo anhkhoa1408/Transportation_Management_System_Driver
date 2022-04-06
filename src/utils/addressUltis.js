@@ -1,4 +1,5 @@
 export const joinAddress = (addressObj, detail = 'FULL') => {
+  if (!addressObj) return '';
   switch (detail) {
     case 'FIRST':
       return `${addressObj.street}, ${addressObj.ward}`;

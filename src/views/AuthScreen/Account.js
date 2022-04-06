@@ -210,7 +210,7 @@ const Account = ({ navigation, userInfo }) => {
         <View style={{ marginLeft: 20, flex: 1 }}>
           <Text style={styles.smallText}>Nhân viên</Text>
           <Text style={styles.bigText}>{userInfo?.user?.name}</Text>
-          <Text style={styles.statusText}>Đang làm việc</Text>
+          {/* <Text style={styles.statusText}>Đang làm việc</Text> */}
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <Icon name="edit" size={28} color={COLORS.primary} />
