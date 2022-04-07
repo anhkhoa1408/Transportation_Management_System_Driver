@@ -62,14 +62,15 @@ const AbsenceForm = props => {
                   type: 'success',
                   message: 'Cập nhật thành công!',
                 });
-                props.setAbsence(false); // TODO: update absence
+                props.setAbsence(false);
               })
-              .catch(error =>
-                props.onFailure({
+              .catch(error => {
+                props.setModal({
                   type: 'warning',
-                  message: 'Bruh!', // TODO: Check error type
-                }),
-              )
+                  message: 'Cập nhật thất bại!',
+                });
+                props.setAbsence(false);
+              })
           }
         />
       </ScrollView>

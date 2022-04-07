@@ -110,12 +110,14 @@ function HomeScreen({ navigation, ...props }) {
           absenceForm={absenceForm}
         />
 
-        <ModalMess
-          type={'success'}
-          message={'Cập nhật thành công.'}
-          alert={modal}
-          setAlert={setModal}
-        />
+        {modal && (
+          <ModalMess
+            type={modal.type}
+            message={modal.message}
+            alert={modal}
+            setAlert={setModal}
+          />
+        )}
 
         <Overlay
           backdropStyle={{
