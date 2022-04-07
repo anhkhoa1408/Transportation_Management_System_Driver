@@ -15,6 +15,8 @@ import Header from '../../components/Header';
 import shipmentApi from '../../api/shipmentAPI';
 import Loading from '../../components/Loading';
 import { MAIN_URL } from './../../api/config';
+import TextField from '../../components/TextField';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ConfirmOrder = ({ navigation, route }) => {
   const [images, setImages] = useState([]);
@@ -22,8 +24,9 @@ const ConfirmOrder = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [deleteList, setDelete] = useState([]);
   const [uploadList, setUpload] = useState([]);
+  const [numOfPackage, setNumOfPackage] = useState('1');
 
-  const { packageId } = route?.params;
+  const { packageId, shipment } = route?.params;
 
   const handleImages = async () => {
     if (images.reduce((acc, ele) => (ele ? acc + 1 : acc), 0) >= 3) {
@@ -78,26 +81,32 @@ const ConfirmOrder = ({ navigation, route }) => {
 
   const handleUpdateImage = () => {
     setLoading(true);
-    shipmentApi
-      .updatePackageImage(packageId, uploadList, deleteList)
-      .then(data => {
-        setLoading(false);
-        setAlert({
-          type: 'success',
-          message: 'Cập nhật thông tin thành công',
-        });
-        setUpload([]);
-        setDelete([]);
-        handleListImage(data.images);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-        setAlert({
-          type: 'danger',
-          message: 'Cập nhật thông tin thất bại',
-        });
+    try {
+      shipmentApi.addShipmentItem({
+        shipment,
+        quantity: numOfPackage,
+        package: packageId,
       });
+      shipmentApi
+        .updatePackageImage(packageId, uploadList, deleteList)
+        .then(data => {
+          setLoading(false);
+          setAlert({
+            type: 'success',
+            message: 'Cập nhật thông tin thành công',
+          });
+          setUpload([]);
+          setDelete([]);
+          handleListImage(data.images);
+        });
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setAlert({
+        type: 'danger',
+        message: 'Cập nhật thông tin thất bại',
+      });
+    }
   };
 
   const handleUploadImage = index => {
@@ -130,95 +139,107 @@ const ConfirmOrder = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={[STYLES.container]}>
-      {alert && (
-        <ModalMess
-          type={alert.type}
-          message={alert.message}
-          setAlert={setAlert}
-          alert={alert}
+      <KeyboardAwareScrollView enableOnAndroid enableAutomaticScroll>
+        {alert && (
+          <ModalMess
+            type={alert.type}
+            message={alert.message}
+            setAlert={setAlert}
+            alert={alert}
+          />
+        )}
+        {loading && <Loading />}
+        <Header
+          headerText="Chụp ảnh kiện hàng"
+          leftElement={
+            <Icon name="west" size={30} onPress={() => navigation.goBack()} />
+          }
         />
-      )}
-      {loading && <Loading />}
-      <Header
-        headerText="Chụp ảnh đơn hàng"
-        leftElement={
-          <Icon name="west" size={30} onPress={() => navigation.goBack()} />
-        }
-      />
-      <View style={[STYLES.container, { padding: 20, paddingTop: 10 }]}>
-        <Text
-          style={[
-            FONTS.Smol,
-            { textAlign: 'center', width: '100%', alignSelf: 'center' },
-          ]}>
-          Vui lòng nhấn vào biểu tượng máy ảnh để chụp ảnh kiện hàng hoặc nhấn
-          chọn bên dưới để chọn ảnh từ thư viện
-        </Text>
-        <View style={[styles.camera]}>
-          <TouchableOpacity onPress={handleImages} style={styles.closeBtn}>
-            <Icon
-              name="camera"
-              size={50}
-              type="font-awesome"
-              color={COLORS.primary}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={[STYLES.row, { justifyContent: 'space-between' }]}>
-          {Array.from({ length: 3 }, (_, index) => (
-            <TouchableOpacity
-              onPress={() => handleUploadImage(index)}
-              key={index}
-              style={[styles.imageContainer]}>
-              {images[index] && Object.keys(images[index]).length ? (
-                <TouchableOpacity
-                  onPress={() => handleDeleteImage(index)}
-                  style={{
-                    position: 'absolute',
-                    top: -15,
-                    right: -15,
-                    margin: 0,
-                    zIndex: 100,
-                  }}>
-                  <Icon
-                    name="close"
-                    reverse
-                    color="red"
-                    containerStyle={{ margin: 0 }}
-                    size={15}
-                  />
-                </TouchableOpacity>
-              ) : null}
-
-              {images.length && images[index] && images[index].uri ? (
-                <Image
-                  style={styles.image}
-                  source={{ uri: images[index].uri }}
-                  resizeMode="cover"
-                />
-              ) : (
-                <View>
-                  <Icon
-                    name="image"
-                    size={30}
-                    type="font-awesome"
-                    color={COLORS.primary}
-                  />
-                  <Text style={{ marginTop: 5, color: COLORS.primary }}>
-                    Chọn
-                  </Text>
-                </View>
-              )}
+        <View style={[STYLES.container, { padding: 20, paddingTop: 10 }]}>
+          <Text
+            style={[
+              FONTS.Smol,
+              { textAlign: 'center', width: '100%', alignSelf: 'center' },
+            ]}>
+            Vui lòng nhấn vào biểu tượng máy ảnh để chụp ảnh kiện hàng hoặc nhấn
+            chọn bên dưới để chọn ảnh từ thư viện
+          </Text>
+          <View style={[styles.camera]}>
+            <TouchableOpacity onPress={handleImages} style={styles.closeBtn}>
+              <Icon
+                name="camera"
+                size={50}
+                type="font-awesome"
+                color={COLORS.primary}
+              />
             </TouchableOpacity>
-          ))}
+          </View>
+
+          <View style={[STYLES.row, { justifyContent: 'space-between' }]}>
+            {Array.from({ length: 3 }, (_, index) => (
+              <TouchableOpacity
+                onPress={() => handleUploadImage(index)}
+                key={index}
+                style={[styles.imageContainer]}>
+                {images[index] && Object.keys(images[index]).length ? (
+                  <TouchableOpacity
+                    onPress={() => handleDeleteImage(index)}
+                    style={{
+                      position: 'absolute',
+                      top: -15,
+                      right: -15,
+                      margin: 0,
+                      zIndex: 100,
+                    }}>
+                    <Icon
+                      name="close"
+                      reverse
+                      color="red"
+                      containerStyle={{ margin: 0 }}
+                      size={15}
+                    />
+                  </TouchableOpacity>
+                ) : null}
+
+                {images.length && images[index] && images[index].uri ? (
+                  <Image
+                    style={styles.image}
+                    source={{ uri: images[index].uri }}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View>
+                    <Icon
+                      name="image"
+                      size={30}
+                      type="font-awesome"
+                      color={COLORS.primary}
+                    />
+                    <Text style={{ marginTop: 5, color: COLORS.primary }}>
+                      Chọn
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <TextField
+            title="Số lượng gói hàng"
+            keyboardType="numeric"
+            value={numOfPackage}
+            onChangeText={setNumOfPackage}
+            error={parseInt(numOfPackage) < 1}
+            errorMessage={'Số gói hàng phải lớn hơn 0'}
+          />
+
+          <PillButton
+            onPress={handleUpdateImage}
+            title="Xác nhận"
+            buttonStyle={{ backgroundColor: COLORS.primary }}
+          />
         </View>
-        <PillButton
-          onPress={handleUpdateImage}
-          title="Xác nhận"
-          buttonStyle={{ backgroundColor: COLORS.primary }}
-        />
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -227,7 +248,8 @@ export default ConfirmOrder;
 
 const styles = StyleSheet.create({
   camera: {
-    flex: 1,
+    // flex: 1,
+    paddingVertical: 40,
     marginTop: 20,
     marginBottom: 45,
     borderWidth: 3,

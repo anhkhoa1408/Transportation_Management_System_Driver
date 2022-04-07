@@ -71,6 +71,10 @@ class ShipmentAPI {
 
     return axiosClient.post(url, formData);
   };
+  addShipmentItem = data => {
+    const url = MAIN_URL.concat('/shipment-items');
+    return axiosClient.post(url, data);
+  };
 }
 const shipmentApi = new ShipmentAPI();
 export default shipmentApi;

@@ -28,15 +28,23 @@ function OrderDetailScreen(props) {
   const { userInfo, navigation, route } = props;
 
   useEffect(() => {
-    updateShipmentData();
-    console.log(meta);
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      updateShipmentData();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const updateShipmentData = () => {
     if (route.params.shipmentID)
       shipmentApi
         .shipmentDetail(route.params.shipmentID)
         .then(response => {
+          response.shipment_items.map(
+            item =>
+              (response.packages.find(
+                _package => _package.id === item.package,
+              ).received = item.quantity),
+          );
           setData(response);
           if (response.from_storage && response.to_storage) {
             setMeta({
@@ -64,6 +72,7 @@ function OrderDetailScreen(props) {
       item={item}
       navigation={navigation}
       isDone={route?.params?.isDone}
+      shipment={route.params.shipmentID}
     />
   );
 

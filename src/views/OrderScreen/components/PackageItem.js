@@ -6,14 +6,22 @@ import PackageImage from '../../../assets/images/package.png';
 import { ListItem, Button, Icon } from 'react-native-elements';
 import { simplifyString } from '../../../utils/simplifyString';
 
-const PackageItem = ({ item, navigation, isDone }) => {
+const PackageItem = ({ item, navigation, isDone, shipment }) => {
+  const renderPackageName = item => {
+    return item?.name ? (
+      <Text style={{ ...FONTS.Big }}>{item.name}</Text>
+    ) : (
+      <Text style={{ ...FONTS.Big }}>ID: {item.id}</Text>
+    );
+  };
+
   return (
     <ListItem.Swipeable
       bottomDivider
       rightContent={
         !isDone && (
           <Button
-            title="Chụp ảnh"
+            title="Nhận hàng"
             icon={{ name: 'camera', color: 'white' }}
             buttonStyle={{
               backgroundColor: COLORS.header,
@@ -23,6 +31,7 @@ const PackageItem = ({ item, navigation, isDone }) => {
               navigation.navigate('ConfirmOrder', {
                 packageId: item.id,
                 packageImage: item.images,
+                shipment: shipment,
               })
             }
           />
@@ -65,10 +74,18 @@ const PackageItem = ({ item, navigation, isDone }) => {
             flex: 1,
             marginLeft: 20,
           }}>
-          <Text style={{ ...FONTS.Big }}>ID: {item.id}</Text>
+          <Text style={{ ...FONTS.Big }}>
+            {item.name ? item.name : item.id}
+          </Text>
           <Text style={{ ...FONTS.Smol }}>
             Số lượng: <Text style={{ ...FONTS.SmolBold }}>{item.quantity}</Text>
           </Text>
+          {item.received && (
+            <Text style={{ ...FONTS.Smol }}>
+              Đã nhận:{' '}
+              <Text style={{ ...FONTS.SmolBold }}>{item.received}</Text>
+            </Text>
+          )}
           <Text style={{ ...FONTS.Smol }}>
             Địa điểm hiện tại:{' '}
             <Text style={[FONTS.SmolBold]}>
