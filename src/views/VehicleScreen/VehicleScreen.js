@@ -12,15 +12,8 @@ import ModalMess from '../../components/ModalMess';
 import shipmentApi from '../../api/shipmentAPI';
 
 const VehicleScreen = () => {
-  const carr = {
-    licence: '',
-    type: '',
-    load: '',
-    size: { len: '', width: '', height: '' },
-  };
-
   const [errorForm, setError] = useState(false);
-  const [car, setCar] = useState(carr);
+  const [car, setCar] = useState({});
   const carInfo = store.getState().userInfo.user.car;
   const userInfo = store.getState().userInfo.user;
   const [successModal, setSuccessModal] = useState(null);
@@ -32,7 +25,7 @@ const VehicleScreen = () => {
   });
 
   useEffect(() => {
-    setCar({ ...carr, ...carInfo });
+    setCar(carInfo);
     shipmentApi.assistanceInfo().then(response => {
       setAssistance(response);
     });
@@ -40,7 +33,6 @@ const VehicleScreen = () => {
 
   return (
     <>
-      {!car.licence && <Loading />}
       <SafeAreaView style={vehicleStyle.container}>
         <View style={vehicleStyle.headerContainer}>
           <View style={vehicleStyle.headerContent}>
@@ -92,14 +84,14 @@ const VehicleScreen = () => {
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Phương tiện</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'type' in car ? car.type : 'Đang cập nhật'}
+                    {car?.type ? car.type : 'Đang cập nhật'}
                   </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Tải trọng tối đa</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'load' in car ? car.load : 'Đang cập nhật'} Kg
+                    {car?.load ? car.load + ' Kg' : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
@@ -110,7 +102,7 @@ const VehicleScreen = () => {
                     Kích thước thùng xe
                   </Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'size' in car
+                    {car?.size
                       ? `${car.size.len} m x ${car.size.width} m x ${car.size.height} m`
                       : 'Đang cập nhật'}
                   </Text>
@@ -119,7 +111,7 @@ const VehicleScreen = () => {
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Biển số xe</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'licence' in car ? car.licence : 'Đang cập nhật'}
+                    {car?.licence ? car.licence : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
@@ -157,14 +149,14 @@ const VehicleScreen = () => {
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>Người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {assistance.name}
+                    {assistance.name ? assistance.name : 'Đang cập nhật'}
                   </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
                   <Text style={vehicleStyle.infoTittle}>SDT người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {assistance.phone}
+                    {assistance.phone ? assistance.phone : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
