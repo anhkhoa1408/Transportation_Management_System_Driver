@@ -15,7 +15,7 @@ import { STYLES, COLORS } from '../../styles';
 import banner from './../../assets/images/delivery.jpg';
 import { container } from '../../styles/layoutStyle';
 import { backdropColor } from '../../styles/color';
-import { getAvatarFromUser } from '../../utils/avatarUltis';
+import { getAvatarFromUser, getNameFromUser } from '../../utils/avatarUltis';
 import ModalMess from '../../components/ModalMess';
 import SpeedDial from './SpeedDial';
 
@@ -69,7 +69,7 @@ function HomeScreen({ navigation, ...props }) {
       <View style={homeStyle.container}>
         <Header
           leftElement={badge}
-          headerText={'Xin chào ' + userInfo?.user?.name}
+          headerText={'Xin chào ' + getNameFromUser(userInfo?.user)}
           rightElement={
             <HeaderAvatar
               url={getAvatarFromUser(userInfo.user)}

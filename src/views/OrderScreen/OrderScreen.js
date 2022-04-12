@@ -49,14 +49,13 @@ function OrderScreen({ navigation, ...props }) {
     shipmentApi
       .currentShipment(coord)
       .then(resData => {
-        setCurrentShipment(resData);
-
         // Save Shipment's State
         resData.map(item => {
           if (!(item._id in shipmentState)) {
             updateShipmentState(item._id, false);
           }
         });
+        setCurrentShipment(resData);
         setRefreshingC(false);
       })
       .catch(err => {
@@ -91,7 +90,7 @@ function OrderScreen({ navigation, ...props }) {
   const renderItem = ({ item, index }) => (
     <ShipmentItem
       item={item}
-      isDone={!item.arrived_time && shipmentState[item._id].checked}
+      isDone={!item.arrived_time && shipmentState[item._id]?.checked}
       onPress={() =>
         navigation.navigate('OrderDetail', {
           shipmentID: item._id,
@@ -155,7 +154,7 @@ function OrderScreen({ navigation, ...props }) {
             data={currentShipment}
             renderItem={renderItem}
             keyExtractor={item => `${item._id}`}
-            onRefresh={() => updateCurrentShipment()}
+            onRefresh={() => updateCurrentShipment(origin)}
             refreshing={refreshingC}
           />
         </TabView.Item>
