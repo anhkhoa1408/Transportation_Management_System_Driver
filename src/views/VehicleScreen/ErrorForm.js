@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { Card, Icon, Text } from 'react-native-elements';
-import PillButton from '../../components/CustomButton/PillButton';
-import { DatePicker } from './../../components/DatePicker';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Icon, Text } from 'react-native-elements';
+import carAPI from '../../api/carAPI';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { primary } from '../../styles/color';
-import carAPI from '../../api/carAPI';
+import { DatePicker } from './../../components/DatePicker';
 
 const ErrorForm = props => {
   const [cause, setCause] = useState('');
@@ -13,12 +13,16 @@ const ErrorForm = props => {
 
   return (
     <View>
-      <ScrollView style={formStyle.form}>
-        <Icon
-          name="close"
-          containerStyle={{ alignSelf: 'flex-end' }}
-          onPress={() => props.setError(false)}
-        />
+      <Icon
+        name="close"
+        containerStyle={{
+          alignSelf: 'flex-end',
+          marginRight: 10,
+          marginBottom: 5,
+        }}
+        onPress={() => props.setError(false)}
+      />
+      <ScrollView contentContainerStyle={formStyle.form}>
         <View
           style={{
             display: 'flex',
@@ -35,9 +39,8 @@ const ErrorForm = props => {
             value={cause}
           />
         </View>
-        <PillButton
+        <PrimaryButton
           title="Gửi"
-          containerStyle={formStyle.button}
           buttonStyle={{
             backgroundColor: primary,
           }}

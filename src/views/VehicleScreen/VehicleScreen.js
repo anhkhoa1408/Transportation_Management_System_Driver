@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  SafeAreaView, ScrollView, StyleSheet, View
 } from 'react-native';
-import { Icon, Text, Card, Overlay } from 'react-native-elements';
-import { container, header, shadowCard } from '../../styles/layoutStyle';
+import { Card, Icon, Overlay, Text } from 'react-native-elements';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import ErrorForm from './ErrorForm';
-import { store } from '../../config/configureStore';
-import Loading from '../../components/Loading';
-import styles, { COLORS } from '../../styles';
-import { backdropColor } from '../../styles/color';
-import ModalMess from '../../components/ModalMess';
 import shipmentApi from '../../api/shipmentAPI';
 import { FocusStatusBar } from '../../components/FocusStatusBar';
+import Loading from '../../components/Loading';
+import ModalMess from '../../components/ModalMess';
+import { store } from '../../config/configureStore';
+import { COLORS } from '../../styles';
+import { backdropColor } from '../../styles/color';
+import { container, header } from '../../styles/layoutStyle';
+import ErrorForm from './ErrorForm';
 
 const VehicleScreen = () => {
   const [errorForm, setError] = useState(false);

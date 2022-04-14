@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Card, Icon, Text } from 'react-native-elements';
-import PillButton from '../../components/CustomButton/PillButton';
-import { DatePicker } from '../../components/DatePicker';
-import CustomInput from '../../components/CustomInput/CustomInput';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Icon, Text } from 'react-native-elements';
 import furloughApi from '../../api/furloughApi';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
+import CustomInput from '../../components/CustomInput/CustomInput';
+import { DatePicker } from '../../components/DatePicker';
 import TextField from '../../components/TextField';
 
 const AbsenceForm = props => {
@@ -16,7 +16,11 @@ const AbsenceForm = props => {
     <View>
       <Icon
         name="close"
-        containerStyle={{ alignSelf: 'flex-end', marginRight: 15 }}
+        containerStyle={{
+          alignSelf: 'flex-end',
+          marginRight: 15,
+          marginBottom: 5,
+        }}
         onPress={() => {
           props.setAbsence(false);
           props.onOpen(false);
@@ -46,9 +50,8 @@ const AbsenceForm = props => {
             onChangeText={text => setCause(text)}
           />
         </View>
-        <PillButton
+        <PrimaryButton
           title="Gửi"
-          containerStyle={formStyle.button}
           type="solid"
           onPress={() =>
             furloughApi
