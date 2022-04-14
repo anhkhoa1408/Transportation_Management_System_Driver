@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import { Icon, Text, Card, Overlay } from 'react-native-elements';
 import { container, header, shadowCard } from '../../styles/layoutStyle';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import ErrorForm from './ErrorForm';
 import { store } from '../../config/configureStore';
 import Loading from '../../components/Loading';
-import { COLORS } from '../../styles';
+import styles, { COLORS } from '../../styles';
 import { backdropColor } from '../../styles/color';
 import ModalMess from '../../components/ModalMess';
 import shipmentApi from '../../api/shipmentAPI';
+import { FocusStatusBar } from '../../components/FocusStatusBar';
 
 const VehicleScreen = () => {
-  const carr = {
-    licence: '',
-    type: '',
-    load: '',
-    size: { len: '', width: '', height: '' },
-  };
-
   const [errorForm, setError] = useState(false);
-  const [car, setCar] = useState(carr);
+  const [car, setCar] = useState({});
   const carInfo = store.getState().userInfo.user.car;
   const userInfo = store.getState().userInfo.user;
   const [successModal, setSuccessModal] = useState(null);
@@ -32,7 +32,7 @@ const VehicleScreen = () => {
   });
 
   useEffect(() => {
-    setCar({ ...carr, ...carInfo });
+    setCar(carInfo);
     shipmentApi.assistanceInfo().then(response => {
       setAssistance(response);
     });
@@ -41,10 +41,11 @@ const VehicleScreen = () => {
   return (
     <>
       {!car.licence && <Loading />}
+      <FocusStatusBar backgroundColor={COLORS.header} barStyle="white-content" />
       <SafeAreaView style={vehicleStyle.container}>
         <View style={vehicleStyle.headerContainer}>
           <View style={vehicleStyle.headerContent}>
-            <Text h4 style={{ color: '#FFF' }}>
+            <Text style={{ color: '#FFF', fontSize: 22, fontWeight: 'bold' }}>
               Thông tin phương tiện
             </Text>
 
@@ -78,38 +79,40 @@ const VehicleScreen = () => {
                   type="feather"
                   name="truck"
                   reverse
-                  size={18}
+                  size={16}
                   color="#f0531f"
                   containerStyle={{
                     marginRight: 15,
                     marginLeft: 0,
                   }}
                 />
-                <Text h4>Phương tiện</Text>
+                <Text style={vehicleStyle.infoTitle}>Phương tiện</Text>
               </View>
 
               <View style={vehicleStyle.infoItem}>
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>Phương tiện</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>Phương tiện</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'type' in car ? car.type : 'Đang cập nhật'}
+                    {car?.type ? car.type : 'Đang cập nhật'}
                   </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>Tải trọng tối đa</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>
+                    Tải trọng tối đa
+                  </Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'load' in car ? car.load : 'Đang cập nhật'} Kg
+                    {car?.load ? car.load + ' Kg' : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
 
               <View style={vehicleStyle.infoItem}>
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>
+                  <Text style={vehicleStyle.infoSubTittle}>
                     Kích thước thùng xe
                   </Text>
-                  <Text style={vehicleStyle.infoContent}>
+                  <Text style={[vehicleStyle.infoContent, { width: '80%' }]}>
                     {'size' in car
                       ? `${car.size.len} m x ${car.size.width} m x ${car.size.height} m`
                       : 'Đang cập nhật'}
@@ -117,9 +120,9 @@ const VehicleScreen = () => {
                 </View>
 
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>Biển số xe</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>Biển số xe</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {'licence' in car ? car.licence : 'Đang cập nhật'}
+                    {car?.licence ? car.licence : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
@@ -131,40 +134,42 @@ const VehicleScreen = () => {
                   type="feather"
                   name="user"
                   reverse
-                  size={18}
+                  size={16}
                   color="#2ed964"
                   containerStyle={{
                     marginRight: 12,
                     marginLeft: 0,
                   }}
                 />
-                <Text h4>Người vận chuyển</Text>
+                <Text style={vehicleStyle.infoTitle}>Người vận chuyển</Text>
               </View>
 
               <View style={vehicleStyle.infoItem}>
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>Tên</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>Tên</Text>
                   <Text style={vehicleStyle.infoContent}>{userInfo.name}</Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>Số điện thoại</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>Số điện thoại</Text>
                   <Text style={vehicleStyle.infoContent}>{userInfo.phone}</Text>
                 </View>
               </View>
 
               <View style={vehicleStyle.infoItem}>
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>Người hỗ trợ</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>Người hỗ trợ</Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {assistance.name}
+                    {assistance.name ? assistance.name : 'Đang cập nhật'}
                   </Text>
                 </View>
 
                 <View style={{ flex: 1 }}>
-                  <Text style={vehicleStyle.infoTittle}>SDT người hỗ trợ</Text>
+                  <Text style={vehicleStyle.infoSubTittle}>
+                    SDT người hỗ trợ
+                  </Text>
                   <Text style={vehicleStyle.infoContent}>
-                    {assistance.phone}
+                    {assistance.phone ? assistance.phone : 'Đang cập nhật'}
                   </Text>
                 </View>
               </View>
@@ -180,8 +185,10 @@ const VehicleScreen = () => {
           }}
           overlayStyle={{
             width: '90%',
+            height: '60%',
             borderRadius: 12,
-            padding: 30,
+            paddingVertical: 30,
+            paddingHorizontal: 15,
           }}
           isVisible={errorForm}>
           <ErrorForm
@@ -202,14 +209,12 @@ const vehicleStyle = StyleSheet.create({
   },
   infoContainer: {
     position: 'absolute',
-    top: 90,
+    top: 80,
     bottom: 0,
     left: 0,
     right: 0,
     margin: 0,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    backgroundColor: '#FFF',
+    backgroundColor: '#FAFAFA',
     paddingVertical: 20,
     zIndex: 1,
     paddingHorizontal: 0,
@@ -217,19 +222,20 @@ const vehicleStyle = StyleSheet.create({
   truckContainer: {
     display: 'flex',
     justifyContent: 'flex-start',
-    borderRadius: 20,
+    borderRadius: 8,
     paddingHorizontal: 12,
     marginBottom: 20,
     shadowColor: COLORS.primary,
     elevation: 12,
+    borderWidth: 0,
   },
   assistContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderRadius: 25,
-    borderWidth: 0,
+    borderRadius: 8,
     elevation: 2,
+    borderWidth: 0,
   },
   infoItem: {
     display: 'flex',
@@ -243,13 +249,12 @@ const vehicleStyle = StyleSheet.create({
     paddingTop: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    height: '40%',
     backgroundColor: COLORS.header,
     marginTop: 0,
     alignItems: 'flex-start',
   },
   headerContent: {
-    marginTop: 20,
+    marginTop: 15,
     marginBottom: 0,
     display: 'flex',
     flex: 1,
@@ -257,12 +262,16 @@ const vehicleStyle = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  infoTittle: {
+  infoTitle: {
+    fontSize: 19,
+    fontWeight: 'bold',
+  },
+  infoSubTittle: {
     fontSize: 15,
     color: 'rgba(0, 0, 0, 0.5)',
   },
   infoContent: {
-    fontSize: 19,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

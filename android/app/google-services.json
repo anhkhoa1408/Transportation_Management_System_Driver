@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "712934763680",
-    "project_id": "t-m-s-79ffd",
-    "storage_bucket": "t-m-s-79ffd.appspot.com"
+    "project_number": "909748338181",
+    "project_id": "transport-management-sys-5385b",
+    "storage_bucket": "transport-management-sys-5385b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:712934763680:android:4a7d9343cd70fc15476dc5",
+        "mobilesdk_app_id": "1:909748338181:android:010e37200e61613e42666c",
         "android_client_info": {
-          "package_name": "com.transportation_management_system_frontend"
+          "package_name": "com.tms.driver"
         }
       },
       "oauth_client": [
         {
-          "client_id": "712934763680-8sk33mqubcj24hv9mi9kn6r3pp7bcssq.apps.googleusercontent.com",
+          "client_id": "909748338181-6i57ttf3rpejulk8ov767g2vllgknsiu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tms.driver",
+            "certificate_hash": "a30fbc352640696024cefa18cfedd530e12af083"
+          }
+        },
+        {
+          "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcl1OWYK0LqK3qEovzMG8wNnx0FaGtGrE"
+          "current_key": "AIzaSyC2tdUiFRVqy0zLbPozfKW-Q7-Ej0_Gqrc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "712934763680-8sk33mqubcj24hv9mi9kn6r3pp7bcssq.apps.googleusercontent.com",
+              "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -74,11 +74,11 @@ const style = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 10,
     height: 100,
-    fontSize: 17,
+    fontSize: 15,
     color: '#000',
   },
   title: {
-    fontSize: 20,
+    fontSize: 15,
     color: '#000000',
   },
   disabled: {

@@ -4,20 +4,20 @@ import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 import { COLORS } from '../../styles';
 
-function PrimaryButton(props) {
+function PrimaryButton({ containerStyle, buttonStyle, ...props }) {
   return (
     <Button
       containerStyle={{
-        ...props.containerStyle,
         borderRadius: 8,
         marginVertical: 15,
+        ...containerStyle,
       }}
       buttonStyle={{
-        ...props.buttonStyle,
         padding: 14,
         backgroundColor: props.backgroundColor
           ? props.backgroundColor
           : COLORS.primary,
+        ...buttonStyle,
       }}
       titleStyle={{
         fontSize: 16,

@@ -10,7 +10,7 @@ import {
 import { Avatar, Icon, ListItem, Switch } from 'react-native-elements';
 import { container, shadowCard } from '../../styles/layoutStyle';
 import img from '../../assets/images/download.jpg';
-import { COLORS } from '../../styles';
+import { COLORS, FONTS } from '../../styles';
 import { useDispatch } from 'react-redux';
 import { success, warning, danger, backdropColor } from '../../styles/color';
 import { connect } from 'react-redux';
@@ -65,13 +65,13 @@ const Account = ({ navigation, userInfo }) => {
       state: toggle.nightMode,
       color: '#000',
     },
-    {
-      title: 'Thông báo',
-      icon: 'notifications',
-      name: 'notification',
-      state: toggle.notification,
-      color: COLORS.primary,
-    },
+    // {
+    //   title: 'Thông báo',
+    //   icon: 'notifications',
+    //   name: 'notification',
+    //   state: toggle.notification,
+    //   color: COLORS.primary,
+    // },
   ];
 
   const keyExtractor = (item, index) => index.toString();
@@ -93,27 +93,26 @@ const Account = ({ navigation, userInfo }) => {
           containerStyle={{
             width: '100%',
             display: 'flex',
-            paddingVertical: 20,
+            paddingVertical: 15,
           }}
           bottomDivider>
           <View
             style={{
               backgroundColor: item.color,
-              padding: 12,
-              borderRadius: 20,
+              padding: 10,
+              borderRadius: 12,
             }}>
             <Icon name={item.icon} color="#FFF" size={22} />
           </View>
           <ListItem.Title
-            style={{
+            style={[FONTS.Medium, {
               flex: 1,
-              fontSize: 18,
               marginLeft: 10,
-            }}>
+            }]}>
             {item.title}
           </ListItem.Title>
 
-          <ListItem.Chevron size={30} />
+          <ListItem.Chevron size={22} />
         </ListItem>
       </TouchableOpacity>
     );
@@ -126,23 +125,22 @@ const Account = ({ navigation, userInfo }) => {
           containerStyle={{
             width: '100%',
             display: 'flex',
-            paddingVertical: 20,
+            paddingVertical: 15,
           }}
           bottomDivider>
           <View
             style={{
               backgroundColor: item.color,
-              padding: 12,
-              borderRadius: 20,
+              padding: 10,
+              borderRadius: 12,
             }}>
             <Icon name={item.icon} color="#FFF" size={22} />
           </View>
           <ListItem.Title
-            style={{
+            style={[FONTS.Medium, {
               flex: 1,
-              fontSize: 18,
               marginLeft: 10,
-            }}>
+            }]}>
             {item.title}
           </ListItem.Title>
 
@@ -210,7 +208,7 @@ const Account = ({ navigation, userInfo }) => {
         <View style={{ marginLeft: 20, flex: 1 }}>
           <Text style={styles.smallText}>Nhân viên</Text>
           <Text style={styles.bigText}>{userInfo?.user?.name}</Text>
-          <Text style={styles.statusText}>Đang làm việc</Text>
+          {/* <Text style={styles.statusText}>Đang làm việc</Text> */}
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <Icon name="edit" size={28} color={COLORS.primary} />
@@ -252,11 +250,11 @@ const styles = StyleSheet.create({
   },
   bigText: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 20,
     color: '#000',
   },
   smallText: {
-    fontSize: 15,
+    fontSize: 13,
     color: 'rgba(0, 0, 0, 0.5)',
   },
   editBtn: {

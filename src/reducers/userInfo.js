@@ -3,7 +3,6 @@ import {
   SAVE_USER_INFO_SUCCESS,
   SAVE_USER_INFO_ERROR,
 } from '../constants/types';
-import { MAIN_URL } from './../api/config';
 
 const initialState = {
   isLoading: true,
@@ -20,7 +19,7 @@ const reducer = (state = initialState, action) => {
             ...action.payload.user,
             avatar: {
               ...action.payload.user.avatar,
-              url: MAIN_URL + action.payload.user.avatar.url,
+              // url: MAIN_URL + action.payload.user.avatar.url,
             },
           },
         };

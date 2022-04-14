@@ -2,8 +2,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+import { Icon } from 'react-native-elements';
 // Function
-import { joinAddress } from '../../../utils/addressUltis';
+import {
+  joinAddress,
+  getDistanceFromCordinateInKm,
+} from '../../../utils/addressUltis';
+import Geolocation from '@react-native-community/geolocation';
 // Asset
 import OrderImage from '../../../assets/images/outline_inventory_black_24dp.png';
 import { COLORS, FONTS, STYLES } from '../../../styles';
@@ -13,6 +18,10 @@ function getItemState(item, isDone) {
   // TODO: Insert check giao hay nhan hang
   const itemState = {
     init: {
+      color: 'gray',
+      text: 'Chưa được nhận',
+    },
+    accept: {
       color: 'orange',
       text: 'Đang vận chuyển',
     },
@@ -25,11 +34,34 @@ function getItemState(item, isDone) {
       text: 'Đã hoàn thành',
     },
   };
+  if (!item.driver) return itemState.init;
   if (!item.arrived_time) {
     if (isDone) return itemState.process;
-    else return itemState.init;
+    else return itemState.accept;
   }
   return itemState.done;
+}
+
+function getItemDestination(item) {
+  if (item.from_address?.latitude && item.from_address?.longitude)
+    return {
+      latitude: item.from_address.latitude,
+      longitude: item.from_address.longitude,
+    };
+  else return undefined;
+}
+
+function getItemDistance(item, origin) {
+  const itemCoord = getItemDestination(item);
+  if (itemCoord && origin) {
+    const distance = getDistanceFromCordinateInKm(
+      itemCoord.latitude,
+      itemCoord.longitude,
+      origin.latitude,
+      origin.longitude,
+    );
+    return Number(distance).toFixed(2) + 'km';
+  } else return 'Không xác định';
 }
 
 export default function ShipmentItem({
@@ -37,7 +69,18 @@ export default function ShipmentItem({
   isDone,
   checkBoxHandler,
   onPress,
+  navigation,
 }) {
+  const [origin, setOrigin] = React.useState(null);
+
+  React.useEffect(() => {
+    Geolocation.getCurrentPosition(
+      info => setOrigin(info.coords),
+      err => console.log(err),
+      { timeout: 5000, maximumAge: 5000, enableHighAccuracy: true },
+    );
+  }, []);
+
   const currentState = getItemState(item, isDone);
   return (
     <TouchableOpacity
@@ -60,7 +103,9 @@ export default function ShipmentItem({
             marginLeft: 10,
             alignItems: 'flex-start',
           }}>
-          <Text style={{ ...FONTS.MediumBold }}>ID: {item.id}</Text>
+          <Text style={{ ...FONTS.MediumBold }}>
+            Đến: {joinAddress(getAddress(item), 'FIRST')}
+          </Text>
           <Text
             style={{
               ...FONTS.MediumBold,
@@ -74,17 +119,40 @@ export default function ShipmentItem({
             disabled={false}
             value={isDone}
             onValueChange={newValue => {
-              checkBoxHandler(item.id, newValue);
+              checkBoxHandler(item._id, newValue);
             }}
           />
         )}
       </View>
-      <View style={{ paddingLeft: 5 }}>
-        <Text style={{ ...FONTS.Medium, color: 'gray' }}>Đến</Text>
-        <Text style={{ ...FONTS.MediumBold }}>
-          {joinAddress(item.to_address)}
-        </Text>
+      <View style={{ paddingLeft: 5, paddingTop: 5 }}>
+        <View style={{ ...STYLES.row, justifyContent: 'space-between' }}>
+          {!item.arrived_time && origin && (
+            <Text style={{ ...FONTS.MediumBold, paddingTop: 5 }}>
+              Cách vị trí hiện tại: {getItemDistance(item, origin)}
+            </Text>
+          )}
+          {!item.arrived_time && (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('MapScreen', {
+                  destination: getItemDestination(item),
+                })
+              }>
+              <Icon name="directions" size={28} color={COLORS.map} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
+}
+
+function getAddress(item) {
+  if (item.from_storage && item.to_storage) {
+    return item.to_storage.to_address;
+  } else if (item.to_storage) {
+    return item.from_address;
+  } else if (item.from_storage) {
+    return item.to_address;
+  }
 }

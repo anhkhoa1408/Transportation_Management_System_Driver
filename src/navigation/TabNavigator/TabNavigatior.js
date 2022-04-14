@@ -44,7 +44,7 @@ const TabNavigatior = () => {
             ref={viewRef}
             style={[
               StyleSheet.absoluteFillObject,
-              { backgroundColor: color, borderRadius: 16 },
+              { backgroundColor: color, borderRadius: 10 },
             ]}
           />
           <View
@@ -91,31 +91,26 @@ const TabNavigatior = () => {
             case 'Vehicle':
               iconName = 'local-shipping';
               name = 'Phương tiện';
-              color = COLORS.primary;
               break;
             case 'Chat':
               iconName = 'forum';
               name = 'Tin nhắn';
-              color = COLORS.header;
               break;
             case 'HomeStack':
               iconName = 'dashboard';
               name = 'Trang chủ';
-              color = COLORS.success;
               break;
             case 'Shipping':
               iconName = 'assignment';
               name = 'Đơn hàng';
-              color = COLORS.danger;
               break;
             case 'Setting':
               iconName = 'settings';
-              color = COLORS.warning;
               name = 'Cài đặt';
           }
           return (
             <CustomTabBarButton
-              color={color}
+              color={COLORS.primary}
               iconName={iconName}
               name={name}
               {...props}
@@ -154,7 +149,7 @@ const style = StyleSheet.create({
     bottom: 15,
     shadowColor: COLORS.primary,
     elevation: 20,
-    borderRadius: 20,
+    borderRadius: 10,
     alignItems: 'center',
     flexDirection: 'row',
     display: 'flex',
@@ -166,7 +161,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     paddingVertical: 15,
-    borderRadius: 16,
+    borderRadius: 12,
   },
 });
 

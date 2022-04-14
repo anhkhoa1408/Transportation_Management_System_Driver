@@ -17,26 +17,63 @@ import InfoField from '../../components/InfoField';
 import shipmentApi from '../../api/shipmentAPI';
 import { socket } from '../../config/socketIO';
 import { connect } from 'react-redux';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
+import ModalMess from '../../components/ModalMess';
 
 function OrderDetailScreen(props) {
   const [data, setData] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [alert, setAlert] = useState(null);
 
   const { userInfo, navigation, route } = props;
 
-  console.log(route.params);
-
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      updateShipmentData();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const updateShipmentData = () => {
     if (route.params.shipmentID)
-      shipmentApi.shipmentDetail(route.params.shipmentID).then(response => {
-        setData(response);
-      });
-  }, []);
+      shipmentApi
+        .shipmentDetail(route.params.shipmentID)
+        .then(response => {
+          response.shipment_items.map(item => {
+            const pkg = response.packages.find(
+              _package => _package.id === item.package,
+            );
+            if (item.assmin) pkg.need_received = item.quantity;
+            else pkg.received = item.quantity;
+          });
+          setData(response);
+          if (response.from_storage && response.to_storage) {
+            setMeta({
+              address: response.to_storage.to_address,
+            });
+          } else if (response.to_storage) {
+            setMeta({
+              name: response.sender_name,
+              phone: response.sender_phone,
+              address: response.from_address,
+            });
+          } else if (response.from_storage) {
+            setMeta({
+              name: response.receiver_name,
+              phone: response.receiver_phone,
+              address: response.to_address,
+            });
+          }
+        })
+        .catch(err => console.log(err));
+  };
 
   const renderItem = ({ item, index }) => (
     <PackageItem
       item={item}
       navigation={navigation}
       isDone={route?.params?.isDone}
+      shipment={route.params.shipmentID}
     />
   );
 
@@ -52,7 +89,26 @@ function OrderDetailScreen(props) {
     });
   };
 
+  const acceptOrder = () => {
+    shipmentApi
+      .acceptOrder(route.params.shipmentID)
+      .then(data => {
+        setAlert({
+          type: 'success',
+          message: 'Đơn hàng đã được nhận!',
+        });
+        updateShipmentData();
+      })
+      .catch(err =>
+        setAlert({
+          type: 'warning',
+          message: 'Nhận đơn hàng thất bại!',
+        }),
+      );
+  };
+
   return (
+    // TODO: Show order price
     <View style={{ ...STYLES.container }}>
       <Header
         leftElement={
@@ -61,75 +117,113 @@ function OrderDetailScreen(props) {
         headerText={'Chi tiết đơn hàng'}
       />
 
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View
-          style={{
-            ...STYLES.row,
-            ...STYLES.subContainer,
-            padding: 0,
-            paddingBottom: 20,
-            ...styles.borderBottom,
-          }}>
-          <Avatar
-            size="medium"
-            avatarStyle={{ borderRadius: 10 }}
-            source={img}
-          />
-          <View style={{ flex: 1 }}>
-            <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
-              <Text>{data.sender_name}</Text>
-              <Text>SĐT: {data.sender_phone}</Text>
-            </View>
-          </View>
+      {alert && (
+        <ModalMess
+          type={alert.type}
+          message={alert.message}
+          alert={alert}
+          setAlert={setAlert}
+        />
+      )}
+
+      {meta?.name && (
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           <View
             style={{
-              backgroundColor: COLORS.white,
-              padding: 12,
-              borderRadius: 15,
-              elevation: 5,
+              ...STYLES.row,
+              ...STYLES.subContainer,
+              padding: 0,
+              paddingBottom: 20,
+              ...styles.borderBottom,
             }}>
-            <TouchableOpacity onPress={handleChatButton}>
-              <Icon name="comment" type="font-awesome" color={COLORS.primary} />
-            </TouchableOpacity>
+            <Avatar
+              size="medium"
+              avatarStyle={{ borderRadius: 10 }}
+              source={img}
+            />
+            <View style={{ flex: 1 }}>
+              <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
+                <Text>{meta?.name}</Text>
+                <Text>SĐT: {meta?.phone}</Text>
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                padding: 12,
+                borderRadius: 15,
+                elevation: 5,
+              }}>
+              <TouchableOpacity onPress={handleChatButton}>
+                <Icon
+                  name="comment"
+                  type="font-awesome"
+                  color={COLORS.primary}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <View
-          style={{
-            ...STYLES.row,
-            ...STYLES.subContainer,
-            ...styles.borderBottom,
-            paddingBottom: 18,
-          }}>
-          <InfoField
-            title={'Địa chỉ'}
-            style={{ flex: 1 }}
-            content={
-              data && data.from_address && joinAddress(data.from_address)
-            }
-          />
-          <InfoField
-            title={'Khối lượng'}
-            style={{ flex: 0.8 }}
-            content={
-              Array.isArray(data.packages) &&
-              data.packages.reduce(
-                (previous, current) =>
-                  previous + current.weight * current.quantity,
-                0,
-              ) + ' Kg'
-            }
-          />
-        </View>
+          <View
+            style={{
+              ...STYLES.row,
+              ...STYLES.subContainer,
+              ...styles.borderBottom,
+              paddingBottom: 18,
+            }}>
+            <InfoField
+              title={'Địa chỉ'}
+              style={{ flex: 1 }}
+              content={meta?.address && joinAddress(meta.address)}
+            />
+            <InfoField
+              title={'Khối lượng'}
+              style={{ flex: 0.6 }}
+              content={
+                Array.isArray(data.packages) &&
+                data.packages.reduce(
+                  (previous, current) =>
+                    previous + current.weight * current.quantity,
+                  0,
+                ) + ' Kg'
+              }
+            />
+          </View>
 
-        <FlatList
-          data={data.packages}
-          renderItem={renderItem}
-          keyExtractor={item => `${item.id}`}
+          <FlatList
+            data={data.packages}
+            renderItem={renderItem}
+            keyExtractor={item => `${item.id}`}
+          />
+
+          {!data.arrived_time && data.driver && (
+            <PrimaryButton
+              title="Thanh toán"
+              backgroundColor={COLORS.header}
+              containerStyle={{ margin: 20 }}
+              onPress={() =>
+                navigation.navigate('PaymentScreen', {
+                  name: meta?.name,
+                  phone: meta?.phone,
+                  fee: data.remain_fee,
+                  order: data.order_id,
+                })
+              }
+            />
+          )}
+        </View>
+      )}
+
+      {meta && !data.driver && (
+        <PrimaryButton
+          title="Nhận đơn hàng"
+          backgroundColor={COLORS.header}
+          containerStyle={{ margin: 20 }}
+          onPress={acceptOrder}
         />
-      </View>
+      )}
 
-      {data.length == 0 && (
+      {!meta?.name && (
         <View
           style={{
             alignItems: 'center',

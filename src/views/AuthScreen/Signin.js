@@ -5,9 +5,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Keyboard,
-  ScrollView,
-  KeyboardAvoidingView,
-  Dimensions,
 } from 'react-native';
 import { COLORS, STYLES, FONTS } from '../../styles';
 import TextField from '../../components/TextField';
@@ -15,7 +12,6 @@ import authApi from '../../api/authApi';
 import { useDispatch } from 'react-redux';
 import * as Bonk from 'yup';
 import { useFormik } from 'formik';
-import { danger } from '../../styles/color';
 import { saveInfo } from '../../actions/actions';
 import Loading from './../../components/Loading';
 import ModalMess from '../../components/ModalMess';
@@ -25,12 +21,6 @@ import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { socket, initChat } from '../../config/socketIO';
 import { syncToken } from '../../config/cloudMessage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {
-  onFacebookButtonPress,
-  onGoogleButtonPress,
-  getPhoneNumberVerificator,
-  onPhoneLogin,
-} from '../../config/OAuth';
 
 const SignIn = ({ navigation, route }) => {
   const [email, setEmail] = useState('');
@@ -69,14 +59,8 @@ const SignIn = ({ navigation, route }) => {
     setLoading(<Loading />);
     let handler;
     switch (values) {
-      case 'google':
-        handler = onGoogleButtonPress();
-        break;
-      case 'facebook':
-        handler = onFacebookButtonPress();
-        break;
       case 'phone':
-        handler = authApi.loginWithProvider('phone', token);
+        handler = authApi.loginWithProvider(token);
         break;
       default:
         handler = authApi.login({
@@ -88,6 +72,7 @@ const SignIn = ({ navigation, route }) => {
     Keyboard.dismiss();
     handler
       .then(data => {
+        if (data.user.role.name !== 'Driver') throw 'Role mismatch';
         dispatch(saveInfo(data));
         if (socket.disconnected) socket.connect();
         else initChat();
@@ -95,17 +80,29 @@ const SignIn = ({ navigation, route }) => {
         setLoading(null);
       })
       .catch(err => {
-        const message = err.response.data.data[0].messages[0].id;
-        if (message === 'Auth.form.error.email.taken')
+        try {
+          const message = err.response.data.data[0].messages[0].id;
+          if (message === 'Auth.form.error.email.taken')
+            setAlert({
+              type: 'warning',
+              message: 'Email đã được sử dụng!',
+            });
+          else if (message === 'unauthorized') {
+            setAlert({
+              type: 'warning',
+              message: 'Xác thực thất bại!',
+            });
+          } else
+            setAlert({
+              type: 'warning',
+              message: 'Tài khoản hoặc mật khẩu không đúng!',
+            });
+        } catch (error) {
           setAlert({
             type: 'warning',
-            message: 'Email đã được sử dụng!',
+            message: 'Xác thực thất bại!',
           });
-        else
-          setAlert({
-            type: 'warning',
-            message: 'Tài khoản hoặc mật khẩu không đúng!',
-          });
+        }
         setLoading(null);
         setDisabled(false);
       });
@@ -113,16 +110,16 @@ const SignIn = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {alert && (
+        <ModalMess
+          type={alert.type}
+          message={alert.message}
+          alert={alert}
+          setAlert={setAlert}
+        />
+      )}
+      {loading}
       <KeyboardAwareScrollView enableOnAndroid enableAutomaticScroll>
-        {alert && (
-          <ModalMess
-            type={alert.type}
-            message={alert.message}
-            alert={alert}
-            setAlert={setAlert}
-          />
-        )}
-        {loading}
         <Image
           source={banner}
           resizeMode="contain"
@@ -205,22 +202,6 @@ const SignIn = ({ navigation, route }) => {
               alignItems: 'center',
               flex: 1,
             }}>
-            <TouchableOpacity onPress={() => handleSubmit('google')}>
-              <Icon
-                name="google"
-                type="font-awesome"
-                color="#4285F4"
-                containerStyle={styles.icon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSubmit('facebook')}>
-              <Icon
-                name="facebook"
-                type="font-awesome"
-                color="#4267B2"
-                containerStyle={styles.icon}
-              />
-            </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('forgotPassword', { type: 'signin' })
