@@ -1,6 +1,6 @@
 // Import Component
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl } from 'react-native';
+import { View, FlatList, RefreshControl, StyleSheet } from 'react-native';
 import { Tab, Text, TabView } from 'react-native-elements';
 import Header from '../../components/Header';
 import ShipmentItem from './components/ShipmentItem';
@@ -91,7 +91,7 @@ function OrderScreen({ navigation, ...props }) {
   const renderItem = ({ item, index }) => (
     <ShipmentItem
       item={item}
-      isDone={!item.arrived_time && shipmentState[item._id].checked}
+      isDone={!item.arrived_time && shipmentState[item._id]?.checked}
       onPress={() =>
         navigation.navigate('OrderDetail', {
           shipmentID: item._id,
@@ -123,30 +123,43 @@ function OrderScreen({ navigation, ...props }) {
       <Header headerText={'Đơn vận chuyển'} />
 
       {/* Tab separate Current and Finished shipments */}
-      <Tab
-        value={index}
-        onChange={e => setIndex(e)}
-        indicatorStyle={{
-          backgroundColor: COLORS.primary,
-          height: 5,
-        }}
-        variant="primary">
-        <Tab.Item
-          title="Đơn hàng hiện tại"
-          containerStyle={{ backgroundColor: 'white' }}
-          titleStyle={{ ...FONTS.Smol, color: COLORS.green }}
-          icon={{
-            name: 'local-shipping',
-            color: COLORS.green,
-          }}
-        />
-        <Tab.Item
-          title="Lịch sử đơn hàng"
-          containerStyle={{ backgroundColor: 'white' }}
-          titleStyle={{ ...FONTS.Smol, color: COLORS.primary }}
-          icon={{ name: 'timer', type: 'ionicon', color: COLORS.primary }}
-        />
-      </Tab>
+      <View style={{ paddingHorizontal: 15, height: 62 }}>
+        <Tab
+          value={index}
+          onChange={e => setIndex(e)}
+          indicatorStyle={{
+            height: 0,
+          }}>
+          <Tab.Item
+            title="Đơn hàng hiện tại"
+            titleStyle={{ fontSize: 12, color: COLORS.primary }}
+            containerStyle={{
+              backgroundColor: COLORS.gray,
+              borderTopLeftRadius: 20,
+              borderBottomLeftRadius: 20,
+            }}
+            buttonStyle={[
+              { padding: 3 },
+              index === 0 ? [styles.activeTab] : [styles.inactiveTab],
+            ]}
+          />
+          <Tab.Item
+            title="Lịch sử đơn hàng"
+            titleStyle={{ fontSize: 12, color: COLORS.primary }}
+            containerStyle={[
+              {
+                backgroundColor: COLORS.gray,
+                borderTopRightRadius: 20,
+                borderBottomRightRadius: 20,
+              },
+            ]}
+            buttonStyle={[
+              { padding: 3 },
+              index === 1 ? [styles.activeTab] : [styles.inactiveTab],
+            ]}
+          />
+        </Tab>
+      </View>
 
       {/* List display shipments */}
       <TabView value={index} onChange={setIndex} animationType="spring">
@@ -173,6 +186,20 @@ function OrderScreen({ navigation, ...props }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  activeTab: {
+    backgroundColor: COLORS.white,
+    margin: 8,
+    marginHorizontal: 5,
+    borderRadius: 16,
+  },
+  inactiveTab: {
+    backgroundColor: '#F1F1FA',
+    margin: 8,
+    marginHorizontal: 5,
+  },
+})
 
 const mapStateToProps = state => ({
   shipmentState: state.shipmentState,
