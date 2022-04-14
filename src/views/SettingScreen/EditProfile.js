@@ -159,7 +159,6 @@ const EditProfile = ({ navigation }) => {
 
         <TextField
           title="Tên"
-          style={styles.fsize}
           onChangeText={text => {
             formik.setFieldValue('name', text);
           }}
@@ -170,7 +169,6 @@ const EditProfile = ({ navigation }) => {
 
         <TextField
           title="Email"
-          style={styles.fsize}
           value={formik.values.email}
           onChangeText={text => formik.setFieldValue('email', text)}
           error={formik.touched.email && formik.errors.email}
@@ -180,7 +178,6 @@ const EditProfile = ({ navigation }) => {
         <TextField
           keyboardType="numeric"
           title="Số điện thoại"
-          style={styles.fsize}
           value={formik.values.phone}
           onChangeText={text => formik.setFieldValue('phone', text)}
           error={formik.touched.phone && formik.errors.phone}

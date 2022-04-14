@@ -105,7 +105,6 @@ const ChangePass = props => {
 
         <TextField
           title="Mật khẩu hiện tại"
-          style={styles.fsize}
           value={formik.values.currPass}
           secureTextEntry
           onChangeText={text => formik.setFieldValue('currPass', text)}
