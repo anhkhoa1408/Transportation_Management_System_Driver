@@ -86,6 +86,7 @@ const ConfirmOrder = ({ navigation, route }) => {
         shipment,
         quantity: numOfPackage,
         package: packageId,
+        assmin: false,
       });
       shipmentApi
         .updatePackageImage(packageId, uploadList, deleteList)

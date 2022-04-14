@@ -72,6 +72,7 @@ const SignIn = ({ navigation, route }) => {
     Keyboard.dismiss();
     handler
       .then(data => {
+        if (data.user.role.name !== 'Driver') throw 'Role mismatch';
         dispatch(saveInfo(data));
         if (socket.disconnected) socket.connect();
         else initChat();

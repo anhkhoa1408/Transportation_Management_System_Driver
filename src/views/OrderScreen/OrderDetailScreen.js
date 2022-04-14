@@ -39,12 +39,13 @@ function OrderDetailScreen(props) {
       shipmentApi
         .shipmentDetail(route.params.shipmentID)
         .then(response => {
-          response.shipment_items.map(
-            item =>
-              (response.packages.find(
-                _package => _package.id === item.package,
-              ).received = item.quantity),
-          );
+          response.shipment_items.map(item => {
+            const pkg = response.packages.find(
+              _package => _package.id === item.package,
+            );
+            if (item.assmin) pkg.need_received = item.quantity;
+            else pkg.received = item.quantity;
+          });
           setData(response);
           if (response.from_storage && response.to_storage) {
             setMeta({

@@ -7,14 +7,6 @@ import { ListItem, Button, Icon } from 'react-native-elements';
 import { simplifyString } from '../../../utils/simplifyString';
 
 const PackageItem = ({ item, navigation, isDone, shipment }) => {
-  const renderPackageName = item => {
-    return item?.name ? (
-      <Text style={{ ...FONTS.Big }}>{item.name}</Text>
-    ) : (
-      <Text style={{ ...FONTS.Big }}>ID: {item.id}</Text>
-    );
-  };
-
   return (
     <ListItem.Swipeable
       bottomDivider
@@ -84,6 +76,12 @@ const PackageItem = ({ item, navigation, isDone, shipment }) => {
             <Text style={{ ...FONTS.Smol }}>
               Đã nhận:{' '}
               <Text style={{ ...FONTS.SmolBold }}>{item.received}</Text>
+            </Text>
+          )}
+          {item.need_received && (
+            <Text style={{ ...FONTS.Smol }}>
+              Cần nhận:{' '}
+              <Text style={{ ...FONTS.SmolBold }}>{item.need_received}</Text>
             </Text>
           )}
           <Text style={{ ...FONTS.Smol }}>

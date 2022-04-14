@@ -1,115 +1,41 @@
 {
   "project_info": {
-    "project_number": "874335421915",
-    "project_id": "tms-344708",
-    "storage_bucket": "tms-344708.appspot.com"
+    "project_number": "909748338181",
+    "project_id": "transport-management-sys-5385b",
+    "storage_bucket": "transport-management-sys-5385b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:874335421915:android:7aee78169db32fb19f13fe",
-        "android_client_info": {
-          "package_name": "com.tms.customer"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "874335421915-091ie3k8llfq1r89p6cj1qcl69isjedf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.tms.customer",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "874335421915-b75jajngfosuoeh59hfg91qv8kt493lt.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBhDJukr-5ye-LsjOKRw8xeyWQcFDSESeo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "874335421915-b75jajngfosuoeh59hfg91qv8kt493lt.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:874335421915:android:e8a81cafd4003ec39f13fe",
+        "mobilesdk_app_id": "1:909748338181:android:010e37200e61613e42666c",
         "android_client_info": {
           "package_name": "com.tms.driver"
         }
       },
       "oauth_client": [
         {
-          "client_id": "874335421915-hmgeq9jqlg1pcd4dmlp4ec7s6hvgt0ke.apps.googleusercontent.com",
+          "client_id": "909748338181-6i57ttf3rpejulk8ov767g2vllgknsiu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tms.driver",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "a30fbc352640696024cefa18cfedd530e12af083"
           }
         },
         {
-          "client_id": "874335421915-b75jajngfosuoeh59hfg91qv8kt493lt.apps.googleusercontent.com",
+          "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhDJukr-5ye-LsjOKRw8xeyWQcFDSESeo"
+          "current_key": "AIzaSyC2tdUiFRVqy0zLbPozfKW-Q7-Ej0_Gqrc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "874335421915-b75jajngfosuoeh59hfg91qv8kt493lt.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:874335421915:android:95971c51e3bd86e39f13fe",
-        "android_client_info": {
-          "package_name": "com.tms.storekeeper"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "874335421915-iicos9c8d4qqvla0csbtbjono9eu8870.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.tms.storekeeper",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "874335421915-b75jajngfosuoeh59hfg91qv8kt493lt.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBhDJukr-5ye-LsjOKRw8xeyWQcFDSESeo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "874335421915-b75jajngfosuoeh59hfg91qv8kt493lt.apps.googleusercontent.com",
+              "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
