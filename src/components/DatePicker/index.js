@@ -87,9 +87,10 @@ const style = StyleSheet.create({
   title: {
     color: '#000',
     textAlign: 'left',
+    fontSize: 15,
   },
   containerTitle: {
-    fontSize: 20,
+    fontSize: 15,
     color: '#000000',
   },
 });
