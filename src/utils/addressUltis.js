@@ -1,13 +1,25 @@
 export const joinAddress = (addressObj, detail = 'FULL') => {
-  if (!addressObj) return '';
+  if (!addressObj) return 'Chưa xác định';
+  let address;
   switch (detail) {
     case 'FIRST':
-      return `${addressObj.street}, ${addressObj.ward}`;
+      address = `${addressObj.street}, ${addressObj.ward}`;
     case 'LAST':
-      return `${addressObj.province}, ${addressObj.city}`;
+      address = `${addressObj.province}, ${addressObj.city}`;
     default:
-      return `${addressObj.street}, ${addressObj.ward}, ${addressObj.province}, ${addressObj.city}`;
+      address = `${addressObj.street}, ${addressObj.ward}, ${addressObj.province}, ${addressObj.city}`;
   }
+  address = address.trim();
+  while (address.indexOf(',') === 0) {
+    address = address.slice(1).trim();
+  }
+  while (
+    address.length > 0 &&
+    address.lastIndexOf(',') === address.length - 1
+  ) {
+    address = address.slice(0, address.length - 1).trim();
+  }
+  return address === '' ? 'Chưa xác định' : address;
 };
 
 export function getDistanceFromCordinateInKm(lat1, lon1, lat2, lon2) {

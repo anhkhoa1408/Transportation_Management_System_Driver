@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { socket } from '../../config/socketIO';
 import { addMessage } from '../../actions/actions';
 import { connect } from 'react-redux';
-import { getAvatarFromUri } from '../../utils/avatarUltis';
+import { getAvatarFromUri, getName } from '../../utils/avatarUltis';
 
 const MessageScreen = props => {
   const { navigation, route, messenger, user, customerInfo } = props;
@@ -40,7 +40,7 @@ const MessageScreen = props => {
             onPress={() => navigation.goBack()}
           />
         </TouchableOpacity>
-        <Text h4>{customer?.name}</Text>
+        <Text h4>{getName(customer?.name)}</Text>
         <Avatar
           rounded
           size="small"

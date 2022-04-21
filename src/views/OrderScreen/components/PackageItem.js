@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { COLORS, FONTS, STYLES } from '../../../styles';
 import PackageImage from '../../../assets/images/package.png';
 import { ListItem, Button, Icon } from 'react-native-elements';
-import { simplifyString } from '../../../utils/simplifyString';
+import { joinAddress } from '../../../utils/addressUltis';
 
 const PackageItem = ({ item, navigation, isDone, shipment }) => {
   return (
@@ -87,12 +87,7 @@ const PackageItem = ({ item, navigation, isDone, shipment }) => {
           <Text style={{ ...FONTS.Smol }}>
             Địa điểm hiện tại:{' '}
             <Text style={[FONTS.SmolBold]}>
-              {item.current_address
-                ? simplifyString(
-                    Object.values(item.current_address).slice(1, 5).join(', '),
-                    20,
-                  )
-                : 'Chưa có thông tin'}
+              {joinAddress(item.current_address)}
             </Text>
           </Text>
         </View>
