@@ -28,7 +28,7 @@ const InfoCard = ({ item }) => {
         />
 
         <ListItem.Subtitle
-          style={{ fontSize: 28, fontWeight: 'bold', color: '#000' }}>
+          style={{ fontSize: 22, fontWeight: 'bold', color: '#000' }}>
           {item.count}
         </ListItem.Subtitle>
       </ListItem.Content>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     shadowColor: COLORS.primary,
   },
   titleFont: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#737373',
   },
 });

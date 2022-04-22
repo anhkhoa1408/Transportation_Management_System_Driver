@@ -162,7 +162,9 @@ function OrderScreen({ navigation, ...props }) {
 
       {/* List display shipments */}
       <TabView value={index} onChange={setIndex} animationType="spring">
-        <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
+        <TabView.Item
+          onMoveShouldSetResponder={e => e.stopPropagation()}
+          style={{ width: '100%', paddingTop: 10 }}>
           <FlatList
             data={currentShipment}
             renderItem={renderItem}
@@ -171,7 +173,9 @@ function OrderScreen({ navigation, ...props }) {
             refreshing={refreshingC}
           />
         </TabView.Item>
-        <TabView.Item style={{ width: '100%', paddingTop: 10 }}>
+        <TabView.Item
+          onMoveShouldSetResponder={e => e.stopPropagation()}
+          style={{ width: '100%', paddingTop: 10 }}>
           <FlatList
             data={finishedShipment}
             renderItem={renderItem}
@@ -198,7 +202,7 @@ const styles = StyleSheet.create({
     margin: 8,
     marginHorizontal: 5,
   },
-})
+});
 
 const mapStateToProps = state => ({
   shipmentState: state.shipmentState,

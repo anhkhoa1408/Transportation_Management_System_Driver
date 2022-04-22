@@ -145,7 +145,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: COLORS.white,
     height: 90,
-    marginHorizontal: 20,
+    marginHorizontal: 15,
     bottom: 15,
     shadowColor: COLORS.primary,
     elevation: 20,

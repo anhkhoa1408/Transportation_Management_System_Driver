@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { Card, Icon, Text } from 'react-native-elements';
-import PillButton from '../../components/CustomButton/PillButton';
-import { DatePicker } from './../../components/DatePicker';
-import CustomInput from '../../components/CustomInput/CustomInput';
-import { primary } from '../../styles/color';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Icon, Text } from 'react-native-elements';
 import carAPI from '../../api/carAPI';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
+import CustomInput from '../../components/CustomInput/CustomInput';
+import { DatePicker } from './../../components/DatePicker';
 
 const ErrorForm = props => {
   const [cause, setCause] = useState('');
@@ -35,13 +34,8 @@ const ErrorForm = props => {
             value={cause}
           />
         </View>
-        <PillButton
+        <PrimaryButton
           title="Gửi"
-          containerStyle={formStyle.button}
-          buttonStyle={{
-            backgroundColor: primary,
-          }}
-          type="solid"
           onPress={() =>
             carAPI
               .create({

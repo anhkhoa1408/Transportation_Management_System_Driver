@@ -245,7 +245,7 @@ export const styles = StyleSheet.create({
   },
   forgot: {
     color: COLORS.primary,
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
     alignSelf: 'flex-end',
   },
