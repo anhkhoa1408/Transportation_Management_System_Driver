@@ -35,18 +35,21 @@ const Account = ({ navigation, userInfo }) => {
       title: 'Chỉnh sửa thông tin',
       icon: 'edit',
       navigate: 'EditProfile',
-      color: '#CCC',
+      color: COLORS.primary,
+      neutral: COLORS.neutralPrimary,
     },
     {
       title: 'Đổi mật khẩu',
       icon: 'lock',
       navigate: 'ChangePass',
-      color: '#fc6603',
+      color: COLORS.warning,
+      neutral: COLORS.neutralWarning,
     },
     {
       title: 'Đăng xuất',
       icon: 'logout',
-      color: danger,
+      color: COLORS.danger,
+      neutral: COLORS.neutralDanger,
     },
   ];
 
@@ -56,15 +59,16 @@ const Account = ({ navigation, userInfo }) => {
       icon: 'language',
       name: 'language',
       state: toggle.language,
-      color: '#ac4ff7',
+      color: COLORS.purple,
+      neutral: COLORS.neutralPurple,
     },
-    {
-      title: 'Chế độ tối',
-      icon: 'nightlight-round',
-      name: 'nightMode',
-      state: toggle.nightMode,
-      color: '#000',
-    },
+    // {
+    //   title: 'Chế độ tối',
+    //   icon: 'nightlight-round',
+    //   name: 'nightMode',
+    //   state: toggle.nightMode,
+    //   color: '#000',
+    // },
     // {
     //   title: 'Thông báo',
     //   icon: 'notifications',
@@ -98,21 +102,31 @@ const Account = ({ navigation, userInfo }) => {
           bottomDivider>
           <View
             style={{
-              backgroundColor: item.color,
+              backgroundColor: item.neutral,
               padding: 10,
               borderRadius: 12,
             }}>
-            <Icon name={item.icon} color="#FFF" size={22} />
+            <Icon name={item.icon} color={item.color} size={22} />
           </View>
           <ListItem.Title
-            style={[FONTS.Medium, {
-              flex: 1,
-              marginLeft: 10,
-            }]}>
+            style={[
+              FONTS.Medium,
+              {
+                flex: 1,
+                marginLeft: 10,
+              },
+            ]}>
             {item.title}
           </ListItem.Title>
 
-          <ListItem.Chevron size={22} />
+          <View
+            style={{
+              padding: 10,
+              backgroundColor: COLORS.gray,
+              borderRadius: 12,
+            }}>
+            <ListItem.Chevron size={22} />
+          </View>
         </ListItem>
       </TouchableOpacity>
     );
@@ -130,17 +144,20 @@ const Account = ({ navigation, userInfo }) => {
           bottomDivider>
           <View
             style={{
-              backgroundColor: item.color,
+              backgroundColor: item.neutral,
               padding: 10,
               borderRadius: 12,
             }}>
-            <Icon name={item.icon} color="#FFF" size={22} />
+            <Icon name={item.icon} color={item.color} size={22} />
           </View>
           <ListItem.Title
-            style={[FONTS.Medium, {
-              flex: 1,
-              marginLeft: 10,
-            }]}>
+            style={[
+              FONTS.Medium,
+              {
+                flex: 1,
+                marginLeft: 10,
+              },
+            ]}>
             {item.title}
           </ListItem.Title>
 
@@ -153,7 +170,7 @@ const Account = ({ navigation, userInfo }) => {
             <Switch
               onValueChange={e => toggleSwitch(e, item)}
               thumbColor="#FFF"
-              trackColor={{ false: '#CCC', true: success }}
+              trackColor={{ false: COLORS.gray, true: success }}
               value={item.state}
             />
           </View>
@@ -199,8 +216,13 @@ const Account = ({ navigation, userInfo }) => {
     <SafeAreaView style={styles.container}>
       <View nestedScrollEnabled style={styles.header}>
         <Avatar
-          rounded
-          size="large"
+          avatarStyle={{
+            borderRadius: 25,
+          }}
+          containerStyle={{
+            width: 55,
+            height: 55,
+          }}
           source={{
             uri: getAvatarFromUser(userInfo.user),
           }}
@@ -243,10 +265,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
     paddingHorizontal: 30,
-    marginBottom: 45,
-    marginTop: 30,
+    paddingVertical: 20,
+    marginVertical: 20,
+    marginHorizontal: 15,
+    elevation: 15,
+    shadowColor: COLORS.primary,
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    marginBottom: 20
   },
   bigText: {
     fontWeight: 'bold',
@@ -266,7 +293,7 @@ const styles = StyleSheet.create({
   statusText: {
     color: success,
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 15,
   },
   sectionText: {
     alignSelf: 'flex-start',
@@ -282,6 +309,6 @@ const styles = StyleSheet.create({
     backgroundColor: success,
   },
   switchOff: {
-    backgroundColor: '#CCC',
+    backgroundColor: COLORS.gray,
   },
 });

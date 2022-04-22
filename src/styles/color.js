@@ -9,12 +9,14 @@ export const red = '#BF3B3B';
 export const background1 = '#F0F1F5';
 export const header = '#39b2f7';
 export const gray = '#F3F3FA';
-export const green = '#30BA00';
 export const neutralPrimary = '#d1f3ff';
 export const neutralSuccess = '#bfffcc';
 export const neutralWarning = '#ffeecc';
 export const neutralDanger = '#ffd4d9';
-export const map = '#1a73e8';
+export const neutralHeader = '#def1fc';
+export const bolderGray = '#d4d4d4';
+export const purple = '#ac4ff7';
+export const neutralPurple = '#f6ebff';
 
 export default {
   primary,
@@ -28,10 +30,12 @@ export default {
   background1,
   header,
   gray,
-  green,
   neutralPrimary,
   neutralSuccess,
   neutralWarning,
   neutralDanger,
-  map,
+  neutralHeader,
+  bolderGray,
+  purple,
+  neutralPurple
 };
