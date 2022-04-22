@@ -217,7 +217,7 @@ const Account = ({ navigation, userInfo }) => {
       <View nestedScrollEnabled style={styles.header}>
         <Avatar
           avatarStyle={{
-            borderRadius: 25,
+            borderRadius: 30,
           }}
           containerStyle={{
             width: 55,

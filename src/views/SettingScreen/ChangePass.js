@@ -93,7 +93,7 @@ const ChangePass = props => {
       <KeyboardAwareScrollView
         enableOnAndroid
         enableAutomaticScroll
-        contentContainerStyle={{ padding: 25 }}>
+        contentContainerStyle={{ paddingHorizontal: 25 }}>
         <Text
           style={{
             textAlign: 'center',
