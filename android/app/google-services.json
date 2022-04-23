@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:909748338181:android:002e39bb9d48b2f942666c",
+        "android_client_info": {
+          "package_name": "com.tms.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909748338181-e42d7bojost6mlm5gn906mdsren9gkf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tms.customer",
+            "certificate_hash": "da9707b0e2bc7647734c6d466752b7bfcc37a002"
+          }
+        },
+        {
+          "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2tdUiFRVqy0zLbPozfKW-Q7-Ej0_Gqrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:909748338181:android:010e37200e61613e42666c",
         "android_client_info": {
           "package_name": "com.tms.driver"
@@ -14,11 +51,48 @@
       },
       "oauth_client": [
         {
-          "client_id": "909748338181-6i57ttf3rpejulk8ov767g2vllgknsiu.apps.googleusercontent.com",
+          "client_id": "909748338181-b2jnhstf2ssae01lk8vhff18un1r8kcr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tms.driver",
-            "certificate_hash": "a30fbc352640696024cefa18cfedd530e12af083"
+            "certificate_hash": "13357936e81b6760ec61619af11e64c68e06d265"
+          }
+        },
+        {
+          "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2tdUiFRVqy0zLbPozfKW-Q7-Ej0_Gqrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909748338181-vkfg611m98g2ajvufuic858p9jmsnthp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909748338181:android:f1342e627ca1fbba42666c",
+        "android_client_info": {
+          "package_name": "com.tms.storekeeper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909748338181-c1v8mhj489fqa4v0emd3qhk9jukhofm3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tms.storekeeper",
+            "certificate_hash": "b0efc94edda394203ddedd937f3aee87ea90fb4c"
           }
         },
         {
