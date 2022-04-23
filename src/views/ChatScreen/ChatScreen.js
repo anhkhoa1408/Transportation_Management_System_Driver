@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { socket } from '../../config/socketIO';
 import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
 import { formatDate } from '../../utils/dateUtils';
+import Header from '../../components/Header';
+import HeaderAvatar from '../../components/HeaderAvatar';
 
 const ChatScreen = props => {
   const { userInfo, messenger, navigation, customerInfo } = props;
@@ -41,16 +43,15 @@ const ChatScreen = props => {
 
   return (
     <View style={chatScreenStyle.container}>
-      <View style={chatScreenStyle.header}>
-        <Text h4>Tin nhắn</Text>
-        <Avatar
-          rounded
-          size="small"
-          source={{
-            uri: getAvatarFromUser(userInfo.user),
-          }}
-        />
-      </View>
+      <Header
+        headerText={'Tin nhắn'}
+        rightElement={
+          <HeaderAvatar
+            url={getAvatarFromUser(userInfo.user)}
+            onPressAction={() => navigation.navigate('EditProfile')}
+          />
+        }
+      />
 
       <View style={{ width: '100%', paddingHorizontal: 20 }}>
         <CustomSearch />

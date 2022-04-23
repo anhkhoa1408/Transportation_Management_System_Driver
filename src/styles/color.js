@@ -17,6 +17,8 @@ export const neutralHeader = '#def1fc';
 export const bolderGray = '#d4d4d4';
 export const purple = '#ac4ff7';
 export const neutralPurple = '#f6ebff';
+export const green = '#30BA00';
+export const map = '#1a73e8';
 
 export default {
   primary,
@@ -37,5 +39,7 @@ export default {
   neutralHeader,
   bolderGray,
   purple,
-  neutralPurple
+  neutralPurple,
+  green,
+  map,
 };
