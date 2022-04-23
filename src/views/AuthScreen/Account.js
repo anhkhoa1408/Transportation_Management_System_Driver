@@ -227,13 +227,13 @@ const Account = ({ navigation, userInfo }) => {
             uri: getAvatarFromUser(userInfo.user),
           }}
         />
-        <View style={{ marginLeft: 20, flex: 1 }}>
+        <View style={{ marginLeft: 20, flex: 1, marginRight: 5 }}>
           <Text style={styles.smallText}>Nhân viên</Text>
           <Text style={styles.bigText}>{userInfo?.user?.name}</Text>
           {/* <Text style={styles.statusText}>Đang làm việc</Text> */}
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
-          <Icon name="edit" size={28} color={COLORS.primary} />
+          <Icon name="edit" size={25} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     paddingVertical: 20,
     marginVertical: 20,
     marginHorizontal: 15,
