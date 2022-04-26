@@ -9,7 +9,7 @@ import TextField from '../../components/TextField';
 
 const AbsenceForm = props => {
   const [cause, setCause] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState("");
   const [absenceDays, setAbsenceDays] = useState('1');
 
   return (
@@ -29,7 +29,7 @@ const AbsenceForm = props => {
             flexDirection: 'column',
           }}>
           <Text>Ngày bắt đầu nghỉ</Text>
-          <DatePicker onDateChange={setStartDate} mode="datetime" />
+          <DatePicker date={startDate} setDate={setStartDate} />
           <Text>Số ngày nghỉ</Text>
           <TextField
             name="Số ngày nghỉ"

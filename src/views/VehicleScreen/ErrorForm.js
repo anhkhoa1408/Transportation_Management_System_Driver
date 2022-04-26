@@ -8,7 +8,7 @@ import { DatePicker } from './../../components/DatePicker';
 
 const ErrorForm = props => {
   const [cause, setCause] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState();
 
   return (
     <View>
@@ -24,7 +24,7 @@ const ErrorForm = props => {
             flexDirection: 'column',
           }}>
           <Text>Thời gian</Text>
-          <DatePicker onDateChange={setDate} />
+          <DatePicker date={date} setDate={setDate} />
           <Text style={{ marginTop: 20 }}>Nguyên nhân</Text>
           <CustomInput
             multiline={true}
