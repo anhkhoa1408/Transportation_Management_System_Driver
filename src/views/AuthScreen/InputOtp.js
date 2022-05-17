@@ -8,6 +8,7 @@ import * as Bonk from 'yup';
 import { useFormik } from 'formik';
 import { danger, success, warning } from '../../styles/color';
 import banner from './../../assets/images/otp_banner.png';
+import ModalMess from '../../components/ModalMess';
 import Loading from './../../components/Loading';
 import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 import { Divider, Image, Text } from 'react-native-elements';
@@ -17,6 +18,7 @@ const InputOtp = ({ navigation, route }) => {
   const { meta, phone } = route.params;
   const [vCode, setVCode] = useState('');
   const [timer, setTimer] = useState(60);
+  const [alert, setAlert] = useState(null);
   const [verificator, setVerificator] = useState(null);
 
   const dispatch = useDispatch();
@@ -37,13 +39,19 @@ const InputOtp = ({ navigation, route }) => {
 
   const handleSubmit = values => {
     if (verificator) {
-      getPhoneToken(verificator, values.code).then(token =>
-        navigation.navigate({
-          name: meta.navigate,
-          params: { token: token },
-          merge: true,
-        }),
-      );
+      getPhoneToken(verificator, values.code)
+        .then(token =>
+          navigation.navigate({
+            name: meta.navigate,
+            params: { token: token },
+            merge: true,
+          }),
+        )
+        .catch(error => {
+          setAlert(true);
+        });
+    } else {
+      setAlert(true);
     }
   };
 
@@ -68,6 +76,14 @@ const InputOtp = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {alert && (
+        <ModalMess
+          type={'danger'}
+          message="Mã OTP không hợp lệ"
+          setAlert={setAlert}
+          alert={alert}
+        />
+      )}
       <Image
         resizeMode="contain"
         style={styles.background}
