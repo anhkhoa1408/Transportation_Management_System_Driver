@@ -4,8 +4,10 @@ export const joinAddress = (addressObj, detail = 'FULL') => {
   switch (detail) {
     case 'FIRST':
       address = `${addressObj.street}, ${addressObj.ward}`;
+      break;
     case 'LAST':
       address = `${addressObj.province}, ${addressObj.city}`;
+      break;
     default:
       address = `${addressObj.street}, ${addressObj.ward}, ${addressObj.province}, ${addressObj.city}`;
   }

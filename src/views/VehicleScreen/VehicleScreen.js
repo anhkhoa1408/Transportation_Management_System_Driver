@@ -40,8 +40,11 @@ const VehicleScreen = () => {
 
   return (
     <>
-      {!car.licence && <Loading />}
-      <FocusStatusBar backgroundColor={COLORS.header} barStyle="white-content" />
+      {!car?.licence && <Loading />}
+      <FocusStatusBar
+        backgroundColor={COLORS.header}
+        barStyle="white-content"
+      />
       <SafeAreaView style={vehicleStyle.container}>
         <View style={vehicleStyle.headerContainer}>
           <View style={vehicleStyle.headerContent}>

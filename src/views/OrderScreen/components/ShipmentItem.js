@@ -103,9 +103,7 @@ export default function ShipmentItem({
             marginLeft: 10,
             alignItems: 'flex-start',
           }}>
-          <Text style={{ ...FONTS.MediumBold }}>
-            Đến: {joinAddress(getAddress(item), 'FIRST')}
-          </Text>
+          <Text style={{ ...FONTS.MediumBold }}>{getAddressText(item)}</Text>
           <Text
             style={{
               ...FONTS.MediumBold,
@@ -147,12 +145,11 @@ export default function ShipmentItem({
   );
 }
 
-function getAddress(item) {
+function getAddressText(item) {
   if (item.from_storage && item.to_storage) {
-    return item.to_storage.to_address;
-  } else if (item.to_storage) {
-    return item.from_address;
-  } else if (item.from_storage) {
-    return item.to_address;
+    return `Chuyển hàng đến ${item.to_address.city}`;
+  } else {
+    const address = joinAddress(item.from_address, 'FIRST');
+    return `Nhận hàng tại ${address}`;
   }
 }

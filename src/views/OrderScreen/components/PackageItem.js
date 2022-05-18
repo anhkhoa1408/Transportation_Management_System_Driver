@@ -72,24 +72,18 @@ const PackageItem = ({ item, navigation, isDone, shipment }) => {
           <Text style={{ ...FONTS.Smol }}>
             Số lượng: <Text style={{ ...FONTS.SmolBold }}>{item.quantity}</Text>
           </Text>
-          {item.received && (
+          {item.received >= 0 && (
             <Text style={{ ...FONTS.Smol }}>
               Đã nhận:{' '}
               <Text style={{ ...FONTS.SmolBold }}>{item.received}</Text>
             </Text>
           )}
-          {item.need_received && (
+          {item.need_received >= 0 && (
             <Text style={{ ...FONTS.Smol }}>
               Cần nhận:{' '}
               <Text style={{ ...FONTS.SmolBold }}>{item.need_received}</Text>
             </Text>
           )}
-          <Text style={{ ...FONTS.Smol }}>
-            Địa điểm hiện tại:{' '}
-            <Text style={[FONTS.SmolBold]}>
-              {joinAddress(item.current_address)}
-            </Text>
-          </Text>
         </View>
       </ListItem.Content>
     </ListItem.Swipeable>

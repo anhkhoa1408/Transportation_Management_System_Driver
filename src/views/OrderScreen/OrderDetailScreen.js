@@ -49,13 +49,13 @@ function OrderDetailScreen(props) {
           setData(response);
           if (response.from_storage && response.to_storage) {
             setMeta({
-              address: response.to_storage.to_address,
+              address: response.to_address,
             });
           } else if (response.to_storage) {
             setMeta({
               name: response.sender_name,
               phone: response.sender_phone,
-              address: response.from_address,
+              address: response.to_address,
             });
           } else if (response.from_storage) {
             setMeta({
@@ -107,6 +107,13 @@ function OrderDetailScreen(props) {
       );
   };
 
+  const finishShipment = () => {
+    shipmentApi
+      .finishShipment(data.id)
+      .then(data => navigation.goBack())
+      .catch(err => console.log(err));
+  };
+
   return (
     // TODO: Show order price
     <View style={{ ...STYLES.container }}>
@@ -115,6 +122,16 @@ function OrderDetailScreen(props) {
           <Icon name="west" size={30} onPress={() => navigation.goBack()} />
         }
         headerText={'Chi tiết đơn hàng'}
+        rightElement={
+          data.driver && (
+            <Icon
+              name="check"
+              size={30}
+              color={COLORS.primary}
+              onPress={() => finishShipment()}
+            />
+          )
+        }
       />
 
       {alert && (
@@ -126,8 +143,8 @@ function OrderDetailScreen(props) {
         />
       )}
 
-      {meta?.name && (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        {meta?.name && (
           <View
             style={{
               ...STYLES.row,
@@ -163,56 +180,56 @@ function OrderDetailScreen(props) {
               </TouchableOpacity>
             </View>
           </View>
+        )}
 
-          <View
-            style={{
-              ...STYLES.row,
-              ...STYLES.subContainer,
-              ...styles.borderBottom,
-              paddingBottom: 18,
-            }}>
-            <InfoField
-              title={'Địa chỉ'}
-              style={{ flex: 1 }}
-              content={meta?.address && joinAddress(meta.address)}
-            />
-            <InfoField
-              title={'Khối lượng'}
-              style={{ flex: 0.6 }}
-              content={
-                Array.isArray(data.packages) &&
-                data.packages.reduce(
-                  (previous, current) =>
-                    previous + current.weight * current.quantity,
-                  0,
-                ) + ' Kg'
-              }
-            />
-          </View>
-
-          <FlatList
-            data={data.packages}
-            renderItem={renderItem}
-            keyExtractor={item => `${item.id}`}
+        <View
+          style={{
+            ...STYLES.row,
+            ...STYLES.subContainer,
+            ...styles.borderBottom,
+            paddingBottom: 18,
+          }}>
+          <InfoField
+            title={'Địa chỉ'}
+            style={{ flex: 1 }}
+            content={data?.to_address && joinAddress(data.to_address)}
           />
-
-          {!data.arrived_time && data.driver && (
-            <PrimaryButton
-              title="Thanh toán"
-              backgroundColor={COLORS.header}
-              containerStyle={{ margin: 20 }}
-              onPress={() =>
-                navigation.navigate('PaymentScreen', {
-                  name: meta?.name,
-                  phone: meta?.phone,
-                  fee: data.remain_fee,
-                  order: data.order_id,
-                })
-              }
-            />
-          )}
+          <InfoField
+            title={'Khối lượng'}
+            style={{ flex: 0.6 }}
+            content={
+              Array.isArray(data.packages) &&
+              data.packages.reduce(
+                (previous, current) =>
+                  previous + current.weight * current.quantity,
+                0,
+              ) + ' Kg'
+            }
+          />
         </View>
-      )}
+
+        <FlatList
+          data={data.packages}
+          renderItem={renderItem}
+          keyExtractor={item => `${item.id}`}
+        />
+
+        {!data.arrived_time && data.driver && (
+          <PrimaryButton
+            title="Thanh toán"
+            backgroundColor={COLORS.header}
+            containerStyle={{ margin: 20 }}
+            onPress={() =>
+              navigation.navigate('PaymentScreen', {
+                name: meta?.name,
+                phone: meta?.phone,
+                fee: data.remain_fee,
+                order: data.order_id,
+              })
+            }
+          />
+        )}
+      </View>
 
       {meta && !data.driver && (
         <PrimaryButton
@@ -223,7 +240,7 @@ function OrderDetailScreen(props) {
         />
       )}
 
-      {!meta?.name && (
+      {/* !{data.length && (
         <View
           style={{
             alignItems: 'center',
@@ -234,7 +251,7 @@ function OrderDetailScreen(props) {
             No Record
           </Text>
         </View>
-      )}
+      )} */}
     </View>
   );
 }
