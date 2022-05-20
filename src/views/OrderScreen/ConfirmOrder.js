@@ -146,10 +146,11 @@ const ConfirmOrder = ({ navigation, route }) => {
             message={alert.message}
             setAlert={_alert => {
               setAlert(_alert);
-              navigation.navigate({
-                name: 'OrderDetail',
-                merge: true,
-              });
+              if (alert.type === 'success')
+                navigation.navigate({
+                  name: 'OrderDetail',
+                  merge: true,
+                });
             }}
             alert={alert}
           />
