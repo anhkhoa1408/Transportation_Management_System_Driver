@@ -19,14 +19,13 @@ import TextField from '../../components/TextField';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const ConfirmOrder = ({ navigation, route }) => {
+  const { packageId, shipment, current } = route?.params;
   const [images, setImages] = useState([]);
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(false);
   const [deleteList, setDelete] = useState([]);
   const [uploadList, setUpload] = useState([]);
-  const [numOfPackage, setNumOfPackage] = useState('1');
-
-  const { packageId, shipment } = route?.params;
+  const [numOfPackage, setNumOfPackage] = useState(`${current ? current : 1}`);
 
   const handleImages = async () => {
     if (images.reduce((acc, ele) => (ele ? acc + 1 : acc), 0) >= 3) {
@@ -145,7 +144,13 @@ const ConfirmOrder = ({ navigation, route }) => {
           <ModalMess
             type={alert.type}
             message={alert.message}
-            setAlert={setAlert}
+            setAlert={_alert => {
+              setAlert(_alert);
+              navigation.navigate({
+                name: 'OrderDetail',
+                merge: true,
+              });
+            }}
             alert={alert}
           />
         )}

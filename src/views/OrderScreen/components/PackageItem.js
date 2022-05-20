@@ -6,14 +6,14 @@ import PackageImage from '../../../assets/images/package.png';
 import { ListItem, Button, Icon } from 'react-native-elements';
 import { joinAddress } from '../../../utils/addressUltis';
 
-const PackageItem = ({ item, navigation, isDone, shipment }) => {
+const PackageItem = ({ item, navigation, isDone, shipment, type }) => {
   return (
     <ListItem.Swipeable
       bottomDivider
       rightContent={
         !isDone && (
           <Button
-            title="Nhận hàng"
+            title={`${type} hàng`}
             icon={{ name: 'camera', color: 'white' }}
             buttonStyle={{
               backgroundColor: COLORS.header,
@@ -24,6 +24,7 @@ const PackageItem = ({ item, navigation, isDone, shipment }) => {
                 packageId: item.id,
                 packageImage: item.images,
                 shipment: shipment,
+                current: item.received,
               })
             }
           />
@@ -72,15 +73,15 @@ const PackageItem = ({ item, navigation, isDone, shipment }) => {
           <Text style={{ ...FONTS.Smol }}>
             Số lượng: <Text style={{ ...FONTS.SmolBold }}>{item.quantity}</Text>
           </Text>
-          {item.received >= 0 && (
+          {type && item.received >= 0 && (
             <Text style={{ ...FONTS.Smol }}>
-              Đã nhận:{' '}
+              Đã {type.toLowerCase()}:{' '}
               <Text style={{ ...FONTS.SmolBold }}>{item.received}</Text>
             </Text>
           )}
-          {item.need_received >= 0 && (
+          {type && item.need_received >= 0 && (
             <Text style={{ ...FONTS.Smol }}>
-              Cần nhận:{' '}
+              Cần {type.toLowerCase()}:{' '}
               <Text style={{ ...FONTS.SmolBold }}>{item.need_received}</Text>
             </Text>
           )}

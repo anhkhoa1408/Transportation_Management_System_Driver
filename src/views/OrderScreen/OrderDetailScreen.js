@@ -43,25 +43,29 @@ function OrderDetailScreen(props) {
             const pkg = response.packages.find(
               _package => _package.id === item.package,
             );
-            if (item.assmin) pkg.need_received = item.quantity;
+            if (item.assmin)
+              pkg.need_received = item.quantity || item.export_received;
             else pkg.received = item.quantity;
           });
           setData(response);
           if (response.from_storage && response.to_storage) {
             setMeta({
               address: response.to_address,
+              type: 'Chuyển',
             });
           } else if (response.to_storage) {
             setMeta({
               name: response.sender_name,
               phone: response.sender_phone,
               address: response.to_address,
+              type: 'Nhận',
             });
           } else if (response.from_storage) {
             setMeta({
               name: response.receiver_name,
               phone: response.receiver_phone,
               address: response.to_address,
+              type: 'Giao',
             });
           }
         })
@@ -74,6 +78,7 @@ function OrderDetailScreen(props) {
       navigation={navigation}
       isDone={route?.params?.isDone}
       shipment={route.params.shipmentID}
+      type={meta?.type}
     />
   );
 
@@ -123,6 +128,7 @@ function OrderDetailScreen(props) {
         }
         headerText={'Chi tiết đơn hàng'}
         rightElement={
+          !data.arrived_time &&
           data.driver && (
             <Icon
               name="check"
@@ -189,11 +195,19 @@ function OrderDetailScreen(props) {
             ...styles.borderBottom,
             paddingBottom: 18,
           }}>
-          <InfoField
-            title={'Địa chỉ'}
+          <TouchableOpacity
             style={{ flex: 1 }}
-            content={data?.to_address && joinAddress(data.to_address)}
-          />
+            onPress={() =>
+              !data.arrived_time &&
+              navigation.navigate('MapScreen', {
+                destination: getItemDestination(data),
+              })
+            }>
+            <InfoField
+              title={'Địa chỉ'}
+              content={data?.to_address && joinAddress(data.to_address)}
+            />
+          </TouchableOpacity>
           <InfoField
             title={'Khối lượng'}
             style={{ flex: 0.6 }}
@@ -214,7 +228,7 @@ function OrderDetailScreen(props) {
           keyExtractor={item => `${item.id}`}
         />
 
-        {!data.arrived_time && data.driver && (
+        {meta?.type !== 'Chuyển' && !data.arrived_time && data.driver && (
           <PrimaryButton
             title="Thanh toán"
             backgroundColor={COLORS.header}
@@ -233,7 +247,7 @@ function OrderDetailScreen(props) {
 
       {meta && !data.driver && (
         <PrimaryButton
-          title="Nhận đơn hàng"
+          title={'Nhận đơn hàng'}
           backgroundColor={COLORS.header}
           containerStyle={{ margin: 20 }}
           onPress={acceptOrder}
@@ -254,6 +268,15 @@ function OrderDetailScreen(props) {
       )} */}
     </View>
   );
+}
+
+function getItemDestination(item) {
+  if (item.to_address?.latitude && item.to_address?.longitude)
+    return {
+      latitude: item.to_address.latitude,
+      longitude: item.to_address.longitude,
+    };
+  else return undefined;
 }
 
 const styles = StyleSheet.create({
