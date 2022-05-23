@@ -130,7 +130,7 @@ function OrderScreen({ navigation, ...props }) {
             height: 0,
           }}>
           <Tab.Item
-            title="Đơn hàng hiện tại"
+            title="Đơn hiện tại"
             titleStyle={{ fontSize: 12, color: COLORS.primary }}
             containerStyle={{
               backgroundColor: COLORS.gray,
@@ -143,7 +143,7 @@ function OrderScreen({ navigation, ...props }) {
             ]}
           />
           <Tab.Item
-            title="Lịch sử đơn hàng"
+            title="Đã vận chuyển"
             titleStyle={{ fontSize: 12, color: COLORS.primary }}
             containerStyle={[
               {

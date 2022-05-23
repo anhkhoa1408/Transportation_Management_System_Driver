@@ -1,21 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  SafeAreaView,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-import { Icon, CheckBox, Avatar, Text, Divider } from 'react-native-elements';
-import { COLORS, FONTS, STYLES } from '../../styles';
-import img from '../../assets/images/download.jpg';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import React from 'react';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { Icon, Text } from 'react-native-elements';
 import Header from '../../components/Header';
-import { joinAddress } from '../../utils/addressUltis';
-import PackageItem from './components/PackageItem';
 import InfoField from '../../components/InfoField';
-import shipmentApi from '../../api/shipmentAPI';
+import { COLORS, STYLES } from '../../styles';
 import PackageImage from './components/PackageImage';
 
 const PackageDetailScreen = ({ navigation, route }) => {
@@ -34,38 +22,37 @@ const PackageDetailScreen = ({ navigation, route }) => {
         <View
           style={{
             ...STYLES.row,
-            backgroundColor: COLORS.white,
-            elevation: 3,
-            padding: 20,
-            marginBottom: 10,
-            borderRadius: 15,
+            paddingTop: 10,
+            paddingBottom: 15,
+            alignItems: 'center',
           }}>
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
             <View
               style={{
-                backgroundColor: COLORS.primary,
-                padding: 5,
-                borderRadius: 15,
-                marginRight: 20,
+                backgroundColor: COLORS.white,
+                padding: 12,
+                borderRadius: 8,
+                elevation: 12,
+                shadowColor: COLORS.primary,
+                marginRight: 10
               }}>
-              <Icon
-                reverse
-                size={15}
-                name="inventory"
-                color={COLORS.white}
-                reverseColor={COLORS.primary}
-              />
+              <View>
+                <Icon
+                  name="inventory"
+                  color={COLORS.primary}
+                />
+              </View>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={{ flex: 1 }}>ID: {item.id}</Text>
               <Text style={{ flex: 1 }}>
                 Tên kiện hàng: {item.name ? item.name : 'Không có'}
               </Text>
+              <Text style={{ flex: 1 }}>{item.id}</Text>
             </View>
           </View>
         </View>
 
-        <View style={[STYLES.column]}>
+        <View style={[STYLES.column, styles.info]}>
           <View style={[STYLES.row, STYLES.subContainer]}>
             <InfoField
               style={{ flex: 1 }}
@@ -97,9 +84,12 @@ const PackageDetailScreen = ({ navigation, route }) => {
               content={item.package_type}
             />
           </View>
-          <View style={[STYLES.subContainer]}>
-            <InfoField title="Hình ảnh xác nhận" />
-          </View>
+        </View>
+        <View style={[STYLES.subContainer]}>
+          <InfoField
+            title="Hình ảnh xác nhận"
+            content={item.images.length === 0 ? 'Chưa có' : ''}
+          />
         </View>
       </View>
       {item.images && <PackageImage images={item.images} />}
@@ -115,4 +105,5 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginHorizontal: '10%',
   },
+  info: { backgroundColor: COLORS.gray, borderRadius: 8, paddingVertical: 15 },
 });

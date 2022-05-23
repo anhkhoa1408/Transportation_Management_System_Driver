@@ -155,36 +155,50 @@ function OrderDetailScreen(props) {
             style={{
               ...STYLES.row,
               ...STYLES.subContainer,
+              ...styles.borderBottom,
               padding: 0,
               paddingBottom: 20,
-              ...styles.borderBottom,
+              borderBottomWidth: 1.5,
             }}>
-            <Avatar
-              size="medium"
-              avatarStyle={{ borderRadius: 10 }}
-              source={img}
-            />
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                borderRadius: 8,
+                elevation: 18,
+                shadowColor: COLORS.primary,
+              }}>
+              <Avatar
+                size="medium"
+                avatarStyle={{ borderRadius: 10 }}
+                icon={{
+                  name: 'account-circle',
+                  color: COLORS.primary,
+                }}
+              />
+            </View>
             <View style={{ flex: 1 }}>
               <View style={{ ...STYLES.column, flex: 1, marginLeft: 20 }}>
                 <Text>{meta?.name}</Text>
                 <Text>SĐT: {meta?.phone}</Text>
               </View>
             </View>
-            <View
+            <TouchableOpacity
+              onPress={handleChatButton}
               style={{
                 backgroundColor: COLORS.white,
                 padding: 12,
-                borderRadius: 15,
-                elevation: 5,
+                borderRadius: 8,
+                elevation: 12,
+                shadowColor: COLORS.primary,
               }}>
-              <TouchableOpacity onPress={handleChatButton}>
+              <View>
                 <Icon
                   name="comment"
                   type="font-awesome"
                   color={COLORS.primary}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -194,9 +208,10 @@ function OrderDetailScreen(props) {
             ...STYLES.subContainer,
             ...styles.borderBottom,
             paddingBottom: 18,
+            borderBottomWidth: 1.5,
           }}>
           <TouchableOpacity
-            style={{ flex: 1 }}
+            style={{ flex: 1, paddingRight: 10 }}
             onPress={() =>
               !data.arrived_time &&
               navigation.navigate('MapScreen', {

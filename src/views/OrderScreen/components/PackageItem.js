@@ -57,7 +57,8 @@ const PackageItem = ({ item, navigation, isDone, shipment, type }) => {
             backgroundColor: COLORS.white,
             padding: 12,
             borderRadius: 15,
-            elevation: 3,
+            elevation: 8,
+            shadowColor: COLORS.primary
           }}>
           <Icon name="inventory" size={28} color={COLORS.primary} />
         </View>
