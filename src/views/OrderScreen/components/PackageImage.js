@@ -1,13 +1,12 @@
 import {
   StyleSheet,
-  Text,
   View,
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
 import React, { useState } from 'react';
 import Carousel from 'react-native-snap-carousel';
-import { Image, Tile } from 'react-native-elements';
+import { Image, Tile, Text, Icon } from 'react-native-elements';
 import { MAIN_URL } from './../../../api/config';
 import { useRef } from 'react';
 import { COLORS, FONTS, STYLES } from '../../../styles';
@@ -22,26 +21,28 @@ const PackageImage = props => {
 
   const _renderItem = ({ item, index }) => (
     <Pressable onPress={() => _onPressCarousel(index)}>
-      {console.log(item)}
       <Tile
         disabled
-        imageSrc={{ uri: MAIN_URL + item.url }}
+        imageSrc={{ uri: item.url }}
         imageProps={{
           resizeMode: 'stretch',
         }}
-        title={`Thời gian xác nhận ${'\n'} ${moment(
-          item.updatedAt.toString(),
-        ).format('DD-MM-YYYY HH:mm:ss')}`}
-        titleStyle={{ fontSize: 16 }}
+        titleStyle={{ height: 0 }}
         width={width / 1.7}
         height={width / 1.7}
         imageContainerStyle={{
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8,
           paddingBottom: 0,
         }}
-        containerStyle={styles.imageContainer}
-      />
+        containerStyle={styles.imageContainer}>
+        <View style={styles.imageInfo}>
+          <Text style={{lineHeight: 20, fontSize: 14}}>{`Thời gian xác nhận ${'\n'} ${moment(
+            item.updatedAt.toString(),
+          ).format('DD-MM-YYYY HH:mm')}`}</Text>
+          <Icon name="check-circle" color={COLORS.success} />
+        </View>
+      </Tile>
     </Pressable>
   );
 
@@ -72,9 +73,16 @@ const styles = StyleSheet.create({
   imageContainer: {
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: 15,
+    borderRadius: 8,
     backgroundColor: '#FFF',
     borderColor: 'rgba(0, 0, 0, 0.1)',
     borderWidth: 1,
+  },
+  imageInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8
   },
 });

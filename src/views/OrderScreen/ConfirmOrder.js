@@ -17,6 +17,7 @@ import Loading from '../../components/Loading';
 import { MAIN_URL } from './../../api/config';
 import TextField from '../../components/TextField';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import PrimaryButton from '../../components/CustomButton/PrimaryButton';
 
 const ConfirmOrder = ({ navigation, route }) => {
   const { packageId, shipment, current } = route?.params;
@@ -69,7 +70,7 @@ const ConfirmOrder = ({ navigation, route }) => {
       if (typeof list[index] !== 'undefined') {
         return {
           ...list[index],
-          uri: MAIN_URL + list[index].url,
+          uri: list[index].url,
         };
       } else {
         return null;
@@ -240,10 +241,9 @@ const ConfirmOrder = ({ navigation, route }) => {
             errorMessage={'Số gói hàng phải lớn hơn 0'}
           />
 
-          <PillButton
+          <PrimaryButton
             onPress={handleUpdateImage}
             title="Xác nhận"
-            buttonStyle={{ backgroundColor: COLORS.primary }}
           />
         </View>
       </KeyboardAwareScrollView>
