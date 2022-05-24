@@ -4,6 +4,7 @@ import { Icon, Text } from 'react-native-elements';
 import Header from '../../components/Header';
 import InfoField from '../../components/InfoField';
 import { COLORS, STYLES } from '../../styles';
+import { convertPackageType } from '../../utils/packageUtil';
 import PackageImage from './components/PackageImage';
 
 const PackageDetailScreen = ({ navigation, route }) => {
@@ -81,7 +82,7 @@ const PackageDetailScreen = ({ navigation, route }) => {
             <InfoField
               style={{ flex: 1 }}
               title="Loại hàng hoá"
-              content={item.package_type}
+              content={convertPackageType(item.package_type)}
             />
           </View>
         </View>
