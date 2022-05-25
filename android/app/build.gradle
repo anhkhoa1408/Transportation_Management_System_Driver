@@ -148,19 +148,19 @@ android {
     }
     signingConfigs {
         debug {
-            if (project.hasProperty('UPLOAD_STORE_FILE')) {
-                storeFile file(UPLOAD_STORE_FILE)
-                storePassword UPLOAD_STORE_PASSWORD
-                keyAlias UPLOAD_KEY_ALIAS
-                keyPassword UPLOAD_KEY_PASSWORD
+            if (project.hasProperty('DRIVER_STORE_FILE')) {
+                storeFile file(DRIVER_STORE_FILE)
+                storePassword DRIVER_STORE_PASSWORD
+                keyAlias DRIVER_KEY_ALIAS
+                keyPassword DRIVER_KEY_PASSWORD
             }
         }
         release {
-            if (project.hasProperty('UPLOAD_STORE_FILE')) {
-                storeFile file(UPLOAD_STORE_FILE)
-                storePassword UPLOAD_STORE_PASSWORD
-                keyAlias UPLOAD_KEY_ALIAS
-                keyPassword UPLOAD_KEY_PASSWORD
+            if (project.hasProperty('DRIVER_STORE_FILE')) {
+                storeFile file(DRIVER_STORE_FILE)
+                storePassword DRIVER_STORE_PASSWORD
+                keyAlias DRIVER_KEY_ALIAS
+                keyPassword DRIVER_KEY_PASSWORD
             }
         }
     }
