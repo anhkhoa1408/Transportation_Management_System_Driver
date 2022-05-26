@@ -10,6 +10,7 @@ import { getAvatarFromUri, getAvatarFromUser } from '../../utils/avatarUltis';
 import { formatDate } from '../../utils/dateUtils';
 import Header from '../../components/Header';
 import HeaderAvatar from '../../components/HeaderAvatar';
+import { simplifyString } from '../../utils/simplifyString';
 
 const ChatScreen = props => {
   const { userInfo, messenger, navigation, customerInfo } = props;
@@ -77,7 +78,7 @@ const ChatScreen = props => {
                 <ListItem.Content style={{ display: 'flex' }}>
                   <View>
                     <ListItem.Title>{element.name}</ListItem.Title>
-                    <ListItem.Subtitle>{element.lastMessage}</ListItem.Subtitle>
+                    <ListItem.Subtitle>{simplifyString(element.lastMessage, 15)}</ListItem.Subtitle>
                   </View>
                   <Text style={chatScreenStyle.time}>{element.time}</Text>
                 </ListItem.Content>
