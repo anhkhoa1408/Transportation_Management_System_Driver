@@ -78,7 +78,7 @@ const ChatScreen = props => {
                 <ListItem.Content style={{ display: 'flex' }}>
                   <View>
                     <ListItem.Title>{element.name}</ListItem.Title>
-                    <ListItem.Subtitle>{simplifyString(element.lastMessage, 15)}</ListItem.Subtitle>
+                    <ListItem.Subtitle>{simplifyString(element.lastMessage, 25)}</ListItem.Subtitle>
                   </View>
                   <Text style={chatScreenStyle.time}>{element.time}</Text>
                 </ListItem.Content>
