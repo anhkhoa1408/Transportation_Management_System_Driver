@@ -6,12 +6,13 @@ import PackageImage from '../../../assets/images/package.png';
 import { ListItem, Button, Icon } from 'react-native-elements';
 import { joinAddress } from '../../../utils/addressUltis';
 
-const PackageItem = ({ item, navigation, isDone, shipment, type }) => {
+const PackageItem = ({ item, navigation, isDone, shipment, type, driver }) => {
   return (
     <ListItem.Swipeable
       bottomDivider
       rightContent={
-        !isDone && (
+        !isDone &&
+        driver && (
           <Button
             title={`${type} hàng`}
             icon={{ name: 'camera', color: 'white' }}
@@ -58,7 +59,7 @@ const PackageItem = ({ item, navigation, isDone, shipment, type }) => {
             padding: 12,
             borderRadius: 15,
             elevation: 8,
-            shadowColor: COLORS.primary
+            shadowColor: COLORS.primary,
           }}>
           <Icon name="inventory" size={28} color={COLORS.primary} />
         </View>
