@@ -11,7 +11,7 @@ import {
 } from './src/config/cloudMessage';
 
 import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['EventEmitter.removeListener']);
+LogBox.ignoreLogs(['EventEmitter.removeListener', 'new NativeEventEmitter']);
 
 export default function App(props) {
   useEffect(() => {

@@ -79,6 +79,7 @@ function OrderDetailScreen(props) {
       isDone={route?.params?.isDone}
       shipment={route.params.shipmentID}
       type={meta?.type}
+      driver={data.driver}
     />
   );
 
